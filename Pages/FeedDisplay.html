@@ -7,14 +7,34 @@
     <link rel="stylesheet" href="../css/FeedDisplay.css">
 </head>
 <body>
+    <div class="overlay" id="overlay"></div>
+        <div id="popup" class="post">
+            <div id="heading-add-post">
+                <p>❤</p>
+                <h3>Viết bài</h3>
+                <p class="hover-element" onclick="togglePopup()">Hủy</p>
+            </div>
+            <div id="body-add-post">
+                <div class="user-info">
+                    <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
+                    <div class="username">
+                        <strong>olivia.food.blog</strong>
+                    </div>
+                </div>
+                <div class="post-block-popup">
+                    <textarea placeholder="Viết bình luận..." class="post-input"></textarea>
+                </div>
+            </div>
+        </div>
+
     <div class="thread">
         <div class="post">
             <div class="add-post-area">
                 <div class="user-info">
                     <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
                 </div>
-                <div class="post-block">
-                    <input type="text" placeholder="Viết bình luận..." class="comment-input">
+                <div class="post-block" onclick="togglePopup()">
+                    <input placeholder="Viết bình luận..." class="comment-input hover-element">
                 </div>
             </div>
         </div>
@@ -62,5 +82,8 @@
             </div>
         </div>
     </div>
+
+    <script src="../script/FeedDisplay.js"></script>
+
 </body>
 </html>
