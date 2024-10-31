@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in to Flow</title>
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <label for="email">Your email:</label>
+        <input type="email" name="email" id="email"> <br>
+        <label for="password">Your password:</label>
+        <input type="password" name="password" id="password"> <br>
+        <button id="sign-up">Sign up</button>
+        <button id="sign-in">Sign in</button>
+    </form>
+    
+    <button id="check">Check sign in status</button>
+    <div id="in">Signed in</div>
+    <div id="out">No user</div>
+
+    <div id="secret">
+        <h3>Hello user</h3>
+        <p>This is me, your overlord to the portal of your personal information</p>
+        <button id="sign-out">Sign out</button>
+    </div>
+
+    <script defer src="../js/init-firebase.js" type="module"></script>
+    <script type="module">
+        import { app } from "../js/init-firebase.js"
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
+
+        const auth = getAuth(app);
+
+        const check = async () => {
+            if (auth.currentUser){
+                const inBox = document.querySelector("#in")
+                const outBox = document.querySelector("#out")
+                inBox.style.display = "block"
+                outBox.style.display = "none"
+            }
+            else {
+                const inBox = document.querySelector("#in")
+                const outBox = document.querySelector("#out")
+                inBox.style.display = "none"
+                outBox.style.display = "block"
+            }
+        }
+        
+        const signUp = async () => {
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
+            // console.log(email, password)
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed up 
+                    console.log("Sign up succ")
+                    const user = userCredential.user;
+                    // ...
+                })
+                .catch((error) => {
+                    console.log("Failed")
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage)
+                    // ..
+                });
+        }
+
+        const signIn = async () => {
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    console.log("Sign in succ")
+                    const user = userCredential.user;
+                    // ...
+                })
+                .catch((error) => {
+                    console.log("Failed")
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage)
+                    // ..
+                });
+        }
+
+        const signUserOut = async () => {
+            console.log("Signing out...")
+            await signOut(auth)
+        }
+
+        const signUpButton = document.querySelector("#sign-up")
+        signUpButton.addEventListener("click", signUp)
+        const signInButton = document.querySelector("#sign-in")
+        signInButton.addEventListener("click", signIn)
+        const signOutButton = document.querySelector("#sign-out")
+        signOutButton.addEventListener("click", signUserOut)
+        const checkButton = document.querySelector("#check")
+        checkButton.addEventListener("click", check)
+
+        const checkAuth = async () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in, see docs for a list of available properties
+                    // https://firebase.google.com/docs/reference/js/auth.user
+                    const uid = user.uid;
+                    console.log("Signed in")
+                    const secret = document.querySelector("#secret")
+                    secret.classList.remove("hide")
+                } else {
+                    // User is signed out
+                    console.log("Signed out")
+                    const secret = document.querySelector("#secret")
+                    secret.classList.add("hide")
+                }
+            });
+        }
+        checkAuth();
+
+    </script>
+</body>
+
+</html>
