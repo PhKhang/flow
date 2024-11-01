@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My bio</title>
+</head>
+
+<body>
+    <button type="button" id="fetch">Fetch user info</button>
+    <pre id="output">No fetch yet</pre>
+    <button type="button" id="change">Change user info</button>
+</body>
+<!-- <script defer type="module" src="../js/init-firebase.js"></script> -->
+<script type="module">
+    import { app } from "../js/init-firebase.js"
+    import { getAuth, updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
+
+    const auth = getAuth(app);
+
+    const fetchInfo = async () => {
+        const output = document.querySelector("#output")
+        if (auth.currentUser) {
+            output.innerHTML = JSON.stringify(auth.currentUser, undefined, 2)
+        } else {
+            output.innerHTML = "null"
+        }
+    }
+
+    const changeInfo = async () => {
+        updateProfile(auth.currentUser, {
+            me: "Jane Q. User"
+        }).then(() => {
+            // Profile updated!
+            console.log("Profile updated!")
+        }).catch((error) => {
+            // An error occurred
+            console.log("An error occurred")
+        });
+        fetchInfo()
+    }
+
+    const fetchButton = document.querySelector("#fetch")
+    fetchButton.addEventListener("click", fetchInfo)
+    const changeButton = document.querySelector("#change")
+    changeButton.addEventListener("click", changeInfo)
+</script>
+
+</html>
