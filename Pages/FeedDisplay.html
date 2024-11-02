@@ -8,24 +8,35 @@
 </head>
 <body>
     <div class="overlay" id="overlay"></div>
-        <div id="popup" class="post">
-            <div id="heading-add-post">
-                <p>❤</p>
-                <h3>Viết bài</h3>
-                <p class="hover-element" onclick="togglePopup()">Hủy</p>
-            </div>
-            <div id="body-add-post">
-                <div class="user-info">
-                    <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
-                    <div class="username">
-                        <strong>olivia.food.blog</strong>
-                    </div>
+    <div id="popup" class="post">
+        <div id="heading-add-post">
+            <p>❤</p>
+            <h3>Viết bài</h3>
+            <p class="hover-element" onclick="togglePopup()">Hủy</p>
+        </div>
+        <div id="body-add-post">
+            <div class="user-info">
+                <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
+                <div class="username">
+                    <strong>olivia.food.blog</strong>
                 </div>
-                <div class="post-block-popup">
-                    <textarea placeholder="Viết bình luận..." class="post-input"></textarea>
+            </div>
+            <div class="post-block-popup">
+                <textarea placeholder="Viết bình luận..." class="post-input"></textarea>
+                <div class="upload-actions">
+                    <label for="imageInput" class="upload-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <path d="M21 15l-5-5L5 21"/>
+                        </svg>
+                    </label>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <span id="fileName" class="file-name"></span>
                 </div>
             </div>
         </div>
+    </div>
 
     <div class="thread">
         <div class="post">

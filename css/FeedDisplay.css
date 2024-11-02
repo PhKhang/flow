@@ -120,7 +120,7 @@ input {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
+    width: 90%;
     padding: 10px;
     box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
     background: #fff;
@@ -178,5 +178,49 @@ input {
     width: 100%;
     font-size: 18px;
     margin-bottom: 20px;
-    height: 10rem;
+    height: 6rem;
+}
+
+.other-posts {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.upload-actions {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-top: 1px solid #eee;
+}
+
+.upload-label {
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.upload-label:hover {
+    background-color: #f0f0f0;
+}
+
+.file-name {
+    margin-left: 10px;
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.remove-file {
+    cursor: pointer;
+    color: #ff4444;
+    font-weight: bold;
+    padding: 0 5px;
 }

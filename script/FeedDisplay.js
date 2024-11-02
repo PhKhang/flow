@@ -32,7 +32,8 @@ function createPostElement(post) {
     const postElement = document.createElement('div');
     postElement.classList.add('post');
     
-    postElement.innerHTML = `
+    // Base post HTML without image
+    let postHTML = `
         <div class="user-info">
             <img src="${post.userProfilePic}" alt="User profile" class="profile-pic">
             <div class="username">
@@ -40,17 +41,24 @@ function createPostElement(post) {
                 <span class="time">${post.time}</span>
             </div>
         </div>
-        <p class="text">${post.text}</p>
+        <p class="text">${post.text}</p>`;
+    
+    // Only add the media div if there's an image
+    if (post.image) {
+        postHTML += `
         <div class="media">
             <img src="${post.image}" alt="Post image" class="post-image">
-        </div>
+        </div>`;
+    }
+    
+    postHTML += `
         <div class="actions">
             <button class="like-button">❤ ${formatNumber(post.likes)}</button>
             <button class="comment-button">💬</button>
             <button class="share-button">↗️</button>
-        </div>
-    `;
+        </div>`;
     
+    postElement.innerHTML = postHTML;
     return postElement;
 }
 
@@ -87,7 +95,32 @@ function addNewPost(postData) {
 // Render feed khi trang load
 document.addEventListener('DOMContentLoaded', renderFeed);
 
-// Lắng nghe sự kiện submit post
+let selectedImage = null;
+const DEFAULT_IMAGE_URL = "https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg";
+
+// Xử lý sự kiện khi chọn file
+document.getElementById('imageInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        selectedImage = true;
+        
+        // Hiển thị tên file và nút xóa
+        const fileNameElement = document.getElementById('fileName');
+        fileNameElement.innerHTML = `
+            <span>${file.name}</span>
+            <span class="remove-file" onclick="removeImage()">&times;</span>
+        `;
+    }
+});
+
+// Hàm xóa ảnh đã chọn
+function removeImage() {
+    selectedImage = null;
+    document.getElementById('fileName').innerHTML = '';
+    document.getElementById('imageInput').value = '';
+}
+
+// Xử lý đăng bài
 document.querySelector('.post-input').addEventListener('keydown', function(event) {
     if (event.key === 'Enter' && this.value.trim()) {
         const newPost = {
@@ -95,12 +128,13 @@ document.querySelector('.post-input').addEventListener('keydown', function(event
             username: "olivia.food.blog",
             time: "Vừa xong",
             text: this.value.trim(),
-            image: null, // Bạn có thể thêm logic upload ảnh ở đây
+            image: selectedImage ? DEFAULT_IMAGE_URL : null,
             likes: 0
         };
-        
+
         addNewPost(newPost);
-        this.value = ''; // Xóa nội dung input sau khi post
-        togglePopup(); // Đóng popup
+        this.value = '';
+        removeImage();
+        togglePopup();
     }
 });
