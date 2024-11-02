@@ -13,7 +13,7 @@
 <script>
     const mainPost = document.querySelector("#main-post")
     
-    const getData = async () => {
+    async function getData () {
         const url = "https://simple-express-js-muddy-flower-7968.fly.dev/all";
         try {
             const response = await fetch(url);
@@ -25,9 +25,13 @@
             console.log(json);
             
             mainPost.innerHTML = JSON.stringify(json, undefined, 2)
+            
+            return json
         } catch (error) {
             console.error(error.message);
         }
+        
+        return null
     }
 
     getData()
