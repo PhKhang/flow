@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get all posts</title>
+</head>
+
+<body>
+    <pre id="main-post"></pre>
+</body>
+<script>
+    const mainPost = document.querySelector("#main-post")
+    
+    const getData = async () => {
+        const url = "https://simple-express-js-muddy-flower-7968.fly.dev/all";
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const json = await response.json();
+            console.log(json);
+            
+            mainPost.innerHTML = JSON.stringify(json, undefined, 2)
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    getData()
+</script>
+
+</html>
