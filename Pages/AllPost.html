@@ -8,10 +8,22 @@
 </head>
 
 <body>
+    <form id="editor">
+        <label for="content">Write your flow here: </label> <br>
+        <textarea name="content" id="content" placeholder="My hot take of the day is..."></textarea> <br>
+        <label for="media">Links to media (optional): </label> <br>
+        <textarea name="media" id="media" placeholder="https://i.com/...jpg&#10;https://i.com/...png"></textarea> <br>
+    </form>
+    <button id="add">Add post</button>
+
     <pre id="main-post"></pre>
-    <button onclick="sendPost()">Add post</button>
 </body>
-<script>
+<script type="module">
+    import { app } from "../script/init-firebase.js"
+    import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
+
+    const auth = getAuth(app);
+
     const mainPost = document.querySelector("#main-post")
 
     async function getData() {
@@ -50,6 +62,18 @@
     }
 
     async function sendPost() {
+        const user = auth.currentUser;
+        if (!user) {
+            console.log("Guest cannot make flow post")
+            return
+        }
+
+        post.authorId = user.uid
+        post.author = user.displayName
+        post.time = Date().toString()
+        post.userProfilePic = user.photoURL || post.userProfilePic
+        post.content = (document.querySelector("textarea[name='content']").value) ? document.querySelector("textarea[name='content']").value.split('\n') : post.content
+        post.media = (document.querySelector("textarea[name='media']").value) ? document.querySelector("textarea[name='media']").value.split('\n') : post.media
         console.log("Add post: ", post)
 
         const url = "https://simple-express-js-muddy-flower-7968.fly.dev/add";
@@ -76,6 +100,9 @@
             console.error(error.message);
         }
     }
+    
+    const addButton = document.querySelector("#add")
+    addButton.addEventListener("click", sendPost)
 </script>
 
 </html>

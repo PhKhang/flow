@@ -21,12 +21,18 @@
 
     const fetchInfo = async () => {
         const output = document.querySelector("#output")
-        if (auth.currentUser) {
+        const user = auth.currentUser;
+
+        if (user) {
             output.innerHTML = JSON.stringify(auth.currentUser, undefined, 2)
         } else {
             output.innerHTML = "null"
         }
     }
+    // I have to set time out because it needs time to load the user after a refresh
+    setTimeout(() => {
+        fetchInfo()
+    }, 300);
 
     const changeInfo = async () => {
         updateProfile(auth.currentUser, {
