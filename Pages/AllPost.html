@@ -9,11 +9,12 @@
 
 <body>
     <pre id="main-post"></pre>
+    <button onclick="sendPost()">Add post</button>
 </body>
 <script>
     const mainPost = document.querySelector("#main-post")
-    
-    async function getData () {
+
+    async function getData() {
         const url = "https://simple-express-js-muddy-flower-7968.fly.dev/all";
         try {
             const response = await fetch(url);
@@ -23,18 +24,58 @@
 
             const json = await response.json();
             console.log(json);
-            
+
             mainPost.innerHTML = JSON.stringify(json, undefined, 2)
-            
+
             return json
         } catch (error) {
             console.error(error.message);
         }
-        
+
         return null
     }
 
     getData()
+
+    // Code for adding a new post to mongodb
+    let post = {
+        userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
+        author: "travel.journey",
+        authorId: "",
+        time: "Sun Nov 03 2024 10:10:32 GMT+0700x",
+        content: "Just arrived in Kyoto! The scenery is breathtaking. Can't wait to explore the temples and gardens tomorrow!",
+        media: [],
+        likes: [],
+        replies: []
+    }
+
+    async function sendPost() {
+        console.log("Add post: ", post)
+
+        const url = "http://localhost:3000/add";
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(post)
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const json = await response.json();
+            console.log(json);
+
+            getData()
+
+            return json
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
 </script>
 
 </html>
