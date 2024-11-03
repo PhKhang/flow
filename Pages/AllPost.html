@@ -27,7 +27,7 @@
     const mainPost = document.querySelector("#main-post")
 
     async function getData() {
-        const url = "https://simple-express-js-muddy-flower-7968.fly.dev/all";
+        const url = "https://flow-express-js.onrender.com/all";
         try {
             const response = await fetch(url);
             if (!response.ok) {
@@ -76,7 +76,7 @@
         post.media = (document.querySelector("textarea[name='media']").value) ? document.querySelector("textarea[name='media']").value.split('\n') : post.media
         console.log("Add post: ", post)
 
-        const url = "https://simple-express-js-muddy-flower-7968.fly.dev/add";
+        const url = "https://flow-express-js.onrender.com/add";
         try {
             const response = await fetch(url, {
                 method: "POST",
