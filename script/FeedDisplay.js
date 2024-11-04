@@ -102,21 +102,24 @@ const DEFAULT_IMAGE_URL = "https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c
 document.getElementById('imageInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
-        selectedImage = true;
+        selectedImage = file;
         
-        // Hiển thị tên file và nút xóa
-        const fileNameElement = document.getElementById('fileName');
-        fileNameElement.innerHTML = `
-            <span>${file.name}</span>
-            <span class="remove-file" onclick="removeImage()">&times;</span>
+        // Hiển thị preview ảnh
+        const previewDiv = document.getElementById('imagePreview');
+        previewDiv.innerHTML = `
+            <img src="${URL.createObjectURL(file)}" alt="Preview">
+            <button onclick="removeImage()" class="remove-image">&times;</button>
         `;
+    } else {
+        selectedImage = null;
+        document.getElementById('imagePreview').innerHTML = '';
     }
 });
 
 // Hàm xóa ảnh đã chọn
 function removeImage() {
     selectedImage = null;
-    document.getElementById('fileName').innerHTML = '';
+    document.getElementById('imagePreview').innerHTML = '';
     document.getElementById('imageInput').value = '';
 }
 
@@ -128,7 +131,7 @@ document.querySelector('.post-input').addEventListener('keydown', function(event
             username: "olivia.food.blog",
             time: "Vừa xong",
             text: this.value.trim(),
-            image: selectedImage ? DEFAULT_IMAGE_URL : null,
+            image: selectedImage ? URL.createObjectURL(selectedImage) : null,
             likes: 0
         };
 
