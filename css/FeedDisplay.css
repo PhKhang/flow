@@ -17,7 +17,7 @@ body {
     max-width: 600px;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Khoảng cách giữa các bài đăng */
+    gap: 10px; 
 }
 
 .post {
@@ -92,9 +92,9 @@ textarea {
 }
 
 .comment-input {
-    width: 100%; /* Đặt độ rộng toàn phần */
-    font-size: 18px; /* Tăng kích thước chữ */
-    padding: 10px 10px 10px 0px; /* Tạo khoảng cách bên trong */
+    width: 100%;
+    font-size: 18px;
+    padding: 10px 10px 10px 0px; 
 }
 
 .post-block {
@@ -106,14 +106,6 @@ input {
     border: none;
     width: 100%;
 }
-
-
-
-
-
-
-
-
 
 #popup {
     position: fixed;
@@ -129,10 +121,12 @@ input {
     transition: opacity 0.3s ease;
     z-index: 100;
 }
+
 #popup.active {
     visibility: visible;
     opacity: 1;
 }
+
 .overlay {
     position: fixed;
     top: 0;
@@ -145,6 +139,7 @@ input {
     transition: opacity 0.3s ease;
     z-index: 99;
 }
+
 .overlay.active {
     opacity: 1;
     visibility: visible;
@@ -159,64 +154,46 @@ input {
 }
 
 .hover-element {
-    cursor: pointer; /* Khi hover, con trỏ sẽ chuyển thành biểu tượng bàn tay */
+    cursor: pointer;
 }
 
 #body-add-post {
     padding: 20px;
+    overflow: hidden;
+}
+
+.post-block-popup {
+    max-height: 10rem;
+    overflow-y: auto;
 }
 
 .post-block {
     width: 100%;
-}
-
-.post-block-popup {
-    height: 10rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .post-input {
     width: 100%;
-    font-size: 18px;
-    margin-bottom: 20px;
-    height: 6rem;
-}
-
-.other-posts {
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-
-.upload-actions {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    border-top: 1px solid #eee;
-}
-
-.upload-label {
-    cursor: pointer;
-    color: #666;
-    padding: 5px;
-    border-radius: 50%;
-    transition: background-color 0.3s;
-}
-
-.upload-label:hover {
-    background-color: #f0f0f0;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: none;
+    overflow: hidden; 
 }
 
 .image-preview {
-    overflow: scroll;
+    max-height: 6rem;
+    position: relative;
 }
 
 .image-preview img {
     width: auto;
-    height: 100%;
     max-width: 100%;
+    max-height: 100%;
     border-radius: 4px;
 }
 
@@ -226,4 +203,8 @@ input {
     font-weight: bold;
     padding: 0 5px;
     position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #fff;
+    border-radius: 50%;
 }

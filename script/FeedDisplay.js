@@ -32,7 +32,7 @@ function createPostElement(post) {
     const postElement = document.createElement('div');
     postElement.classList.add('post');
     
-    // Base post HTML without image
+    // Base post HTML with new content-wrapper div
     let postHTML = `
         <div class="user-info">
             <img src="${post.userProfilePic}" alt="User profile" class="profile-pic">
@@ -41,17 +41,18 @@ function createPostElement(post) {
                 <span class="time">${post.time}</span>
             </div>
         </div>
-        <p class="text">${post.text}</p>`;
+        <div class="content-wrapper">
+            <p class="text">${post.text}</p>`;
     
     // Only add the media div if there's an image
     if (post.image) {
         postHTML += `
-        <div class="media">
-            <img src="${post.image}" alt="Post image" class="post-image">
-        </div>`;
+            <div class="media">
+                <img src="${post.image}" alt="Post image" class="post-image">
+            </div>`;
     }
     
-    postHTML += `
+    postHTML += `</div>
         <div class="actions">
             <button class="like-button">❤ ${formatNumber(post.likes)}</button>
             <button class="comment-button">💬</button>
@@ -93,7 +94,14 @@ function addNewPost(postData) {
 
 
 // Render feed khi trang load
-document.addEventListener('DOMContentLoaded', renderFeed);
+document.addEventListener('DOMContentLoaded', () => {
+    renderFeed();
+
+    const postInput = document.querySelector('.post-input');
+    postInput.addEventListener('input', function() {
+        autoResize(this);
+    });
+});
 
 let selectedImage = null;
 const DEFAULT_IMAGE_URL = "https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg";
@@ -141,3 +149,8 @@ document.querySelector('.post-input').addEventListener('keydown', function(event
         togglePopup();
     }
 });
+
+function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+}

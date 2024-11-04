@@ -45,7 +45,8 @@
                     <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
                 </div>
                 <div class="post-block" onclick="togglePopup()">
-                    <input placeholder="Viết bình luận..." class="comment-input hover-element">
+                    <input placeholder="Viết bình luận..." class="comment-input hover-element" oninput="autoResize(this)">
+                    <div id="imagePreview" class="image-preview"></div> 
                 </div>
             </div>
         </div>
