@@ -27,6 +27,12 @@ body {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.other-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .user-info {
     display: flex;
     align-items: center;

@@ -29,62 +29,31 @@
                 <button class="share-button">↗️</button>
             </div>
         </div>
-            
-            <!-- Khu vực comment -->
-            <div class="comment-section">
-                <!--Ô nhập comment-->
-                <div class="comment">
-                    <div class="user-info">
-                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
-                        <div class="username">
-                            <strong>Nini</strong>
-                        </div>
-                    </div>
-                    <div class="comment-block">
-                        <input type="text" placeholder="Viết bình luận..." class="comment-input">
-                        <br>
-                        <button class="post-comment">Đăng</button>
+        <!-- Khu vực comment -->
+        <div class="comment-section">
+            <!--Ô nhập comment-->
+            <div class="comment">
+                <div class="user-info">
+                    <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
+                    <div class="username">
+                        <strong>Nini</strong>
                     </div>
                 </div>
-
-
-                <div class="comment">
-                    <div class="user-info">
-                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
-                        <div class="username">
-                            <strong>Nini</strong>
-                            <span class="time">53 phút</span>
-                        </div>
-                    </div>
-                    <div class="comment-block">
-                        <p class="text">Claim ạ </p>
-                        <div class="actions">
-                            <button class="like-button">❤ 1</button>
-                            <button class="comment-button">💬 1</button>
-                            <button class="share-button">🔁</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="comment">
-                    <div class="user-info">
-                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
-                        <div class="username">
-                            <strong>Nini</strong>
-                            <span class="time">43 phút</span>
-                        </div>
-                    </div>
-                    <div class="comment-block">
-                        <p class="text">chúc bạn may mắn</p>
-                        <div class="actions">
-                            <button class="like-button">❤ 1</button>
-                            <button class="comment-button">💬</button>
-                            <button class="share-button">🔁</button>
-                        </div>
+                <div class="comment-block">
+                    <div class="comment-wrapper">
+                        <input type="text" placeholder="Viết bình luận..." class="comment-input" id="newCommentInput">
+                        <input type="file" class="image-input" id="commentImageInput" accept="image/*">
+                        <img id="commentImagePreview" class="image-preview">
+                        <button class="post-comment" onclick="addNewComment()">Đăng</button>
                     </div>
                 </div>
             </div>
+
+            <div id="commentsContainer">
+                <!-- Comments sẽ được thêm vào đây -->
+            </div>
         </div>
-    
+    </div>
+    <script src="../script/Post.js"></script>
 </body>
 </html>
