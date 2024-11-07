@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/SignIn.css">
     <title>Sign in to Flow</title>
     <style>
         .hide {
@@ -13,23 +14,27 @@
 </head>
 
 <body>
-    <!-- <form> -->
-        <label for="email">Your email:</label>
-        <input type="email" name="email" id="email"> <br>
-        <label for="password">Your password:</label>
-        <input type="password" name="password" id="password"> <br>
-        <button id="sign-up">Sign up</button>
-        <button id="sign-in">Sign in</button>
-    <!-- </form> -->
-    
-    <button id="check">Check sign in status</button>
-    <div id="in">Signed in</div>
-    <div id="out">No user</div>
-
-    <div id="secret">
-        <h3>Hello user</h3>
-        <p>This is me, your overlord to the portal of your personal information</p>
-        <button id="sign-out">Sign out</button>
+    <div class="main">
+        <div class="content">
+            <div class="actual-content">
+                <h2>Get started</h2>
+                <form action="javascript:void(0);">
+                    <input type="email" name="email" id="email" placeholder="Enter your email">
+                    <input type="password" name="password" id="password" placeholder="Enter your password">
+                    <input type="password" name="password1" id="password" placeholder="Reenter your password">
+                    <button id="sign-up">Sign up</button>
+                </form>
+                <!-- <button id="check">Check sign in status</button>
+                <div id="in">Signed in</div>
+                <div id="out">No user</div>
+                <div id="secret">
+                    <h3>Hello user</h3>
+                    <p>This is me, your overlord to the portal of your personal information</p>
+                    <button id="sign-out">Sign out</button>
+                </div> -->
+               <p>Already have an account? <a href="">Sign in</a></p> 
+            </div>
+        </div>
     </div>
 
     <!-- <script defer src="../js/init-firebase.js" type="module"></script> -->
