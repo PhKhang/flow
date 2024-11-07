@@ -72,7 +72,7 @@
         post.author = user.displayName
         post.time = Date().toString()
         post.userProfilePic = user.photoURL || post.userProfilePic
-        post.content = (document.querySelector("textarea[name='content']").value) ? document.querySelector("textarea[name='content']").value.split('\n') : post.content
+        post.content = (document.querySelector("textarea[name='content']").value) ? document.querySelector("textarea[name='content']").value : post.content
         post.media = (document.querySelector("textarea[name='media']").value) ? document.querySelector("textarea[name='media']").value.split('\n') : post.media
         console.log("Add post: ", post)
 
