@@ -31,37 +31,47 @@ const posts = [
 function createPostElement(post) {
     const postElement = document.createElement('div');
     postElement.classList.add('post');
-    
+  
     // Base post HTML with new content-wrapper div
     let postHTML = `
-        <div class="user-info">
-            <img src="${post.userProfilePic}" alt="User profile" class="profile-pic">
-            <div class="username">
-                <strong>${post.username}</strong>
-                <span class="time">${post.time}</span>
-            </div>
+      <div class="user-info">
+        <img src="${post.userProfilePic}" alt="User profile" class="profile-pic">
+        <div class="username">
+          <strong>${post.username}</strong>
+          <span class="time">${post.time}</span>
         </div>
-        <div class="content-wrapper">
-            <p class="text">${post.text}</p>`;
-    
+      </div>
+      <div class="content-wrapper">
+        <p class="text">${post.text}</p>`;
+  
     // Only add the media div if there's an image
     if (post.image) {
-        postHTML += `
-            <div class="media">
-                <img src="${post.image}" alt="Post image" class="post-image">
-            </div>`;
-    }
-    
-    postHTML += `</div>
-        <div class="actions">
-            <button class="like-button">❤ ${formatNumber(post.likes)}</button>
-            <button class="comment-button">💬</button>
-            <button class="share-button">↗️</button>
+      postHTML += `
+        <div class="media">
+          <img src="${post.image}" alt="Post image" class="post-image">
         </div>`;
-    
+    }
+  
+    postHTML += `
+      </div>
+      <div class="actions">
+        <button class="like-button">❤ ${formatNumber(post.likes)}</button>
+        <button class="comment-button">💬</button>
+        <button class="share-button">↗️</button>
+      </div>`;
+  
     postElement.innerHTML = postHTML;
+  
+    // Add click event listener to the post element
+    postElement.addEventListener('click', (event) => {
+      // Check if the clicked element is not an img or like-button
+      if (!event.target.matches('img, .like-button')) {
+        window.location.href = 'Post.html';
+      }
+    });
+  
     return postElement;
-}
+  }
 
 // Hàm format số lượng like
 function formatNumber(num) {

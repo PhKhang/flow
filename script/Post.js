@@ -115,3 +115,7 @@ function addNewComment() {
 
 // Render comments khi trang load
 renderComments();
+
+function goBack() {
+    window.history.back();
+}
