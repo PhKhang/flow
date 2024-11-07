@@ -13,7 +13,7 @@
     
     height: 100vh;
     background-color: red;
-    background-image: url("/Assets/image.png");
+    background-image: url("../Assets/image.png");
     background-size: cover;
 }
 
