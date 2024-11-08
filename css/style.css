@@ -5,10 +5,13 @@ body {
 :root {
     --text-color: #000;
     --secondary-text-color: #B5B5B5;
-    --primary-color: #6D7EEB;
+    --primary-color: #5865F2;
+    --secondary-color: #BDB3F9;
     --background-color: #FAFAFA;
     --hover-background-color: rgba(0, 0, 0, 0.05);
     --new-notification: #DD2334;
+    --form-border-radius: 8px;
+    --block-content-border-radius: 10px;
 }
 
 h1 {
