@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             postImgSrc: 'https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/464870771_1127720692692959_4752701202994234827_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEQBiU9u-WwNBHtOje4a7Bb6YVee1A8PeXphV57UDw95ehDYhf8_eEqbbVuACZu7VDvlOpGUmV32nDzjJj8M7Iy&_nc_ohc=V3DdQ16SEu0Q7kNvgETXjbq&_nc_zt=23&_nc_ht=scontent.fsgn8-3.fna&_nc_gid=AvrWGSR6h0i_rEyyy6JsQ49&oh=00_AYAdhW17ANblM5QfFjamOJZc0lU_zG6t-LSU10FT8io4bg&oe=672E4AA0'
         },
         {
-            username: 'uyeernnhiiii',
+            username: 'nghoanghenry',
             time: '2h',
             message: 'Started following you.',
             read: true,
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             postImgSrc: null
         },
         {
-            username: 'uyeernnhiiii',
+            username: 'phkhang',
             time: '1d',
             message: 'Commented on your post: Trộm vía mèo xinh quá chị ạ.',
             read: true,
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const notificationContainer = document.querySelector('.notifications');
 
     function renderNotifications() {
-        notificationsData.forEach(notification => {
+        notificationsData.forEach((notification, index) => {
             const notificationItem = document.createElement('div');
             notificationItem.classList.add('notification-item');
             notificationItem.dataset.read = notification.read ? 'true' : 'false';
@@ -52,23 +52,62 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${notification.message}</p>
                 </div>
                 ${notification.postImgSrc ? `<div class="post-pic"><img src="${notification.postImgSrc}" alt="Post Image"></div>` : ''}
+                <div class="noti-setting-wrapper">
+                    <div class="noti-setting-icon-wrapper">
+                        <img src="../images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
+                    </div>
+                    <div class="noti-menu hidden">
+                        <button class="menu-item" onclick="toggleReadStatus(${index})">
+                            <img src="../images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
+                            ${notification.read ? 'Mark as Unread' : 'Mark as Read'}
+                        </button>
+                        <button class="menu-item" onclick="deleteNotification(${index})">
+                            <img src="../images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
+                            Delete
+                        </button>
+                    </div>
+                </div>
             `;
 
             notificationItem.onclick = () => markAsRead(notificationItem);
-
             notificationContainer.appendChild(notificationItem);
+
+            const settingIcon = notificationItem.querySelector('.noti-setting-icon');
+            const notiMenu = notificationItem.querySelector('.noti-menu');
+
+            settingIcon.addEventListener('click', (event) => {
+                event.stopPropagation();
+                notiMenu.classList.toggle('hidden');
+            });
         });
     }
-
+    
     function markAsRead(notification) {
         notification.dataset.read = "true";
+        
     }
 
-    function markAllAsRead() {
-        document.querySelectorAll('.notification-item').forEach(item => {
-            markAsRead(item);
-        });
+    function toggleReadStatus(index) {
+        const notification = notificationsData[index];
+        notification.read = !notification.read;
+        
+        const button = document.querySelectorAll('.menu-item')[index];
+        button.textContent = notification.read ? 'Mark as Unread' : 'Mark as Read';
+        console.log(button.textContent);
+        document.querySelectorAll('.notification-item')[index].dataset.read = notification.read ? 'true' : 'false';
     }
+
+    function deleteNotification(index) {
+        console.log(notificationsData)
+        notificationsData.splice(index, 1);  
+        document.querySelectorAll('.notification-item')[index].remove(); 
+    }
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.noti-menu').forEach(menu => {
+            menu.classList.add('hidden');
+        });
+    });
 
     renderNotifications();
 
@@ -85,5 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    function markAllAsRead() {
+        notificationsData.forEach(notification => notification.read = true);
+    
+        const notificationItems = document.querySelectorAll('.notification-item');
+        notificationItems.forEach(item => {
+            item.dataset.read = 'true';
+        });
+    }
+
     document.querySelector('.mark-read').addEventListener('click', markAllAsRead);
+    
 });
