@@ -117,6 +117,7 @@ input {
     position: fixed;
     top: 50%;
     left: 50%;
+    height: 80%;
     transform: translate(-50%, -50%);
     width: 90%;
     padding: 10px;
@@ -164,12 +165,13 @@ input {
 }
 
 #body-add-post {
+    height: 90%;
     padding: 20px;
     overflow: hidden;
 }
 
 .post-block-popup {
-    max-height: 10rem;
+    height: 80%;
     overflow-y: auto;
 }
 
@@ -192,13 +194,12 @@ input {
 }
 
 .image-preview {
-    max-height: 6rem;
     position: relative;
 }
 
 .image-preview img {
     width: auto;
-    max-width: 100%;
+    max-width: 90%;
     max-height: 100%;
     border-radius: 4px;
 }

@@ -22,18 +22,21 @@
                 </div>
             </div>
             <div class="post-block-popup">
-                <textarea placeholder="Viết bình luận..." class="post-input"></textarea>
-                <div id="imagePreview" class="image-preview"></div>
-                <div class="upload-actions">
-                    <label for="imageInput" class="upload-label">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                            <path d="M21 15l-5-5L5 21"/>
-                        </svg>
-                    </label>
-                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                </div>
+                <form class="post-feed-form" action="" onsubmit="handleFormSubmit(event)"> 
+                    <textarea placeholder="Viết bình luận..." class="post-input"></textarea>
+                    <div id="imagePreview" class="image-preview"></div>
+                    <div class="upload-actions">
+                        <label for="imageInput" class="upload-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <path d="M21 15l-5-5L5 21"/>
+                            </svg>
+                        </label>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    </div>
+                    <button class="post-button">Đăng</button>
+                </form>
             </div>
         </div>
     </div>
@@ -51,53 +54,33 @@
             </div>
         </div>
         <div class="other-posts">
-
+            <!-- Posts will be added here -->
         </div>
-
-        <!-- <div class="post">
-            <div class="user-info">
-                <img src="https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg" alt="User profile" class="profile-pic">
-                <div class="username">
-                    <strong>olivia.food.blog</strong>
-                    <span class="time">8 giờ</span>
-                </div>
-            </div>
-            <p class="text">
-                Finally checked out Mensho Tokyo in Sydney—and luckily, no line! Verdict: super delicious, but not totally convinced it’s worth the price point. What do you think?
-            </p>
-            <div class="media">
-                <img src="https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg" alt="Post image" class="post-image">
-            </div>
-            <div class="actions">
-                <button class="like-button">❤ 2.9K</button>
-                <button class="comment-button">💬</button>
-                <button class="share-button">↗️</button>
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="user-info">
-                <img src="https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg" alt="User profile" class="profile-pic">
-                <div class="username">
-                    <strong>travel.journey</strong>
-                    <span class="time">5 giờ</span>
-                </div>
-            </div>
-            <p class="text">
-                Just arrived in Kyoto! The scenery is breathtaking. Can't wait to explore the temples and gardens tomorrow!
-            </p>
-            <div class="media">
-                <img src="https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg" alt="Kyoto scenery" class="post-image">
-            </div>
-            <div class="actions">
-                <button class="like-button">❤ 2.9K</button>
-                <button class="comment-button">💬</button>
-                <button class="share-button">↗️</button>
-            </div>
-        </div> -->
     </div>
 
     <script src="../script/FeedDisplay.js"></script>
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const postInput = document.querySelector('.post-input');
+            const text = postInput.value.trim();
+            if (!text) return;
 
+            const newPost = {
+                userProfilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
+                username: "olivia.food.blog",
+                time: "Vừa xong",
+                text: text,
+                image: selectedImage ? URL.createObjectURL(selectedImage) : null,
+                likes: 0
+            };
+
+            addNewPost(newPost);
+            postInput.value = '';
+            removeImage();
+            togglePopup();
+        }
+    </script>
 </body>
 </html>

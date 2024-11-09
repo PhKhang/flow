@@ -141,22 +141,34 @@ function removeImage() {
     document.getElementById('imageInput').value = '';
 }
 
-// Xử lý đăng bài
+function handleNewPost(text) {
+    const newPost = {
+        userProfilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
+        username: "olivia.food.blog",
+        time: "Vừa xong",
+        text: text.trim(),
+        image: selectedImage ? URL.createObjectURL(selectedImage) : null,
+        likes: 0
+    };
+
+    addNewPost(newPost);
+    document.querySelector('.post-input').value = '';
+    removeImage();
+    togglePopup();
+}
+
+// Xử lý đăng bài khi nhấn Enter
 document.querySelector('.post-input').addEventListener('keydown', function(event) {
     if (event.key === 'Enter' && this.value.trim()) {
-        const newPost = {
-            userProfilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
-            username: "olivia.food.blog",
-            time: "Vừa xong",
-            text: this.value.trim(),
-            image: selectedImage ? URL.createObjectURL(selectedImage) : null,
-            likes: 0
-        };
+        handleNewPost(this.value);
+    }
+});
 
-        addNewPost(newPost);
-        this.value = '';
-        removeImage();
-        togglePopup();
+// Xử lý đăng bài khi nhấn nút Đăng
+document.querySelector('.post-button').addEventListener('click', function(event) {
+    const postInput = document.querySelector('.post-input');
+    if (postInput.value.trim()) {
+        handleNewPost(postInput.value);
     }
 });
 
