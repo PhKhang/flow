@@ -1,0 +1,250 @@
+@import url("style.css");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background-color);
+}
+
+.notifications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    height: 1rem;;
+    margin-top: 10px;
+}
+
+.mark-read {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.notification-settings {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+.tab {
+    background: none;
+    border: none;
+    color: var(--secondary-text-color);
+    margin-right: 10px; 
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.tab.active {
+    color: var(--primary-color);
+    position: relative;
+    padding: 10px 0;
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    border-radius: 16px ;
+    height: 2px;
+    background-color: var(--primary-color); 
+}
+
+.hidden {
+    display: none !important;
+}
+
+.notification-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 5px;
+    border-radius: var(--block-content-border-radius);
+    width: 100%;
+    cursor: pointer;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+.notification-item:hover .overlay {
+    background: var(--hover-background-color);
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    z-index: 2; 
+    flex-shrink: 0;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.notification-item::after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    flex-shrink: 0;    
+    background-color: var(--primary-color);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.notification-item[data-read="true"]::after {
+    display: none;
+}
+
+.notification-username {
+    font-weight: 600;
+}
+
+.notification-text {
+    max-width: calc(100% - 80px);
+    flex-grow: 1;
+    z-index: 2; 
+}
+
+.notification-text p {
+    margin: 0;
+    font-size: 0.9rem;
+    justify-content: center;
+    align-items: center;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; 
+    line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notification-text .time {
+    font-size: 0.9rem;
+    color: var(--secondary-text-color);
+    margin-top: 5px;
+}
+
+.post-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 10px;
+    z-index: 2; 
+    flex-shrink: 0;
+}
+
+.post-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.noti-setting-wrapper {
+    align-self: center;
+    position: relative;
+}
+
+.noti-setting-icon-wrapper {
+    margin-left: auto;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: transparent; 
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+}
+
+.noti-setting-icon-wrapper:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.noti-setting-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.noti-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.15);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    padding: 7px 0;
+    width: 150px;
+}
+
+.menu-item {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.menu-item:hover {
+    background-color: var(--hover-background-color);
+}
+
+.hidden {
+    display: none;
+}
+
+.setting-menu-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    padding-bottom: 3px;
+}
