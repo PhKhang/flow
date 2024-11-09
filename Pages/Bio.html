@@ -15,7 +15,7 @@
 <!-- <script defer type="module" src="../js/init-firebase.js"></script> -->
 <script type="module">
     import { app } from "../script/init-firebase.js"
-    import { getAuth, updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
+    import { getAuth, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
 
     const auth = getAuth(app);
 
@@ -30,9 +30,16 @@
         }
     }
     // I have to set time out because it needs time to load the user after a refresh
-    setTimeout(() => {
-        fetchInfo()
-    }, 300);
+    // setTimeout(() => {
+    //     fetchInfo()
+    // }, 400);
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            fetchInfo()
+        } else {
+            // No user is signed in.
+        }
+    });
 
     const changeInfo = async () => {
         updateProfile(auth.currentUser, {
