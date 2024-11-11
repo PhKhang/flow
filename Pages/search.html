@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flow</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="../css/search.css">
+    <link rel="icon" type="image/x-icon" href="../images/favicon.svg">
+</head>
+<body>
+    <main class="search-page">
+        <header>
+            <h1>Search</h1>
+        </header>
+        <div class="input-group rounded">
+            <span class="input-group-text border-0" id="search-addon">
+                <i class="--bs-secondary-bg fas fa-search"></i>
+            </span>
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            
+        </div>
+        <div class="search-settings">
+            
+            <div class="left-settings">
+                <button class="tab active">User</button>
+                <button class="tab">Post</button>
+            </div>
+        </div>
+        <div id="search-results"></div>
+    </main>     
+    <script src="../script/search.js"></script>
+</body>
+</html>
