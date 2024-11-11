@@ -55,6 +55,7 @@ header {
     font-size: 0.9rem;
     cursor: pointer;
     font-weight: 600;
+    font-family: var(--font-family-system);
 }
 
 .tab.active {
