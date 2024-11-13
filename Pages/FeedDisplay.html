@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Media Thread</title>
     <link rel="stylesheet" href="../css/FeedDisplay.css">
+    <link rel="stylesheet" href="../css/navigation-bar.css">
 </head>
 <body>
     <nav class="nav">
@@ -98,13 +99,13 @@
     </div>
 
     <div class="thread">
-        <div class="post">
+        <div class="post header">
             <div class="add-post-area">
                 <div class="user-info">
                     <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
                 </div>
                 <div class="post-block" onclick="togglePopup()">
-                    <input placeholder="Viết bình luận..." class="comment-input hover-element" oninput="autoResize(this)">
+                    <p class="comment-input hover-element" oninput="autoResize(this)">Share something...</p>
                     <div id="imagePreview" class="image-preview"></div> 
                 </div>
             </div>
