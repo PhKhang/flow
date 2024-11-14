@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userData = [
         {
             username: '_nezuni1812',
-            followers: "11.2M",
+            followers: "305",
             isFollowed: false,
             bio: 'Trần Ngọc Uyển Nhi',
             type: 'user',
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             username: 'nghoanghenry',
-            followers: 405,
+            followers: "40M",
             isFollowed: false,
             bio: 'Hoang Nguyen',
             type: 'user',

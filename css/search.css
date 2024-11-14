@@ -197,3 +197,16 @@ header {
     box-shadow: none;
     border: 2px solid var(--primary-color);
 }
+
+.nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    display: flex;
+    background-color: white;
+    border-top: 1px solid #e0e0e0;
+    padding: 10px 0;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}

@@ -74,18 +74,14 @@ function createPostElement(post, index) {
   
     postHTML += `
         </div>
-        <div class="actions">
-            <button class="like-button">
-                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#FF0000"></path>
-                </svg>
-                ${formatNumber(post.likes)}
+        <div class="actions container mt-0 text-center">
+            <button class="btn btn-light hover-icon">
+                <i class="bi bi-heart-fill"></i> 
+                <span>${formatNumber(post.likes)}</span>
             </button>
-            <button class="comment-button">
-                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M21 15c-1.66 0-3 1.34-3 3v3h-4v-6h5c0.55 0 1-0.45 1-1s-0.45-1-1-1h-5V5h3c1.66 0 3 1.34 3 3s1.34 3 3 3zM3 7c1.66 0 3-1.34 3-3S4.66 1 3 1 0 2.34 0 4s1.34 3 3 3z" fill="#333"></path>
-                </svg>
-                ${formatNumber(post.comments)}
+            <button class="btn btn-light hover-icon">
+                <i class="bi bi-heart-fill"></i> 
+                <span>${formatNumber(post.comments)}</span>
             </button>
         </div>`;
 

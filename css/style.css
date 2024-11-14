@@ -10,16 +10,28 @@ body {
     --secondary-color: #BDB3F9;
     --background-color: #FAFAFA;
     --button-primary-outline: rgba(0, 0, 0, 0.15);
+    --icon-secondary-outline: #c4bebe;
     --hover-background-color: rgba(0, 0, 0, 0.05);
     --outline: #e0e0e0;
     --new-notification: #DD2334;
     --form-border-radius: 8px;
     --block-content-border-radius: 10px;
     --max-post-height: 420px;
+    --bs-link-color: rgba(0, 0, 0, 0.3);
+    --bs-body-bg: #FAFAFA;
 }   
 
 h1 {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+ol,
+ul {
+  padding-left: 0rem;
 }
