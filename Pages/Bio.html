@@ -16,12 +16,12 @@
 
 <body>
     <nav class="nav">
+        <div class="logo">
+            <a href="#">
+                <img src="../images/favicon.svg">
+            </a>
+        </div>
         <ul class="nav-list">
-            <li class="logo">
-                <a href="#">
-                    <img src="../images/favicon.svg">
-                </a>
-            </li>
             <ul class="nav-list">
                 <li class="nav-item">
                     <a href="./FeedDisplay.html" class="custom-nav-link">
@@ -66,10 +66,16 @@
                     </a>
                 </li>
             </ul>
-            
         </ul>
+        <div class="nav-list" id="sign-out-btn">
+            <div class="nav-item">
+                <a href="#" class="custom-nav-link">
+                    <svg viewBox="0 0 24 24" width="25" height="25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 17L21 12M21 12L16 7M21 12H9M12 17C12 17.93 12 18.395 11.8978 18.7765C11.6204 19.8117 10.8117 20.6204 9.77646 20.8978C9.39496 21 8.92997 21 8 21H7.5C6.10218 21 5.40326 21 4.85195 20.7716C4.11687 20.4672 3.53284 19.8831 3.22836 19.1481C3 18.5967 3 17.8978 3 16.5V7.5C3 6.10217 3 5.40326 3.22836 4.85195C3.53284 4.11687 4.11687 3.53284 4.85195 3.22836C5.40326 3 6.10218 3 7.5 3H8C8.92997 3 9.39496 3 9.77646 3.10222C10.8117 3.37962 11.6204 4.18827 11.8978 5.22354C12 5.60504 12 6.07003 12 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                </a>
+            </div>
+        </div>  
     </nav>
-    <div class="main">
+    <div class="main col-12 col-md-8 col-lg-5 pe-3 ps-3">
         <div class="header">
             <div id="profile-picture">
                 <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture">
@@ -153,9 +159,44 @@
         </div>
         <button type="button" id="fetch">Fetch user info</button>
         <pre id="output">No fetch yet</pre>
+        <div class="overlay" id="overlay"></div>
+        <div id="popup" class="post col-sm-12 col-md-8 col-lg-5">
+            <div id="heading-add-post">
+                <h1>New Post</h1>
+                <p class="hover-element" onclick="togglePopup()">Cancel</p>
+            </div>
+            <form class="post-feed-form" action="" onsubmit="handleFormSubmit(event)"> 
+                <div class="post-block-popup">
+                    <div class="post-feed-header">
+                        <div class="post-user-info">
+                            <div class="profile-pic">
+                                <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile Picture">
+                            </div>
+                            <div class="post-text">
+                                <p><span class="post-username">username</span></p>
+                                <textarea id="captionInput" name="captionInput" placeholder="Share something..." class="post-input"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="imagePreview" class="image-preview"></div>
+                </div>
+                <div class="post-button-wrapper">
+                    <div class="upload-actions">
+                        <label for="imageInput" class="upload-label">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.2647 15.9377L12.5473 14.2346C11.758 13.4519 11.3633 13.0605 10.9089 12.9137C10.5092 12.7845 10.079 12.7845 9.67922 12.9137C9.22485 13.0605 8.83017 13.4519 8.04082 14.2346L4.04193 18.2622M14.2647 15.9377L14.606 15.5991C15.412 14.7999 15.8149 14.4003 16.2773 14.2545C16.6839 14.1262 17.1208 14.1312 17.5244 14.2688C17.9832 14.4253 18.3769 14.834 19.1642 15.6515L20 16.5001M14.2647 15.9377L18.22 19.9628M18.22 19.9628C17.8703 20 17.4213 20 16.8 20H7.2C6.07989 20 5.51984 20 5.09202 19.782C4.7157 19.5903 4.40973 19.2843 4.21799 18.908C4.12583 18.7271 4.07264 18.5226 4.04193 18.2622M18.22 19.9628C18.5007 19.9329 18.7175 19.8791 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V13M11 4H7.2C6.07989 4 5.51984 4 5.09202 4.21799C4.7157 4.40973 4.40973 4.71569 4.21799 5.09202C4 5.51984 4 6.0799 4 7.2V16.8C4 17.4466 4 17.9066 4.04193 18.2622M18 9V6M18 6V3M18 6H21M18 6H15" stroke="#b5b5b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </label>
+                    </div>
+                    <input type="file" id="imageInput" name="imageInput" accept="image/*" style="display: none;">
+                    <input type="submit" class="post-button" value="Post"></button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 <link rel="stylesheet" href="../css/style.css"/>
+<link rel="stylesheet" href="../css/add-post.css">
+<script src="../script/add-post.js"></script>
+
 <!-- <script defer type="module" src="../js/init-firebase.js"></script> -->
 <script type="module">
     import { app } from "../script/init-firebase.js"

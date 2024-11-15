@@ -2,7 +2,6 @@
     color: var(--icon-secondary-outline);
     text-decoration: none;
     padding: 8px;
-    transition: all 0.3s ease;
     border-radius: 6px;
     display: flex;
     justify-content: center;
@@ -10,7 +9,8 @@
 }
 
 .nav-item:hover {
-    background-color: #f5f5f5;
+    background-color: var(--hover-background-color);
+    transition: all 0.3s ease;
     padding: 8px;
     border-radius: 6px;
 }
@@ -34,11 +34,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: var(--hover-background-color);
 }
 
 .create-post {
-    background-color: #f5f5f5;
+    background-color: var(--hover-background-color);
     padding: 8px;
     border-radius: 8px;
     cursor: pointer;
@@ -49,7 +48,14 @@
 }
 
 .logo {
-    display: none;
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+}
+
+.logo img {
+    height: 35px;
+    width: 35px;
 }
 
 @media (min-width: 768px) {
@@ -59,29 +65,17 @@
         width: 80px;
         height: 100vh;
         color: black;
+        display: inline-flex;
         justify-content: center;
-        background-color: white;
+        align-content: space-between;
     }
 
     .nav-list {
-        height: 100%;
         display: inline-flex;
         flex-direction: column;
         justify-content: center;
         align-content: center;
         color: black;
-    }
-
-    .logo {
-        display: block;
-        position: absolute;
-        top: 10px;
-        left: 25px;
-
-    }
-
-    .logo img {
-        width: 55%;
     }
 
     .nav-item {
@@ -91,15 +85,17 @@
     }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
     .nav {
         position: fixed;
-        bottom: 1px;
+        bottom: 0px;
         left: 0;
         height: 8vh;
         width: 100%;
         color: black;
-        justify-content: center;
+        display: inline-flex;
+        justify-content: space-around;
+        align-items: center;
         background-color: white;
     }
 
@@ -113,13 +109,10 @@
         gap: 30px;
     }
 
-    .logo {
-        display: none;
-    }
-
     .nav-item {
         width: 50px;
         height: 40px;
+        margin: 0;
     }
 
     .custom-nav-link {
@@ -139,9 +132,19 @@
         border-radius: 8px;
         cursor: pointer;
     }
+
+    .logo {
+        width:auto;
+        height: auto;
+    }
 }
 
 @media (max-width: 575.98px) {
+    .nav {
+        background-color: white;
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+    }
+
     .nav-list {
         height: 100%;
         display: inline-flex;
@@ -150,6 +153,14 @@
         align-content: center;
         color: black;
         gap: 10px;
+    }
+
+    .logo {
+        display: none;
+    }
+    
+    #sign-out-btn {
+        display: none;
     }
 
 }
