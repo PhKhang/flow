@@ -6,8 +6,16 @@
     box-sizing: border-box;
 }
 
+
+body {
+    font-family: var(--font-family-system);
+    background-color: var(--background-color);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .main {
-    height: 100vh;
     margin: 20px auto;
     padding: 15px 20px;
     background: white;
@@ -35,15 +43,31 @@ button {
 
 .header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+}
+
+.row>* {
+    padding: 0 !important;
+}
+
+.row {
+    margin: 0;
+}
+
+.full-name {
+    font-size: 1.2rem;
+    font-family: var(--font-family-system);
+}
+
+#profile-info {
+    font-family: var(--font-family-system);
+    font-size: 0.9rem;
 }
 
 #profile-picture {
-    margin-top: 20px;
-    width: 150px;
-    height: 150px;
-
+    color: black;
+    width: 80px;
+    height: 80px;
     /* background-color: cornflowerblue; */
     display: flex;
     justify-content: center;
@@ -51,6 +75,7 @@ button {
     position: relative;
 
     img {
+        /* border: 1px solid var(--secondary-text-color); */
         width: 100%;
         border-radius: 50%;
         object-fit: cover;
@@ -64,12 +89,18 @@ button {
     }
 }
 
-.info {
-    text-align: center;
+.bio p {
     margin-top: 20px;
+    font-size: 0.9rem;
+    font-family: var(--font-family-system);
+}
+
+.info {
+    font-size: 0.9rem;
+    text-align: center;
 
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 
     >* {
         width: 30%;
@@ -89,7 +120,8 @@ button {
 .edit {
     display: flex;
     justify-content: space-around;
-    margin: 1rem;
+    margin: 0;
+    font-size: 0.9rem;
 }
 
 .nav-tabs {
@@ -129,19 +161,194 @@ button {
             font-weight: bold;
         }
     }
+}
 
-    .post {
-        .user-info {
-            display: flex;
-            align-items: center;
+.other-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-            .profile-pic {
-                width: 50px;
-                border-radius: 50%;
-                margin-right: .4rem;
-            }
-        }
-    }
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-info {
+    font-family: var(--font-family-system) !important;
+    font-size: 0.9rem;
+}
+
+.post-info a {
+    color: var(--primary-text-color);
+    text-decoration: none;
+}
+
+.post-info a:hover {
+    text-decoration: underline;
+}
+
+.post-info .time {
+    color: var(--secondary-text-color);
+}
+
+.post-info .username {
+    font-weight: 600;
+}
+
+.content-wrapper {
+    margin-left: 0;
+}
+
+.text {
+    font-family: var(--font-family-system);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.media {
+    margin-bottom: 10px;
+}
+
+.post-image {
+    height: auto; 
+    max-width: 100%;
+    max-height: var(--max-post-height); 
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+}
+
+.modal img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.actions {
+    margin-left: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.actions button {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #4e4e4e;  
+    transition: color 0.2s ease;
+    font-family: var(--font-family-system);
+    font-size: 0.85rem;
+    border-radius: 20px;
+}
+
+.like-button-clicked svg path {
+    color: var(--new-notification);
+    fill: var(--new-notification)
+}
+
+.like-button-clicked p {
+    color: var(--new-notification)
+}
+
+.actions .comment-button {
+    display: flex;
+    align-items: center;
+}
+
+.button:hover {
+    background-color: var(--hover-background-color);
+}
+
+.button p {
+    margin-left: 5px;
+    z-index: 10;
+}
+
+.edit-btn {
+    width: 100%;
+    padding: 3px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid var(--button-primary-outline);
+    font-weight: 600;
+    font-family: var(--font-family-system);
+    background-color: transparent;
+    z-index: 2;
+}
+
+.post {
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: var(--block-content-border-radius);
+    padding: 15px 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.add-post {
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: var(--block-content-border-radius);
+    padding: 10px 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.post-block {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    padding: 10px;
+    margin-left: -10px;
+}
+
+.post-block:hover {
+    background-color: var(--hover-background-color);
+}
+
+.comment-input {
+    color: var(--secondary-text-color)
+}
+
+.add-post-area {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.thread {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 0px auto;
 }
 
 .nav {
@@ -153,4 +360,47 @@ button {
     border-top: 1px solid #e0e0e0;
     padding: 10px 0;
     box-sizing: border-box;
+}
+
+.post-count:hover, 
+.follower-count:hover,
+.following-count:hover {
+    border-radius: 10px;
+    background-color: var(--hover-background-color);
+}
+
+.post-count, 
+.follower-count,
+.following-count {
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+#popup-follower {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 20px 5px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+#popup-follower.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+@media (max-width: 768px) {
+    .name {
+        text-align: center;
+    }
+    
 }

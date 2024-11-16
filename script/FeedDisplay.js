@@ -10,20 +10,20 @@ document.getElementById("overlay").addEventListener("click", togglePopup);
 
 const posts = [
     {
-        userProfilePic: "https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg",
-        username: "olivia.food.blog",
+        userProfilePic: "https://i.pinimg.com/736x/69/56/ff/6956ffc5caa89f3bb844c1ab7432739d.jpg",
+        username: "travel.journey",
         time: "1w",
-        text: "Finally checked out Mensho Tokyo in Sydney—and luckily, no line! Verdict: super delicious, but not totally convinced it's worth the price point. What do you think?",
-        image: "https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg",
+        text: "Finally checked out Japan and luckily, no line! Verdict: super delicious, but not totally convinced it's worth the price point. What do you think?",
+        image: "https://i.pinimg.com/736x/47/55/ca/4755ca0523caf299505ae160c2a2ca8b.jpg",
         likes: 2900,
         comments: 17,
     },
     {
-        userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
-        username: "travel.journey",
+        userProfilePic: "https://i.pinimg.com/280x280_RS/d2/e5/e9/d2e5e964fddc7c8b5bad913bae95a528.jpg",
+        username: "jessica_gordon",
         time: "5h",
-        text: "Just arrived in Kyoto! The scenery is breathtaking. Can't wait to explore the temples and gardens tomorrow!",
-        image: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
+        text: "Just arrived in the Valley! The scenery is breathtaking. Can't wait to explore the temples and gardens tomorrow!",
+        image: "https://i.pinimg.com/736x/66/7a/cd/667acde78fd8c4f97f48ee20465d7e6e.jpg",
         likes: 810,
         comments: 510,
     },
@@ -55,7 +55,7 @@ function createPostElement(post, index) {
         <div class="user-info">
             <img src="${post.userProfilePic}" alt="User profile" class="profile-pic">
             <div class="post-info">
-                <p class="username">${post.username}</p>
+                <a href="./otherProfile.html"><p class="username">${post.username}</p></a>
                 <span class="time">${post.time}</span>
             </div>
         </div>
@@ -74,26 +74,35 @@ function createPostElement(post, index) {
   
     postHTML += `
         </div>
-        <div class="actions container mt-0 text-center">
-            <button class="btn btn-light hover-icon">
-                <i class="bi bi-heart-fill"></i> 
-                <span>${formatNumber(post.likes)}</span>
+        <div class="actions container text-center">
+            <button class="like-button button hover-icon" onclick="toggleLike(this)">
+                <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                </svg>
+                <p>${formatNumber(post.likes)}</p>
             </button>
-            <button class="btn btn-light hover-icon">
-                <i class="bi bi-heart-fill"></i> 
-                <span>${formatNumber(post.comments)}</span>
+            <button class="comment-button button hover-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> 
+                <p>${formatNumber(post.comments)}</p>
             </button>
         </div>`;
 
         postElement.innerHTML = postHTML;
   
         postElement.addEventListener('click', (event) => {
-            if (!event.target.matches('img, .like-button, .post-image, .modal')) {
+            if (event.target.closest('.like-button')) {
+                return; 
+            }
+            if (!event.target.matches('img, .post-image, .modal')) {
                 window.location.href = 'Post.html';
             }
         });
   
     return postElement;
+}
+
+function toggleLike(button) {
+    button.classList.toggle('like-button-clicked');
 }
 
 function formatNumber(num) {

@@ -10,8 +10,9 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <link defer rel="stylesheet" href="../css/Bio.css">
+    <link rel="icon" type="image/x-icon" href="../images/favicon.svg">
     <link rel="stylesheet" href="../css/navigation-bar.css">
-    <title>My bio</title>
+    <title>Tran Nguyen Phuc Khang</title>
 </head>
 
 <body>
@@ -69,50 +70,66 @@
         </ul>
         <div class="nav-list" id="sign-out-btn">
             <div class="nav-item">
-                <a href="#" class="custom-nav-link">
+                <a href="./SignIn.html" class="custom-nav-link">
                     <svg viewBox="0 0 24 24" width="25" height="25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 17L21 12M21 12L16 7M21 12H9M12 17C12 17.93 12 18.395 11.8978 18.7765C11.6204 19.8117 10.8117 20.6204 9.77646 20.8978C9.39496 21 8.92997 21 8 21H7.5C6.10218 21 5.40326 21 4.85195 20.7716C4.11687 20.4672 3.53284 19.8831 3.22836 19.1481C3 18.5967 3 17.8978 3 16.5V7.5C3 6.10217 3 5.40326 3.22836 4.85195C3.53284 4.11687 4.11687 3.53284 4.85195 3.22836C5.40326 3 6.10218 3 7.5 3H8C8.92997 3 9.39496 3 9.77646 3.10222C10.8117 3.37962 11.6204 4.18827 11.8978 5.22354C12 5.60504 12 6.07003 12 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                 </a>
             </div>
         </div>  
     </nav>
-    <div class="main col-12 col-md-8 col-lg-5 pe-3 ps-3">
-        <div class="header">
-            <div id="profile-picture">
-                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture">
+    <div class="main col-12 col-md-8 col-lg-5">
+        <div class="header col-12 row flex-column align-items-center flex-md-row-reverse">
+            <div id="profile-picture" class="col-12 col-md-4 d-flex justify-content-center mb-3 mb-md-0">
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture" class="rounded-circle">
                 <div>
                     <label for="file">✏️</label>
-                    <input type="file" accept="image/*" id="file" style="visibility: hidden; width: 0; height: 0;" />
+                    <input type="file" accept="image/*" id="file" style="visibility: hidden; width: 0; height: 0;">
                 </div>
             </div>
-
-            <h3 class="username" contenteditable="true">Meo</h3>
-            <p class="role">@nguoi_dung</p>
-            <p class="bio" contenteditable="true">
-                Hello! I'm a human.
-                I enjoy learning new technologies and improving my skills. In my free time, I like to explore new places
-                and
-                read tech blogs.
+        
+            <div id="profile-info" class="col-12 col-md-8">
+                <div class="name">
+                    <h2 class="mb-0 full-name" contenteditable="true">Tran Nguyen Phuc Khang</h2>
+                    <p class="username">phkhang</p>
+                </div>
+            </div>
+        </div>
+        <div class="bio mt-2">
+            <p contenteditable="true">
+                Hello! I'm a human. I enjoy learning new technologies and improving my skills. 
+                In my free time, I like to explore new places and read tech blogs.
             </p>
         </div>
-        <div class="info">
+        <div class="info mt-2">
             <div class="post-count">
                 <span>123</span>
                 posts
             </div>
             <div class="bar"></div>
-            <div class="follower-count">
+            <div class="follower-count" onclick="togglePopupFollower()">
                 <span>123</span>
                 followers
             </div>
             <div class="bar"></div>
-            <div class="following-count">
+            <div class="following-count" onclick="togglePopupFollower()">
                 <span>123</span>
                 following
             </div>
         </div>
-        <div class="edit">
-            <button type="button" id="change">Edit profile</button>
+        <button type="button" class="edit edit-btn mt-3 mb-2" id="change">
+            <p>Edit profile</p>
+        </button>
+        <div class="add-post header" onclick="togglePopup()">
+            <div class="add-post-area">
+                <div class="add-post-user">
+                    <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture" class="profile-pic">
+                </div>
+                <div class="post-block">
+                    <p class="comment-input hover-element">Share something...</p>
+                    <div id="imagePreview" class="image-preview"></div> 
+                </div>
+            </div>
         </div>
+        
         
         <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -131,34 +148,20 @@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Contact</div>
         </div> -->
         
+    </div>
+    <div class="thread col-12 col-md-8 col-lg-5">
         <div class="profile">
-            <div class="divider">
+            <!-- <div class="divider">
                 <span>Recent posts</span>
                 <span>Replies</span>
-            </div>
-            <div class="post">
-                <div class="user-info">
-                    <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="User profile"
-                        class="profile-pic">
-                    <div class="username">
-                        <strong>olivia.food.blog</strong>
-                        <span class="time">8 giờ</span>
-                    </div>
-                </div>
-                <div class="content-wrapper">
-                    <p class="text">Finally checked out Mensho Tokyo in Sydney—and luckily, no line! Verdict: super
-                        delicious, but not
-                        totally convinced it's worth the price point. What do you think?</p>
-                </div>
-                <div class="actions">
-                    <button class="like-button">❤ 2.9K</button>
-                    <button class="comment-button">💬</button>
-                    <button class="share-button">↗️</button>
-                </div>
+            </div> -->
+            <div class="other-posts">
+                <!-- Posts will be added here -->
             </div>
         </div>
         <button type="button" id="fetch">Fetch user info</button>
         <pre id="output">No fetch yet</pre>
+
         <div class="overlay" id="overlay"></div>
         <div id="popup" class="post col-sm-12 col-md-8 col-lg-5">
             <div id="heading-add-post">
@@ -191,10 +194,20 @@
                 </div>
             </form>
         </div>
+
+        <div id="popup-follower" class="post col-sm-12 col-md-8 col-lg-5">
+            <div id="heading-add-post">
+                <h1>New Post</h1>
+                <p class="hover-element" onclick="togglePopup()">Cancel</p>
+            </div>
+        </div>
     </div>
+    
+        
 </body>
 <link rel="stylesheet" href="../css/style.css"/>
 <link rel="stylesheet" href="../css/add-post.css">
+<script src="../script/bio.js"></script>
 <script src="../script/add-post.js"></script>
 
 <!-- <script defer type="module" src="../js/init-firebase.js"></script> -->
