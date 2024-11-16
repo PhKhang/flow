@@ -15,6 +15,7 @@
 
 <body>
     <div class="main">
+        <img src="../images/logo.svg" alt="" srcset="">
         <div class="content">
             <div class="actual-content">
                 <h2>Welcome back</h2>
@@ -24,13 +25,6 @@
                     <div id="out" style="color: red"></div>
                     <button id="sign-in">Sign in</button>
                 </form>
-                <!-- <button id="check">Check sign in status</button>
-                <div id="in">Signed in</div>
-                <div id="secret">
-                    <h3>Hello user</h3>
-                    <p>This is me, your overlord to the portal of your personal information</p>
-                    <button id="sign-out">Sign out</button>
-                </div> -->
                <p>No account yet? <a href="SignUp.html">Sign up</a></p> 
             </div>
         </div>
@@ -80,6 +74,7 @@
         }
         
         const signIn = async () => {
+            window.location.href = 'FeedDisplay.html'
             const email = document.querySelector("#email").value;
             const password = document.querySelector("#password").value;
             signInWithEmailAndPassword(auth, email, password)
@@ -89,7 +84,6 @@
                 const user = userCredential.user;
                 const outBox = document.querySelector("#out") 
                 outBox.innerHTML = JSON.stringify("") 
-                window.location.href = 'allpost.html'
                 // ...
             })
             .catch((error) => {

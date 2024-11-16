@@ -125,7 +125,7 @@
                 <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
                 <input class="mt-1" type="password" name="new-password" id="new-password" placeholder="New password">
 
-                <button type="button" class="edit edit-btn mt-3 mb-2" id="change">
+                <button type="button" class="edit edit-btn mt-3 mb-2" id="change" onclick="document.querySelector('.over').style.display = 'none'">
                     <p>Save all changes</p>
                 </button>
                 <!-- </form> -->
@@ -529,10 +529,13 @@
 
     const fetchButton = document.querySelector("#fetch")
     fetchButton.addEventListener("click", fetchInfo)
-    const changeButton = document.querySelector("")
-    changeButton.addEventListener("click", changeInfo)
+    // const changeButton = document.querySelector("")
+    // changeButton.addEventListener("click", changeInfo)
 
     document.getElementById('file').addEventListener('change', function (event) {
+        document.querySelector('.over').style.display = 'none'
+        console.log("Hey")
+        return;
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();

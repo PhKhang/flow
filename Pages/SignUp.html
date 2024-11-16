@@ -16,29 +16,22 @@
 
 <body>
     <div class="main">
+        <img src="../images/logo.svg" alt="Logo" srcset="">
         <div class="content">
             <div class="actual-content">
                 <h2>Get started</h2>
                 <form action="javascript:void(0);">
+                    <input type="text" name="username" id="username" placeholder="Enter your username">
                     <input type="email" name="email" id="email" placeholder="Enter your email">
                     <input type="password" name="password" id="password" placeholder="Enter your password">
                     <input type="password" name="password1" id="password" placeholder="Reenter your password">
                     <button id="sign-up">Sign up</button>
                 </form>
-                <!-- <button id="check">Check sign in status</button>
-                <div id="in">Signed in</div>
-                <div id="out">No user</div>
-                <div id="secret">
-                    <h3>Hello user</h3>
-                    <p>This is me, your overlord to the portal of your personal information</p>
-                    <button id="sign-out">Sign out</button>
-                </div> -->
                <p>Already have an account? <a href="SignIn.html">Sign in</a></p> 
             </div>
         </div>
     </div>
 
-    <!-- <script defer src="../js/init-firebase.js" type="module"></script> -->
     <script type="module">
         import { app } from "../script/init-firebase.js"
         import {
@@ -65,6 +58,7 @@
         }
         
         const signUp = async () => {
+            window.location.href = 'FeedDisplay.html'
             const email = document.querySelector("#email").value;
             const password = document.querySelector("#password").value;
             // console.log(email, password)
