@@ -120,6 +120,7 @@ function renderFeed() {
     });
 }
 
+let IsActiveFollowers= false;
 
 document.addEventListener('DOMContentLoaded', () => {
     renderFeed();
@@ -127,8 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function togglePopupFollower() {
     const popupFl = document.getElementById("popup-follower");
-    const overlayFl = document.getElementById("overlay");
+    const overlayFl = document.getElementById("overlay-follower");
     
-    popupFl.classList.toggle("active");
-    overlayFl.classList.toggle("active");
+    popupFl.classList.toggle("active-follower");
+    overlayFl.classList.toggle("active-follower");
+
+    IsActiveFollowers = popupFl.classList.contains("active-follower");
 }
+
+document.getElementById("overlay-follower").addEventListener("click", () => {
+    if (IsActiveFollowers) {
+        togglePopupFollower();
+    }
+});

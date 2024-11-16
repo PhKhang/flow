@@ -1,12 +1,19 @@
+let IsActiveAddPost = false;
+
 const togglePopup = () => {
     const popupEl = document.getElementById("popup");
     const overlayEl = document.getElementById("overlay");
     
     popupEl.classList.toggle("active");
     overlayEl.classList.toggle("active");
+    IsActiveAddPost = popupEl.classList.contains("active");
 };
 
-document.getElementById("overlay").addEventListener("click", togglePopup);
+document.getElementById("overlay").addEventListener("click", () => {
+    if (IsActiveAddPost) {
+        togglePopup();
+    }
+});
 
 const posts = [
     {

@@ -88,17 +88,7 @@ header {
     cursor: pointer;
 }
 
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    border-radius: 10px;
-}
-
-.notification-item:hover .overlay {
+.notification-item:hover {
     background: var(--hover-background-color);
 }
 

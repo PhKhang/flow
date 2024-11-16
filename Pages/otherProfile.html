@@ -12,7 +12,7 @@
     <link defer rel="stylesheet" href="../css/Bio.css">
     <link rel="icon" type="image/x-icon" href="../images/favicon.svg">
     <link rel="stylesheet" href="../css/navigation-bar.css">
-    <title>Tran Nguyen Phuc Khang</title>
+    <title>Full Name</title>
 </head>
 
 <body>
@@ -59,7 +59,7 @@
                 </li>
     
                 <li class="nav-item">
-                    <a href="./Bio.html" class="custom-nav-link active">
+                    <a href="./Bio.html" class="custom-nav-link">
                         <svg viewBox="0 0 24 24" width="24" height="24" class="nav-icon">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="2"/>
                             <circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -79,24 +79,20 @@
     <div class="main col-12 col-md-8 col-lg-5">
         <div class="header col-12 row flex-column align-items-center flex-md-row-reverse">
             <div id="profile-picture" class="col-12 col-md-4 d-flex justify-content-center mb-3 mb-md-0">
-                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture" class="rounded-circle">
-                <div>
-                    <label for="file">✏️</label>
-                    <input type="file" accept="image/*" id="file" style="visibility: hidden; width: 0; height: 0;">
-                </div>
+                <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="Profile picture" class="rounded-circle">
+                
             </div>
         
             <div id="profile-info" class="col-12 col-md-8">
                 <div class="name">
-                    <h2 class="mb-0 full-name" contenteditable="true">Tran Nguyen Phuc Khang</h2>
-                    <p class="username">phkhang</p>
+                    <h2 class="mb-0 full-name" contenteditable="true">Full Name</h2>
+                    <p class="username">username</p>
                 </div>
             </div>
         </div>
         <div class="bio mt-2">
             <p contenteditable="true">
-                Hello! I'm a human. I enjoy learning new technologies and improving my skills. 
-                In my free time, I like to explore new places and read tech blogs.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure, consectetur. Velit nostrum saepe maiores similique aliquam fugiat doloribus nam. Tempora iusto quaerat, sapiente sequi cumque nesciunt laboriosam nisi minus voluptate!
             </p>
         </div>
         <div class="info mt-2">
@@ -113,20 +109,6 @@
             <div class="following-count" onclick="togglePopupFollower()">
                 <span>123</span>
                 following
-            </div>
-        </div>
-        <button type="button" class="edit edit-btn mt-3 mb-2" id="change">
-            <p>Edit profile</p>
-        </button>
-        <div class="add-post header" onclick="togglePopup()">
-            <div class="add-post-area">
-                <div class="add-post-user">
-                    <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture" class="profile-pic">
-                </div>
-                <div class="post-block">
-                    <p class="comment-input hover-element">Share something...</p>
-                    <div id="imagePreview" class="image-preview"></div> 
-                </div>
             </div>
         </div>
         
@@ -159,8 +141,6 @@
                 <!-- Posts will be added here -->
             </div>
         </div>
-        <button type="button" id="fetch">Fetch user info</button>
-        <pre id="output">No fetch yet</pre>
 
         <div class="overlay" id="overlay"></div>
         <div id="popup" class="post col-sm-12 col-md-8 col-lg-5">
@@ -208,15 +188,15 @@
             </div>
             <div class="mt-2 follow-result">
                 <div class="search-result-item" data-type="user">
-                    
+                    <div class="overlay"></div>
                     <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
+                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="User Avatar">
                     </div>
                     <div class="search-text">
                         <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
+                            <p>_nezuni1812</p>
                         </a>
-                        <p class="search-user-bio">Full Name</p>
+                        <p class="search-user-bio">Trần Ngọc Uyển Nhi</p>
                         <p class="mt-1">305 followers</p>
                     </div>
                     <button class="follow-btn mt-1 me-1">
@@ -224,15 +204,15 @@
                     </button>
                 </div>
                 <div class="search-result-item" data-type="user">
-                    
+                    <div class="overlay"></div>
                     <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
+                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="User Avatar">
                     </div>
                     <div class="search-text">
                         <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
+                            <p>_nezuni1812</p>
                         </a>
-                        <p class="search-user-bio">Full Name</p>
+                        <p class="search-user-bio">Trần Ngọc Uyển Nhi</p>
                         <p class="mt-1">305 followers</p>
                     </div>
                     <button class="follow-btn mt-1 me-1">
@@ -240,15 +220,15 @@
                     </button>
                 </div>
                 <div class="search-result-item" data-type="user">
-                    
+                    <div class="overlay"></div>
                     <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
+                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="User Avatar">
                     </div>
                     <div class="search-text">
                         <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
+                            <p>_nezuni1812</p>
                         </a>
-                        <p class="search-user-bio">Full Name</p>
+                        <p class="search-user-bio">Trần Ngọc Uyển Nhi</p>
                         <p class="mt-1">305 followers</p>
                     </div>
                     <button class="follow-btn mt-1 me-1">
@@ -256,15 +236,15 @@
                     </button>
                 </div>
                 <div class="search-result-item" data-type="user">
-                    
+                    <div class="overlay"></div>
                     <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
+                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="User Avatar">
                     </div>
                     <div class="search-text">
                         <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
+                            <p>_nezuni1812</p>
                         </a>
-                        <p class="search-user-bio">Full Name</p>
+                        <p class="search-user-bio">Trần Ngọc Uyển Nhi</p>
                         <p class="mt-1">305 followers</p>
                     </div>
                     <button class="follow-btn mt-1 me-1">
@@ -272,15 +252,15 @@
                     </button>
                 </div>
                 <div class="search-result-item" data-type="user">
-                    
+                    <div class="overlay"></div>
                     <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
+                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="User Avatar">
                     </div>
                     <div class="search-text">
                         <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
+                            <p>_nezuni1812</p>
                         </a>
-                        <p class="search-user-bio">Full Name</p>
+                        <p class="search-user-bio">Trần Ngọc Uyển Nhi</p>
                         <p class="mt-1">305 followers</p>
                     </div>
                     <button class="follow-btn mt-1 me-1">
@@ -288,159 +268,15 @@
                     </button>
                 </div>
                 <div class="search-result-item" data-type="user">
-                    
+                    <div class="overlay"></div>
                     <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
+                        <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="User Avatar">
                     </div>
                     <div class="search-text">
                         <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
+                            <p>_nezuni1812</p>
                         </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
-                        <p class="mt-1">305 followers</p>
-                    </div>
-                    <button class="follow-btn mt-1 me-1">
-                        <p>Follow</p>
-                    </button>
-                </div>
-                <div class="search-result-item" data-type="user">
-                    
-                    <div class="profile-pic">
-                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User Avatar">
-                    </div>
-                    <div class="search-text">
-                        <a class="search-username" href="./otherProfile.html">
-                            <p>username</p>
-                        </a>
-                        <p class="search-user-bio">Full Name</p>
+                        <p class="search-user-bio">Trần Ngọc Uyển Nhi</p>
                         <p class="mt-1">305 followers</p>
                     </div>
                     <button class="follow-btn mt-1 me-1">
