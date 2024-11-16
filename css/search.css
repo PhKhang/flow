@@ -85,7 +85,6 @@ header {
     padding: 6px 5px;
     border-radius: var(--block-content-border-radius);
     width: 100%;
-    cursor: pointer;
 }
 
 .overlay {
@@ -120,6 +119,13 @@ header {
 
 .search-username {
     font-weight: 600;
+    text-decoration: none;
+    color: var(--primary-text-color);
+}
+
+.search-username:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .search-content {
@@ -213,5 +219,6 @@ header {
     border-top: 1px solid #e0e0e0;
     padding: 10px 0;
     box-sizing: border-box;
+    z-index: 10;
 }
 

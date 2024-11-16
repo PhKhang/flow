@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <img src="${item.avatarSrc}" alt="User Avatar">
                     </div>
                     <div class="search-text">
-                        <p class="search-username">${item.username}</p>
+                        <a href="./otherProfile.html" class="search-username"><p >${item.username}</p></a>
                         <p class="search-user-bio">${item.bio}</p>
                         <p class="mt-1">${item.followers} followers</p>
                     </div>

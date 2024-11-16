@@ -249,5 +249,6 @@ header {
     border-top: 1px solid #e0e0e0;
     padding: 10px 0;
     box-sizing: border-box;
+    z-index: 10;
 }
 

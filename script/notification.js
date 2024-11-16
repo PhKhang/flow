@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             message: 'Liked on your photo.',
             read: false,
             imgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
-            postImgSrc: 'https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/464870771_1127720692692959_4752701202994234827_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEQBiU9u-WwNBHtOje4a7Bb6YVee1A8PeXphV57UDw95ehDYhf8_eEqbbVuACZu7VDvlOpGUmV32nDzjJj8M7Iy&_nc_ohc=V3DdQ16SEu0Q7kNvgETXjbq&_nc_zt=23&_nc_ht=scontent.fsgn8-3.fna&_nc_gid=AvrWGSR6h0i_rEyyy6JsQ49&oh=00_AYAdhW17ANblM5QfFjamOJZc0lU_zG6t-LSU10FT8io4bg&oe=672E4AA0'
+            postImgSrc: 'https://i.pinimg.com/736x/ef/78/37/ef78370fd9db0d29245b16444393baf6.jpg'
         },
         {
             username: 'nghoanghenry',

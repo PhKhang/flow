@@ -1,18 +1,18 @@
 const comments = [
     {
-        username: "Nini",
+        username: "nghoang",
         profilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
-        time: "53 phút",
-        text: "Claim ạ",
+        time: "53m",
+        text: "Chúc bạn có một chuyến đi vui vẻ",
         image: null,
         likes: 1,
         replies: 1
     },
     {
         username: "Nini",
-        profilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
-        time: "43 phút",
-        text: "chúc bạn may mắn",
+        profilePic: "https://i.pinimg.com/736x/cd/9f/bd/cd9fbd7a5a930c7a5b24749da7052399.jpg",
+        time: "43s",
+        text: "What's a nice place!",
         image: null,
         likes: 1,
         replies: 0
@@ -47,14 +47,16 @@ document.getElementById('newCommentInput').addEventListener('keypress', function
 function createCommentHTML(comment) {
     let commentHTML = `
         <div class="comment">
+            <img src="${comment.profilePic}" alt="Profile picture" class="profile-pic">
             <div class="user-info">
-                <img src="${comment.profilePic}" alt="Profile picture" class="profile-pic">
                 <div class="username">
-                    <strong>${comment.username}</strong>
+                    <span style="font-weight: 600;">${comment.username}</span>
+                    <span> • </span>
                     <span class="time">${comment.time}</span>
                 </div>
+                <div class="comment-block">
             </div>
-            <div class="comment-block">`;
+            `;
     
     // Chỉ hiển thị text nếu có
     if (comment.text) {
@@ -63,14 +65,21 @@ function createCommentHTML(comment) {
     
     // Hiển thị hình nếu có
     if (comment.image) {
-        commentHTML += `<img src="${comment.image}" alt="Comment image" class="comment-image">`;
+        commentHTML += `<img src="${comment.image}" alt="Comment image" class="mt-1 comment-image">`;
     }
 
     commentHTML += `
-                <div class="actions">
-                    <button class="like-button">❤ ${comment.likes}</button>
-                    <button class="comment-button">💬 ${comment.replies || ''}</button>
-                    <button class="share-button">🔁</button>
+                <div class="actions container text-center">
+                    <button style="margin-left: -10px" class="me-2 like-button button hover-icon" onclick="toggleLike(this)">
+                        <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                        </svg>
+                        <p>${formatNumber(comment.likes)}</p>
+                    </button>
+                    <button style="margin-left: -10px" class="me-2 comment-button button hover-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> 
+                        <p>${formatNumber(comment.replies)}</p>
+                    </button>
                 </div>
             </div>
         </div>
@@ -78,25 +87,34 @@ function createCommentHTML(comment) {
     return commentHTML;
 }
 
-// Hàm render tất cả comments
+function formatNumber(num) {
+    if (num >= 1_000_000_000) {
+        return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+    } else if (num >= 1_000_000) {
+        return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    } else if (num >= 1_000) {
+        return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+    } else {
+        return num.toString();
+    }
+}
+
 function renderComments() {
     const container = document.getElementById('commentsContainer');
     container.innerHTML = comments.map(comment => createCommentHTML(comment)).join('');
 }
 
-// Hàm thêm comment mới
 function addNewComment() {
     const input = document.getElementById('newCommentInput');
     const text = input.value.trim();
     const hasImage = commentImagePreview.style.display === 'block';
     
-    // Chỉ đăng khi có text hoặc có hình
     if (text || hasImage) {
         const newComment = {
-            username: "Nini",
-            profilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
-            time: "Vừa xong",
-            text: text || "", // Nếu không có text thì để rỗng
+            username: "phkhang",
+            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
+            time: "1s",
+            text: text || "", 
             image: hasImage ? commentImagePreview.src : null,
             likes: 0,
             replies: 0
@@ -113,9 +131,24 @@ function addNewComment() {
     }
 }
 
-// Render comments khi trang load
 renderComments();
 
 function goBack() {
     window.history.back();
+}
+
+function toggleLike(button) {
+    button.classList.toggle('like-button-clicked');
+}
+
+function formatNumber(num) {
+    if (num >= 1_000_000_000) {
+        return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+    } else if (num >= 1_000_000) {
+        return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    } else if (num >= 1_000) {
+        return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+    } else {
+        return num.toString();
+    }
 }

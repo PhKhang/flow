@@ -82,6 +82,7 @@ body {
     font-family: var(--font-family-system);
     font-size: 0.9rem;
     margin-bottom: 10px;
+    overflow-wrap: break-word;
 }
 
 .media {
@@ -136,6 +137,7 @@ body {
     font-family: var(--font-family-system);
     font-size: 0.85rem;
     border-radius: 20px;
+    z-index: 1;
 }
 
 .like-button-clicked svg path {
@@ -424,17 +426,6 @@ textarea {
     align-content: center;
 }
 
-@media (max-width: 575.98px) {
-    #popup {
-        width: 100%;
-        height: 100%;
-    }
-
-    .post-feed-form {
-        max-height: 93vh;
-    }
-}
-
 .nav {
     position: fixed;
     bottom: 0;
@@ -444,4 +435,5 @@ textarea {
     border-top: 1px solid #e0e0e0;
     padding: 10px 0;
     box-sizing: border-box;
+    z-index: 10;
 }
