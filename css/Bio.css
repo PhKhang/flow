@@ -41,6 +41,89 @@ button {
     }
 }
 
+.over {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 99;
+    border-radius: 0;
+
+
+    /* border: var(--bs-border-width) solid var(--bs-border-color); */
+    border-radius: 12px;
+    padding: 1rem;
+
+    .change {
+        width: 100;
+        max-width: 400px;
+        margin: auto;
+
+        background-color: white;
+        border: 1px solid var(--outline);
+        border-radius: 12px;
+        padding: 1rem;
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+
+        }
+
+        button.cancel {
+            padding: 3px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid var(--button-primary-outline);
+            font-weight: 600;
+            font-family: var(--font-family-system);
+        }
+
+        #profile-picture {
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            margin-bottom: 1rem;
+
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            div {}
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            background-color: var(--bs-body-bg);
+            border: var(--bs-border-width) solid var(--bs-border-color);
+            height: 2rem;
+            border-radius: 10px;
+            padding: .5rem;
+            margin-bottom: .2rem;
+        }
+
+        textarea {
+            background-color: var(--bs-body-bg);
+            border: var(--bs-border-width) solid var(--bs-border-color);
+            border-radius: 10px;
+            padding: .5rem;
+        }
+    }
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -219,9 +302,9 @@ button {
 }
 
 .post-image {
-    height: auto; 
+    height: auto;
     max-width: 100%;
-    max-height: var(--max-post-height); 
+    max-height: var(--max-post-height);
     object-fit: contain;
     border-radius: 8px;
 }
@@ -261,7 +344,7 @@ button {
     padding: 8px 12px;
     cursor: pointer;
     font-size: 18px;
-    color: #4e4e4e;  
+    color: #4e4e4e;
     transition: color 0.2s ease;
     font-family: var(--font-family-system);
     font-size: 0.85rem;
@@ -362,14 +445,14 @@ button {
     box-sizing: border-box;
 }
 
-.post-count:hover, 
+.post-count:hover,
 .follower-count:hover,
 .following-count:hover {
     border-radius: 10px;
     background-color: var(--hover-background-color);
 }
 
-.post-count, 
+.post-count,
 .follower-count,
 .following-count {
     cursor: pointer;
@@ -402,5 +485,5 @@ button {
     .name {
         text-align: center;
     }
-    
+
 }
