@@ -209,7 +209,7 @@ header {
     display: flex;
     flex-direction: column;
     padding: 7px 0;
-    width: 150px;
+    width: 160px;
 }
 
 .menu-item {
@@ -222,6 +222,10 @@ header {
     transition: background-color 0.2s ease;
     display: flex;
     align-items: center;
+    font-size: 0.9rem;
+}
+
+.noti-menu button {
     font-family: var(--font-family-system);
 }
 

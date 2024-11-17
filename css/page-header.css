@@ -34,6 +34,16 @@
     max-height: 30px;
 }
 
+/* .page-title {
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.page-title:active {
+    opacity: 0.7;
+    transform: scale(0.99);
+} */
+
 .page-options {
     cursor: pointer;
     display: flex;

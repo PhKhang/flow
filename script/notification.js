@@ -5,16 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
             time: '1s',
             message: 'Liked your post: Giữa dòng đời hối hả, Sài Gòn mang đến những phút giây bình yên khó quên. Những buổi chiều hoàng hôn rực rỡ bên bờ sông hay ly cà phê vỉa hè, tiếng cười bạn bè vang vọng khắp nơi.',
             read: false,
-            imgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
-            postImgSrc:  null
+            imgSrc: 'https://i.pinimg.com/736x/63/92/24/639224f094deff2ebf9cd261fba24004.jpg',
+            postImgSrc: null,
+            href: './Post.html' 
         },
         {
             username: 'nezuni1812',
             time: '15m',
             message: 'Liked on your photo.',
             read: false,
-            imgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
-            postImgSrc: 'https://i.pinimg.com/736x/ef/78/37/ef78370fd9db0d29245b16444393baf6.jpg'
+            imgSrc: 'https://i.pinimg.com/736x/63/92/24/639224f094deff2ebf9cd261fba24004.jpg',
+            postImgSrc: 'https://i.pinimg.com/736x/ef/78/37/ef78370fd9db0d29245b16444393baf6.jpg',
+            href: './Post.html' 
         },
         {
             username: 'nghoanghenry',
@@ -22,15 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
             message: 'Started following you.',
             read: true,
             imgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
-            postImgSrc: null
+            postImgSrc: null,
+            href: './otherProfile.html' 
         },
         {
-            username: 'phkhang',
+            username: 'tnpkhang',
             time: '1d',
             message: 'Commented on your post: Trộm vía mèo xinh quá chị ạ.',
             read: true,
-            imgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
-            postImgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg'
+            imgSrc: 'https://i.pinimg.com/736x/53/ec/98/53ec9845f5a3698945cc4d2735b56102.jpg',
+            postImgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
+            href: './Post.html' 
         }
     ];
 
@@ -69,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            notificationItem.onclick = () => markAsRead(notificationItem);
+            notificationItem.onclick = () => markAsRead(notificationItem, notification.href);
+
             notificationContainer.appendChild(notificationItem);
 
             const settingIcon = notificationItem.querySelector('.noti-setting-icon');
@@ -80,11 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 notiMenu.classList.toggle('hidden');
             });
         });
+
+        notificationItem.onclick = () => markAsRead(notificationItem, notification.href);
     }
     
-    function markAsRead(notification) {
-        notification.dataset.read = "true";
-        
+    function markAsRead(notificationElement, href) {
+        notificationElement.dataset.read = "true";
+        if (href) {
+            window.open(href, '_blank'); 
+        } else {
+            console.error("No URL specified for this notification.");
+        }
     }
 
     function toggleReadStatus(index) {

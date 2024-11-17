@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isFollowed: false,
             bio: 'Trần Ngọc Uyển Nhi',
             type: 'user',
-            avatarSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
+            avatarSrc: 'https://i.pinimg.com/736x/63/92/24/639224f094deff2ebf9cd261fba24004.jpg',
         },
         {
             username: 'nghoanghenry',
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isFollowed: false,
             bio: 'Phuc Khang 🫥',
             type: 'user',
-            avatarSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
+            avatarSrc: 'https://i.pinimg.com/736x/53/ec/98/53ec9845f5a3698945cc4d2735b56102.jpg',
         },
     ];
 
