@@ -85,8 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 notiMenu.classList.toggle('hidden');
             });
         });
-
-        notificationItem.onclick = () => markAsRead(notificationItem, notification.href);
     }
     
     function markAsRead(notificationElement, href) {
@@ -128,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
-            const showUnread = tab.textContent === 'Unread';
+            const showUnread = tab.textContent.trim() === 'Unread'; 
             document.querySelectorAll('.notification-item').forEach(item => {
                 item.classList.toggle('hidden', showUnread && item.dataset.read === 'true');
             });
@@ -143,7 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
             item.dataset.read = 'true';
         });
     }
-
+    
+    const markReadButton = document.querySelector('.mark-read');
+    if (markReadButton) {
+        markReadButton.addEventListener('click', markAllAsRead);
+    } 
+    
     document.querySelector('.mark-read').addEventListener('click', markAllAsRead);
     
 });
