@@ -50,7 +50,7 @@ function createCommentHTML(comment) {
             <img src="${comment.profilePic}" alt="Profile picture" class="profile-pic">
             <div class="user-info">
                 <div class="username">
-                    <span style="font-weight: 600;">${comment.username}</span>
+                    <a href="./otherProfile.html"><span class="username" style="font-weight: 600;">${comment.username}</span></a>
                     <span> • </span>
                     <span class="time">${comment.time}</span>
                 </div>
@@ -105,6 +105,11 @@ function renderComments() {
 }
 
 function addNewComment() {
+    const textarea = document.getElementById('newCommentInput');
+    if (textarea) {
+        textarea.style.height = 'auto'; 
+    }
+
     const input = document.getElementById('newCommentInput');
     const text = input.value.trim();
     const hasImage = commentImagePreview.style.display === 'block';
@@ -151,4 +156,21 @@ function formatNumber(num) {
     } else {
         return num.toString();
     }
+}
+
+function openFullscreen(index) {
+    let modal = document.getElementById(`imageModal-${index}`);
+    let closeButton = document.getElementById(`closeButton-${index}`);
+    modal.style.display = 'flex';
+    closeButton.style.display = 'block';
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) { 
+          closeFullscreen(index);
+        }
+    });
+}
+
+function closeFullscreen(index) {
+    let modal = document.getElementById(`imageModal-${index}`);
+    modal.style.display = 'none';
 }

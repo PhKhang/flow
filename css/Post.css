@@ -6,9 +6,9 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
+    background-color: var(--background-color);
+    /* display: flex;
+    justify-content: center; */
 }
 
 .thread {
@@ -18,7 +18,7 @@ body {
     border-radius: 10px;
     padding: 15px 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    margin: 20px auto;
+    margin: 0px auto 5rem;
     box-sizing: border-box;
 }
 
@@ -80,6 +80,15 @@ body {
     text-decoration: underline;
 }
 
+.username a {
+    color: var(--primary-text-color);
+    text-decoration: none;
+}
+
+.username a:hover {
+    text-decoration: underline;
+}
+
 .post-info .time {
     color: var(--secondary-text-color);
 }
@@ -95,6 +104,10 @@ body {
 .text {
     font-family: var(--font-family-system);
     font-size: 0.9rem;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-word; 
+    width: 100%;
 }
 
 .media {
@@ -228,9 +241,30 @@ body {
 
 .upload-image-comment-btn {
     color: var(--secondary-text-color);
-    width: 24px;
-    height: 24px;
+    width: 22px;
     cursor: pointer;
+}
+
+.upload-image-comment-btn svg {
+    transition: transform 0.3s ease; 
+}
+
+.upload-image-comment-btn:active svg {
+    transform: scale(0.9); 
+}
+
+.comment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.send-comment svg {
+    transition: transform 0.3s ease; 
+}
+
+.send-comment:active svg {
+    transform: scale(0.9); 
 }
 
 .send-comment {
@@ -238,7 +272,6 @@ body {
     cursor: pointer;
     border: none;
     width: 22px;
-    height: 22px;
     color: var(--secondary-text-color);
 }
 
@@ -267,4 +300,8 @@ body {
     padding: 10px 0;
     box-sizing: border-box;
     z-index: 10;
+}
+
+p {
+    overflow-wrap: break-word;
 }

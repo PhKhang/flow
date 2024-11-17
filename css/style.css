@@ -21,6 +21,11 @@ body {
     --bs-body-bg: #FAFAFA;
 }   
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-system);
+    color: var(--text-color);
+}
+
 h1 {
     font-size: 1.25rem;
     font-weight: 600;

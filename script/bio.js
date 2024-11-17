@@ -58,6 +58,13 @@ function createPostElement(post, index) {
                 <img src="${post.image}" alt="Post image" class="post-image" onclick="openFullscreen(${index})">
             </div>
             <div class="modal" id="imageModal-${index}">
+                <svg style="display: none;" id="closeButton-${index}" class="close-full-image" onclick="closeFullscreen(${index})" fill="#fff" viewBox="-3.5 0 19 19" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path d="M11.383 13.644A1.03 1.03 0 0 1 9.928 15.1L6 11.172 2.072 15.1a1.03 1.03 0 1 1-1.455-1.456l3.928-3.928L.617 5.79a1.03 1.03 0 1 1 1.455-1.456L6 8.261l3.928-3.928a1.03 1.03 0 0 1 1.455 1.456L7.455 9.716z"></path>
+                    </g>
+                </svg>
                 <img src="${post.image}" alt="Full Image" class="full-image">
             </div>`;
     }
@@ -80,7 +87,7 @@ function createPostElement(post, index) {
         postElement.innerHTML = postHTML;
   
         postElement.addEventListener('click', (event) => {
-            if (event.target.closest('.like-button')) {
+            if (event.target.closest('.like-button, .close-full-image')) {
                 return; 
             }
             if (!event.target.matches('img, .post-image, .modal')) {
@@ -150,4 +157,21 @@ function toggleFollow(button) {
     } else {
         button.innerText = 'Follow';
     }
+}
+
+function openFullscreen(index) {
+    let modal = document.getElementById(`imageModal-${index}`);
+    let closeButton = document.getElementById(`closeButton-${index}`);
+    modal.style.display = 'flex';
+    closeButton.style.display = 'block';
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) { 
+          closeFullscreen(index);
+        }
+    });
+}
+
+function closeFullscreen(index) {
+    let modal = document.getElementById(`imageModal-${index}`);
+    modal.style.display = 'none';
 }

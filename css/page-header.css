@@ -1,0 +1,100 @@
+.page-header {
+    display: flex;
+    align-items: center;
+    /* padding: 10px 16px; */
+    padding: 0 3px;
+    border-bottom: 1px solid var(--background-color);;
+    background-color: var(--background-color);
+    position: sticky;
+    height: 47px;
+    top: 0;
+    margin: 0 auto;
+    z-index: 9;
+    width: 93%;
+}
+
+.page-back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    justify-items: flex-start;
+    margin-right: auto;
+    margin-left: 5%;
+    color: var(--icon-secondary-outline);
+}
+
+.page-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    justify-items: center;
+    position: absolute;
+    left: 50%; 
+    transform: translateX(-50%); 
+    max-height: 30px;
+}
+
+.page-options {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto; 
+    margin-right: 7%;
+    padding-top: 2px;
+    width: 20px;
+}
+
+.sign-out-item svg {
+    width: 23px;
+    color: var(--icon-secondary-outline);
+    background-color: transparent;
+}
+
+.page-back-button svg {
+    transition: transform 0.3s ease; 
+}
+.page-back-button:active svg {
+    transform: scale(0.9); 
+}
+
+.page-back-button:hover {
+    color: var(--secondary-text-color);
+    background-color: var(--background-color);
+}
+
+#sign-out-btn-profile {
+    display: none;
+}
+
+#sign-out-btn-profile svg {
+    transition: transform 0.3s ease; 
+}
+
+#sign-out-btn-profile:active svg {
+    transform: scale(0.9); 
+}
+
+#sign-out-btn-profile:hover {
+    color: var(--secondary-text-color);
+    background-color: var(--background-color);
+}
+
+@media (min-width: 768px) {
+    .page-header {
+        width: 68%;
+    }
+}
+
+@media (min-width: 992px) {
+    .page-header {
+        width: 43%;
+    }
+
+}
+
+@media (max-width: 576px) {
+    #sign-out-btn-profile {
+        display: block;
+    }
+}

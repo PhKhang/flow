@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity</title>
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-ions.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <link rel="icon" type="image/x-icon" href="../images/favicon.svg">
     <link rel="stylesheet" href="../css/notification.css">
+    <link rel="stylesheet" href="../css/page-header.css">
     <link rel="stylesheet" href="../css/navigation-bar.css">
 </head>
 <body>
@@ -71,7 +75,27 @@
             </div>
         </div>  
     </nav>
-    <main class="notifications col-12 col-md-8 col-lg-5 pe-3 ps-3">
+    <div class="page-header">
+        <button class="page-back-button" onclick="goBack()">
+            <svg width="24px" height="24px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" stroke-width="19.456"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="currentColor" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="currentColor" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
+        </button>
+        <img class="page-title" src="../images/logo.svg" onclick="scrollToTop()" style="cursor: pointer;">
+        <!-- <h2 class="page-title">Thread</h2> -->
+        <div class="page-options" id="sign-out-btn-profile"> 
+            <div class="sign-out-item">
+                <a href="./SignIn.html" class="sign-out-item-link">
+                    <svg viewBox="0 0 24 24" width="25" height="25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M16 17L21 12M21 12L16 7M21 12H9M12 17C12 17.93 12 18.395 11.8978 18.7765C11.6204 19.8117 10.8117 20.6204 9.77646 20.8978C9.39496 21 8.92997 21 8 21H7.5C6.10218 21 5.40326 21 4.85195 20.7716C4.11687 20.4672 3.53284 19.8831 3.22836 19.1481C3 18.5967 3 17.8978 3 16.5V7.5C3 6.10217 3 5.40326 3.22836 4.85195C3.53284 4.11687 4.11687 3.53284 4.85195 3.22836C5.40326 3 6.10218 3 7.5 3H8C8.92997 3 9.39496 3 9.77646 3.10222C10.8117 3.37962 11.6204 4.18827 11.8978 5.22354C12 5.60504 12 6.07003 12 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    <main class="notifications col-11 col-md-8 col-lg-5 pe-3 ps-3">
         <header>
             <h1>Notifications</h1>
             <button class="mark-read">Mark all as read</button>
@@ -123,5 +147,17 @@
     <link rel="stylesheet" href="../css/style.css"/>
     <link rel="stylesheet" href="../css/add-post.css">
     <script src="../script/add-post.js"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0, 
+                behavior: "smooth"
+            });
+        }
+    </script>
 </body>
 </html>
