@@ -58,15 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${notification.postImgSrc ? `<div class="post-pic"><img src="${notification.postImgSrc}" alt="Post Image"></div>` : ''}
                 <div class="noti-setting-wrapper">
                     <div class="noti-setting-icon-wrapper">
-                        <img src="../images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
+                        <img src="./images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
                     </div>
                     <div class="noti-menu hidden">
                         <button class="menu-item" onclick="toggleReadStatus(${index})">
-                            <img src="../images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
+                            <img src="./images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
                             ${notification.read ? 'Mark as Unread' : 'Mark as Read'}
                         </button>
                         <button class="menu-item" onclick="deleteNotification(${index})">
-                            <img src="../images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
+                            <img src="./images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
                             Delete
                         </button>
                     </div>
