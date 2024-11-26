@@ -20,13 +20,20 @@ app.engine('hbs', expressHbs.engine({
                 day: "numeric",
             });
         },
+        eq: (a, b) => a === b, 
     },
 }));
 
 app.set('view engine', 'hbs');
 
-app.get('/', (req, res) => {
-    res.redirect('/blogs');
+app.get("/", (req, res) => {
+    res.locals.title = "Home • flow";
+    res.render('index', {currentPath: "/"});
 });
 
-app.listen(port, () => console.log('Example app listening on port ${port}!'));
+app.get("/notification", (req, res) => {
+    res.locals.title = "Activity • flow";
+    res.render("notification", {currentPath: "/notification"});
+});
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));

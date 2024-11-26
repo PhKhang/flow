@@ -1,0 +1,65 @@
+<div class="thread col-11 col-md-8 col-lg-5">
+    <div class="add-post header">
+        <div class="add-post-area">
+            <div class="add-post-user-info">
+                <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
+            </div>
+            <div class="add-post-block" onclick="togglePopup()">
+                <p class="comment-input hover-element">Share something...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row-2 post">
+        <p class="tab-post active">From all users</p>
+        <p class="tab-post">From following users</p>
+    </div>
+    <div class="other-posts">
+        <!-- Posts will be added here -->
+    </div>
+</div>
+
+<link rel="stylesheet" href="./css/FeedDisplay.css">
+<script src="./script/FeedDisplay.js"></script>
+<script>
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        
+        const postInput = document.querySelector('.post-input');
+        const text = postInput.value.trim();
+        if (!text) return;
+
+        const newPost = {
+            userProfilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
+            username: "username",
+            time: "Just Done",
+            text: text,
+            image: selectedImage ? URL.createObjectURL(selectedImage) : null,
+            likes: 0
+        };
+
+        addNewPost(newPost);
+        postInput.value = '';
+        removeImage();
+        togglePopup();
+    }
+
+    const tabs = document.querySelectorAll('.tab-post');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0, 
+            behavior: "smooth"
+        });
+    }
+</script>

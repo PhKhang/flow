@@ -45,3 +45,42 @@ function removeImage() {
     document.getElementById('imageInput').value = '';
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    renderFeed();
+
+    const postInput = document.querySelector('.post-input');
+    postInput.addEventListener('input', function() {
+        autoResize(this);
+    });
+});
+
+function handleNewPost(text) {
+    const newPost = {
+        userProfilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
+        username: "olivia.food.blog",
+        time: "Vừa xong",
+        text: text.trim(),
+        image: selectedImage ? URL.createObjectURL(selectedImage) : null,
+        likes: 0, 
+        comments: 0
+    };
+
+    addNewPost(newPost);
+    document.querySelector('.post-input').value = '';
+    removeImage();
+    togglePopup();
+}
+
+document.querySelector('.post-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && this.value.trim()) {
+        handleNewPost(this.value);
+    }
+});
+
+document.querySelector('.post-button').addEventListener('click', function(event) {
+    const postInput = document.querySelector('.post-input');
+    if (postInput.value.trim()) {
+        handleNewPost(postInput.value);
+    }
+});
+
