@@ -43,7 +43,7 @@ function createPostElement(post, index) {
   
     let postHTML = `
         <div class="user-info">
-            <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" alt="User profile" class="profile-pic">
+            <img src="../images/sample-profile.avif" alt="User profile" class="profile-pic">
             <div class="post-info">
                 <a href="./Bio.html"><p class="username">username</p></a>
                 <span class="time">${post.time}</span>
