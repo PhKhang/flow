@@ -43,9 +43,9 @@ function createPostElement(post, index) {
   
     let postHTML = `
         <div class="user-info">
-            <img src="./images/sample-profile.avif" alt="User profile" class="profile-pic">
+            <img src="/images/sample-profile.avif" alt="User profile" class="profile-pic">
             <div class="post-info">
-                <a href="./Profile.html"><p class="username">username</p></a>
+                <a href="/Profile.html"><p class="username">username</p></a>
                 <span class="time">${post.time}</span>
             </div>
         </div>

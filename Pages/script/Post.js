@@ -50,7 +50,7 @@ function createCommentHTML(comment) {
             <img src="${comment.profilePic}" alt="Profile picture" class="profile-pic">
             <div class="user-info">
                 <div class="username">
-                    <a href="./otherProfile.html"><span class="username" style="font-weight: 600;">${comment.username}</span></a>
+                    <a href="/otherProfile.html"><span class="username" style="font-weight: 600;">${comment.username}</span></a>
                     <span> • </span>
                     <span class="time">${comment.time}</span>
                 </div>

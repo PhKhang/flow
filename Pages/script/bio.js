@@ -45,7 +45,7 @@ function createPostElement(post, index) {
         <div class="user-info">
             <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="User profile" class="profile-pic">
             <div class="post-info">
-                <a href="./Profile.html"><p class="username">phkhang</p></a>
+                <a href="/Profile.html"><p class="username">phkhang</p></a>
                 <span class="time">${post.time}</span>
             </div>
         </div>
@@ -174,4 +174,22 @@ function openFullscreen(index) {
 function closeFullscreen(index) {
     let modal = document.getElementById(`imageModal-${index}`);
     modal.style.display = 'none';
+}
+
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+    });
+});
+function goBack() {
+    window.history.back();
+}
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0, 
+        behavior: "smooth"
+    });
 }

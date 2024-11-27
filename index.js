@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const expressHbs = require('express-handlebars');
+const current_user = "Tran Nguyen Phuc Khang (@phkhang) • flow";
+const current_username = "@phkhang";
 
 app.use(express.static(__dirname + '/Pages'));
 app.engine('hbs', expressHbs.engine({
@@ -21,8 +23,15 @@ app.engine('hbs', expressHbs.engine({
             });
         },
         eq: (a, b) => a === b, 
+        concat: (...args) => args.slice(0, -1).join(''), 
     },
 }));
+
+app.use((req, res, next) => {
+    res.locals.username = current_username;
+    res.locals.isCurrentUser = req.path.includes(`/profile/${current_username}`);
+    next();
+});
 
 app.set('view engine', 'hbs');
 
@@ -31,26 +40,20 @@ app.get("/", (req, res) => {
     res.render('index', {currentPath: "/"});
 });
 
-app.get("/notification", (req, res) => {
+app.get("/notifications", (req, res) => {
     res.locals.title = "Activity • flow";
-    res.render("notification", {currentPath: "/notification"});
+    res.render("notifications", {currentPath: "/notifications"});
 });
 
-app.get("/profile", (req, res) => {
-    res.locals.title = "Tran Nguyen Phuc Khang (@phkhang) • flow";
-    res.render("profile", {currentPath: "/profile"});
+app.get("/search", (req, res) => {
+    res.locals.title = "Search • flow";
+    res.render("search", {currentPath: "/search"});
 });
 
-app.get("/signin", (req, res) => {
-    res.render("signin", {layout: false});
-});
-
-app.get("/signup", (req, res) => {
-    res.render("signup", {layout: false});
-});
-
-app.get("/forgetpassword", (req, res) => {
-    res.render("forgetpassword", {layout: false});
+app.get("/profile/:username", (req, res) => {
+    const username = req.params.username;
+    res.locals.title = `${username} • flow`;
+    res.render("profile", {currentPath: `/profile/${username}`, username: username});
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
