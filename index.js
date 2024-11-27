@@ -40,6 +40,21 @@ app.get("/", (req, res) => {
     res.render('index', {currentPath: "/"});
 });
 
+app.get("/signin", (req, res) => {
+    res.locals.title = "Sign in • flow";
+    res.render('signin', {currentPath: "/signin", layout: false});
+});
+
+app.get("/signup", (req, res) => {
+    res.locals.title = "Sign up • flow";
+    res.render('signup', {currentPath: "/signup", layout: false});
+});
+
+app.get("/forgetpassword", (req, res) => {
+    res.locals.title = "Forget Password • flow";
+    res.render('forgetpassword', {currentPath: "/forgetpassword", layout: false});
+});
+
 app.get("/notifications", (req, res) => {
     res.locals.title = "Activity • flow";
     res.render("notifications", {currentPath: "/notifications"});
@@ -54,6 +69,11 @@ app.get("/profile/:username", (req, res) => {
     const username = req.params.username;
     res.locals.title = `${username} • flow`;
     res.render("profile", {currentPath: `/profile/${username}`, username: username});
+});
+
+app.get("/post", (req, res) => {
+    res.locals.title = "Post • flow";
+    res.render("post", {currentPath: "/post"});
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
