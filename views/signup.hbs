@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/SignIn.css">
+    <title>Get started • flow</title>
+    <link rel="icon" type="image/x-icon" href="./images/favicon.svg">
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="main">
+        <img src="./images/logo.svg" alt="Logo" srcset="">
+        <div class="content col-12 col-md-5 col-lg-4 mx-auto d-flex justify-content-center">
+            <div class="actual-content mt-2">
+                <h2>Get Started</h2>
+                <form action="javascript:void(0);">
+                    <!-- Username -->
+                    <div class="border-lable-flt">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Enter your Username" required>
+                    </div>
+    
+                    <!-- Email -->
+                    <div class="mt-2 border-lable-flt">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Enter your Email" required>
+                        <label for="email">Email</label>
+                    </div>
+    
+                    <!-- Password -->
+                    <div class="mt-2 border-lable-flt">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" required>
+                        <label for="password">Password</label>
+                    </div>
+    
+                    <!-- Confirm Password -->
+                    <div class="mt-2 mb-3 border-lable-flt">
+                        <input type="password" class="form-control" name="password1" id="password1" placeholder="Reenter your Password" required>
+                        <label for="password1">Confirm Password</label>
+                    </div>
+    
+                    <button id="sign-up">Sign up</button>
+                </form>
+                <p>Already have an account? <a href="SignIn.html">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { app } from "./script/init-firebase.js"
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
+
+        const auth = getAuth(app);
+
+        const check = async () => {
+            if (auth.currentUser){
+                const inBox = document.querySelector("#in")
+                const outBox = document.querySelector("#out")
+                outBox.innerHTML = JSON.stringify(auth.currentUser)
+            }
+            else {
+                const inBox = document.querySelector("#in")
+                const outBox = document.querySelector("#out")
+                outBox.innerHTML = JSON.stringify(auth.currentUser)
+            }
+        }
+        
+        const signUp = async () => {
+            window.location.href = 'SignIn.html'
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
+            // console.log(email, password)
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed up 
+                    console.log("Sign up succ")
+                    const user = userCredential.user;
+                    // ...
+                })
+                .catch((error) => {
+                    console.log("Failed")
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage)
+                    // ..
+                });
+        }
+
+        const signIn = async () => {
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    console.log("Sign in succ")
+                    const user = userCredential.user;
+                    // ...
+                })
+                .catch((error) => {
+                    console.log("Failed")
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage)
+                    // ..
+                });
+        }
+
+        const signUserOut = async () => {
+            console.log("Signing out...")
+            await signOut(auth)
+        }
+
+        const signUpButton = document.querySelector("#sign-up")
+        signUpButton.addEventListener("click", signUp)
+        const signInButton = document.querySelector("#sign-in")
+        signInButton.addEventListener("click", signIn)
+        const signOutButton = document.querySelector("#sign-out")
+        signOutButton.addEventListener("click", signUserOut)
+        const checkButton = document.querySelector("#check")
+        checkButton.addEventListener("click", check)
+
+        const checkAuth = async () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in, see docs for a list of available properties
+                    // https://firebase.google.com/docs/reference/js/auth.user
+                    const uid = user.uid;
+                    console.log("Signed in")
+                    const secret = document.querySelector("#secret")
+                    secret.classList.remove("hide")
+                } else {
+                    // User is signed out
+                    console.log("Signed out")
+                    const secret = document.querySelector("#secret")
+                    secret.classList.add("hide")
+                }
+            });
+        }
+        checkAuth();
+
+    </script>
+</body>
+
+</html>

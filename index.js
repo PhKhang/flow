@@ -36,4 +36,21 @@ app.get("/notification", (req, res) => {
     res.render("notification", {currentPath: "/notification"});
 });
 
+app.get("/profile", (req, res) => {
+    res.locals.title = "Tran Nguyen Phuc Khang (@phkhang) • flow";
+    res.render("profile", {currentPath: "/profile"});
+});
+
+app.get("/signin", (req, res) => {
+    res.render("signin", {layout: false});
+});
+
+app.get("/signup", (req, res) => {
+    res.render("signup", {layout: false});
+});
+
+app.get("/forgetpassword", (req, res) => {
+    res.render("forgetpassword", {layout: false});
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
