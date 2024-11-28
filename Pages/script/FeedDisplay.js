@@ -45,7 +45,7 @@ function createPostElement(post, index) {
         <div class="user-info">
             <img src="${post.userProfilePic}" alt="User profile" class="profile-pic">
             <div class="post-info">
-                <a href="/otherProfile.html"><p class="username">${post.username}</p></a>
+                <a href="/profile/@username"><p class="username">${post.username}</p></a>
                 <span class="time">${post.time}</span>
             </div>
         </div>
@@ -91,7 +91,7 @@ function createPostElement(post, index) {
                 return; 
             }
             if (!event.target.matches('img, .post-image, .modal')) {
-                window.location.href = 'Post.html';
+                window.location.href = '/post';
             }
         });
   

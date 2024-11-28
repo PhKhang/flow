@@ -5,10 +5,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
     background-color: var(--background-color);
-    /* display: flex;
-    justify-content: center; */
 }
 
 .thread {

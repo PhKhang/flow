@@ -1,6 +1,6 @@
 const comments = [
     {
-        username: "nghoang",
+        username: "username",
         profilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
         time: "53m",
         text: "Chúc bạn có một chuyến đi vui vẻ",
@@ -9,7 +9,7 @@ const comments = [
         replies: 1
     },
     {
-        username: "Nini",
+        username: "username",
         profilePic: "https://i.pinimg.com/736x/cd/9f/bd/cd9fbd7a5a930c7a5b24749da7052399.jpg",
         time: "43s",
         text: "What's a nice place!",
@@ -50,7 +50,7 @@ function createCommentHTML(comment) {
             <img src="${comment.profilePic}" alt="Profile picture" class="profile-pic">
             <div class="user-info">
                 <div class="username">
-                    <a href="/otherProfile.html"><span class="username" style="font-weight: 600;">${comment.username}</span></a>
+                    <a href="/profile/${comment.username}"><span class="username" style="font-weight: 600;">${comment.username}</span></a>
                     <span> • </span>
                     <span class="time">${comment.time}</span>
                 </div>

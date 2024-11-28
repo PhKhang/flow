@@ -29,10 +29,10 @@ app.engine('hbs', expressHbs.engine({
 
 app.use((req, res, next) => {
     res.locals.username = current_username;
+    res.locals.current_username = current_username;
     res.locals.isCurrentUser = req.path.includes(`/profile/${current_username}`);
     next();
 });
-
 app.set('view engine', 'hbs');
 
 app.get("/", (req, res) => {
@@ -42,17 +42,22 @@ app.get("/", (req, res) => {
 
 app.get("/signin", (req, res) => {
     res.locals.title = "Sign in • flow";
-    res.render('signin', {currentPath: "/signin", layout: false});
+    res.render('signin', {currentPath: "/signin", layout: 'layout-signin'});
 });
 
 app.get("/signup", (req, res) => {
     res.locals.title = "Sign up • flow";
-    res.render('signup', {currentPath: "/signup", layout: false});
+    res.render('signup', {currentPath: "/signup", layout: 'layout-signin'});
 });
 
 app.get("/forgetpassword", (req, res) => {
     res.locals.title = "Forget Password • flow";
-    res.render('forgetpassword', {currentPath: "/forgetpassword", layout: false});
+    res.render('forgetpassword', {currentPath: "/forgetpassword", layout: 'layout-signin'});
+});
+
+app.get("/resetpassword", (req, res) => {
+    res.locals.title = "Reset Password • flow";
+    res.render('resetpassword', {currentPath: "/resetpassword", layout: 'layout-signin'});
 });
 
 app.get("/notifications", (req, res) => {
