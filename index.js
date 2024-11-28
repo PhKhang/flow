@@ -5,6 +5,7 @@ import expressHbs from 'express-handlebars';
 const current_user = "Tran Nguyen Phuc Khang (@phkhang) • flow";
 const current_username = "@phkhang";
 import mongoose from 'mongoose';
+import dotenv from 'dotenv/config';
 
 import { getUser, getAllUsers } from "./api/controller/userController.js"
 
