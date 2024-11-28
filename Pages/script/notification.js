@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             read: false,
             imgSrc: 'https://i.pinimg.com/736x/63/92/24/639224f094deff2ebf9cd261fba24004.jpg',
             postImgSrc: null,
-            href: './Post.html' 
+            href: '/Post.html' 
         },
         {
             username: 'nezuni1812',
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             read: false,
             imgSrc: 'https://i.pinimg.com/736x/63/92/24/639224f094deff2ebf9cd261fba24004.jpg',
             postImgSrc: 'https://i.pinimg.com/736x/ef/78/37/ef78370fd9db0d29245b16444393baf6.jpg',
-            href: './Post.html' 
+            href: '/Post.html' 
         },
         {
             username: 'nghoanghenry',
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             read: true,
             imgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
             postImgSrc: null,
-            href: './otherProfile.html' 
+            href: '/otherProfile.html' 
         },
         {
             username: 'tnpkhang',
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             read: true,
             imgSrc: 'https://i.pinimg.com/736x/53/ec/98/53ec9845f5a3698945cc4d2735b56102.jpg',
             postImgSrc: 'https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg',
-            href: './Post.html' 
+            href: '/Post.html' 
         }
     ];
 
@@ -58,15 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${notification.postImgSrc ? `<div class="post-pic"><img src="${notification.postImgSrc}" alt="Post Image"></div>` : ''}
                 <div class="noti-setting-wrapper">
                     <div class="noti-setting-icon-wrapper">
-                        <img src="../images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
+                        <img src="/images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
                     </div>
                     <div class="noti-menu hidden">
                         <button class="menu-item" onclick="toggleReadStatus(${index})">
-                            <img src="../images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
+                            <img src="/images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
                             ${notification.read ? 'Mark as Unread' : 'Mark as Read'}
                         </button>
                         <button class="menu-item" onclick="deleteNotification(${index})">
-                            <img src="../images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
+                            <img src="/images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
                             Delete
                         </button>
                     </div>

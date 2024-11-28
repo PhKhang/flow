@@ -1,0 +1,61 @@
+<div class="main">
+    <img src="/images/logo.svg" alt="Logo" srcset="">
+    <div class="content col-12 col-md-5 col-lg-4 mx-auto d-flex justify-content-center">
+        <div class="actual-content mt-2">
+            <h2>Get Started</h2>
+            {{!-- action="javascript:void(0);" --}}
+            <form class="form" method="post" action="/signin" target="_self">
+                <!-- Username -->
+                <div class="border-lable-flt">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter your Username" required>
+                </div>
+
+                <!-- Email -->
+                <div class="mt-2 border-lable-flt">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter your Email" required>
+                    <label for="email">Email</label>
+                </div>
+
+                <!-- Password -->
+                <div class="mt-2 border-lable-flt">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" required>
+                    <label for="password">Password</label>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mt-2 mb-3 border-lable-flt">
+                    <input type="password" class="form-control" name="password1" id="password1" placeholder="Reenter your Password" required>
+                    <label for="password1">Confirm Password</label>
+                </div>
+
+                <button type="submit" id="sign-up">Sign up</button>
+            </form>
+            <p>Already have an account? <a href="/signin">Sign in</a></p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    const signUp = async () => {
+        window.location.href = '/signin'
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+        // console.log(email, password)
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed up 
+                console.log("Sign up succ")
+                const user = userCredential.user;
+            })
+            .catch((error) => {
+                console.log("Failed")
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage)
+            });
+    }
+
+    const signUpButton = document.querySelector("#sign-up")
+    signUpButton.addEventListener("click", signUp)
+</script>

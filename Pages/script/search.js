@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <img src="${item.avatarSrc}" alt="User Avatar">
                     </div>
                     <div class="search-text">
-                        <a href="./otherProfile.html" class="search-username"><p>${item.username}</p></a>
+                        <a href="/otherProfile.html" class="search-username"><p>${item.username}</p></a>
                         <p class="search-user-bio">${item.bio}</p>
                         <p class="mt-1">${item.followers} followers</p>
                     </div>
@@ -146,7 +146,7 @@ function createPostElement(post, index) {
         <div class="user-info">
             <img src="${post.userProfilePic}" alt="User profile" class="profile-pic">
             <div class="post-info">
-                <a href="./otherProfile.html"><p class="username">${post.username}</p></a>
+                <a href="/otherProfile.html"><p class="username">${post.username}</p></a>
                 <span class="time">${post.time}</span>
             </div>
         </div>

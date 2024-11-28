@@ -19,6 +19,10 @@
     transform: scale(0.9);
 }
 
+#nav-icon-search circle {
+    fill: transparent;
+}
+
 .nav-item .custom-nav-link.active .nav-icon path, 
 .nav-item .custom-nav-link.active .nav-icon circle,
 .nav-item .custom-nav-link.active .nav-icon line {
