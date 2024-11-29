@@ -13,6 +13,8 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.701.0",
+        "@aws-sdk/credential-providers": "^3.699.0",
         "bootstrap": "^5.3.3",
         "bootstrap-icons": "^1.11.3",
         "cookie-parser": "^1.4.7",

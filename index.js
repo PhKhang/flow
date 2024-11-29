@@ -14,7 +14,7 @@ import { getUser, getAllUsers } from "./server/controller/userController.js"
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { verifyToken } from './server/middleware/verifyToken.js';
-
+import { getAllPosts, getFollowPosts } from './server/controller/postController.js';
 // connect to the atlas
 await mongoose.connect(process.env.ATLAS_URI);
 
@@ -52,9 +52,16 @@ app.use((req, res, next) => {
 });
 app.set('view engine', 'hbs');
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+    res.locals.posts = await getAllPosts();
     res.locals.title = "Home • flow";
     res.render('index', { currentPath: "/" });
+});
+
+app.get("/following", async (req, res) => {
+    res.locals.posts = await getFollowPosts();
+    res.locals.title = "Following • flow";
+    res.render('following', { currentPath: "/following" });
 });
 
 app.get("/signin", (req, res) => {
@@ -93,7 +100,8 @@ app.get("/profile/:username", (req, res) => {
     res.render("profile", { currentPath: `/profile/${username}`, username: username });
 });
 
-app.get("/post", (req, res) => {
+app.get("/post", async (req, res) => {
+    res.locals.posts = await getAllPosts();
     res.locals.title = "Post • flow";
     res.render("post", { currentPath: "/post" });
 });
