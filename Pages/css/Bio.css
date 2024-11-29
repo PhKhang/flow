@@ -276,13 +276,6 @@ button {
     margin-bottom: 10px;
 }
 
-.profile-pic {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
 .post-info {
     font-family: var(--font-family-system) !important;
     font-size: 0.9rem;
@@ -430,15 +423,15 @@ button {
     height: 100%;
     border-radius: 20px;
     padding: 10px;
-    margin-left: -5px;
-}
-
-.post-block:hover {
     background-color: var(--hover-background-color);
 }
 
+.post-block:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
 .comment-input {
-    color: var(--secondary-text-color)
+    color: var(--secondary-text-color);
 }
 
 .add-post-area {
@@ -575,7 +568,6 @@ button {
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: 10px;
     z-index: 2; 
     flex-shrink: 0;
 }

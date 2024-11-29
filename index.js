@@ -2,18 +2,18 @@ import express from 'express';
 const app = express();
 const port = 3000;
 import expressHbs from 'express-handlebars';
-const current_user = "Tran Nguyen Phuc Khang (@phkhang) • flow";
-const current_username = "@phkhang";
+const current_user = "Tran Nguyen Phuc Khang (phkhang) • flow";
+const current_username = "phkhang";
 import mongoose from 'mongoose';
 import dotenv from 'dotenv/config';
 import jwt from "jsonwebtoken"
 import cookieParser from "cookie-parser"
 
-import { getUser, getAllUsers } from "./api/controller/userController.js"
+import { getUser, getAllUsers } from "./server/controller/userController.js"
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { verifyToken } from './api/middleware/verifyToken.js';
+import { verifyToken } from './server/middleware/verifyToken.js';
 
 // connect to the atlas
 await mongoose.connect(process.env.ATLAS_URI);
@@ -98,7 +98,7 @@ app.get("/post", (req, res) => {
     res.render("post", { currentPath: "/post" });
 });
 
-app.get("/api/all", async (req, res) => {
+app.get("/server/all", async (req, res) => {
 
     const users = await getAllUsers();
 
@@ -107,8 +107,8 @@ app.get("/api/all", async (req, res) => {
     res.send(users.length.toString());
 });
 
-app.get("/api/:name", async (req, res) => {
-    // http://localhost:3000/api/john_doe
+app.get("/server/:name", async (req, res) => {
+    // http://localhost:3000/server/john_doe
     const user = await getUser(req.params.name);
     if (user) {
         console.log(user);
