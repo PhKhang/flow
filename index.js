@@ -9,11 +9,11 @@ import dotenv from 'dotenv/config';
 import jwt from "jsonwebtoken"
 import cookieParser from "cookie-parser"
 
-import { getUser, getAllUsers } from "./api/controller/userController.js"
+import { getUser, getAllUsers } from "./server/controller/userController.js"
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { verifyToken } from './api/middleware/verifyToken.js';
+import { verifyToken } from './server/middleware/verifyToken.js';
 
 // connect to the atlas
 await mongoose.connect(process.env.ATLAS_URI);
@@ -128,7 +128,7 @@ app.get("/sign", (req, res) => {
     const token = jwt.sign(
         { userId: "123Khang" },
         process.env.SECRET_KEY,
-        { expiresIn: '1s' }
+        { expiresIn: '7d' }
     )
 
     res.cookie("access_token", token, {
