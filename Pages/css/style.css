@@ -1,0 +1,46 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+:root {
+    --font-family-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --text-color: #000;
+    --secondary-text-color: #B5B5B5;
+    --primary-color: #5865F2;
+    --secondary-color: #BDB3F9;
+    --background-color: #FAFAFA;
+    --button-primary-outline: rgba(0, 0, 0, 0.15);
+    --icon-secondary-outline: #c4bebe;
+    --hover-background-color: rgba(0, 0, 0, 0.05);
+    --outline: #e0e0e0;
+    --new-notification: #DD2334;
+    --form-border-radius: 8px;
+    --block-content-border-radius: 10px;
+    --max-post-height: 420px;
+    --bs-link-color: rgba(0, 0, 0, 0.3);
+    --bs-body-bg: #FAFAFA;
+}   
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-system);
+    color: var(--text-color);
+}
+
+h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+p, ul {
+    margin-bottom: 0;
+}
+
+ol,
+ul {
+  padding-left: 0rem;
+}
+
+/* button, input, optgroup, select, textarea {
+    font-family: var(--font-family-system) !important;
+} */

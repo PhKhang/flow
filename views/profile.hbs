@@ -1,0 +1,210 @@
+<link rel="stylesheet" href="/css/Bio.css">
+
+<div class="main col-11 col-md-8 col-lg-5">
+    <div class="over">
+        <div class="change col-11 col-md-8 col-lg-5">
+            <div class="top">
+                <h1>Edit profile</h1>
+                <button type="button" class="cancel" onclick="document.querySelector('.over').style.display = 'none'">
+                    Cancel
+                </button> 
+            </div>
+            <!-- <form action=""> -->
+            <div id="profile-picture" class="">
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                    class="rounded-circle">
+                <div class="avatar-upload">
+                    <label for="file" class="upload-label">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.2647 15.9377L12.5473 14.2346C11.758 13.4519 11.3633 13.0605 10.9089 12.9137C10.5092 12.7845 10.079 12.7845 9.67922 12.9137C9.22485 13.0605 8.83017 13.4519 8.04082 14.2346L4.04193 18.2622M14.2647 15.9377L14.606 15.5991C15.412 14.7999 15.8149 14.4003 16.2773 14.2545C16.6839 14.1262 17.1208 14.1312 17.5244 14.2688C17.9832 14.4253 18.3769 14.834 19.1642 15.6515L20 16.5001M14.2647 15.9377L18.22 19.9628M18.22 19.9628C17.8703 20 17.4213 20 16.8 20H7.2C6.07989 20 5.51984 20 5.09202 19.782C4.7157 19.5903 4.40973 19.2843 4.21799 18.908C4.12583 18.7271 4.07264 18.5226 4.04193 18.2622M18.22 19.9628C18.5007 19.9329 18.7175 19.8791 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V13M11 4H7.2C6.07989 4 5.51984 4 5.09202 4.21799C4.7157 4.40973 4.40973 4.71569 4.21799 5.09202C4 5.51984 4 6.0799 4 7.2V16.8C4 17.4466 4 17.9066 4.04193 18.2622M18 9V6M18 6V3M18 6H21M18 6H15" stroke="#b5b5b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    </label>
+                    <input type="file" accept="image/*" id="file" style="visibility: hidden; width: 0; height: 0;">
+                </div>
+            </div>
+
+            <label for="username">Username</label><br>
+            <input type="text" name="username" id="username" maxlength="15" placeholder="phkhang"><br>
+
+            <label class="mt-1" for="full-name">Full name</label><br>
+            <input type="text" name="full-name" id="full-name" placeholder="Tran Nguyen Phuc Khang"><br>
+
+            <label class="mt-1" for="bio">Bio</label><br>
+            <textarea name="bio" id="bio" cols="30" rows="6" maxlength="150"
+                placeholder="Write bio (max 150 characters)"></textarea><br>
+
+            <label for="old-password">Change password</label><br>
+            <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
+            <input class="mt-1" type="password" name="new-password" id="new-password" placeholder="New password">
+
+            <button type="button" class="edit edit-btn mt-3 mb-2" id="change" onclick="document.querySelector('.over').style.display = 'none'">
+                <p>Save all changes</p>
+            </button>
+            
+            <!-- </form> -->
+        </div>
+    </div>
+    <div class="header col-11 row flex-column align-items-center flex-md-row-reverse">
+        <div id="profile-picture" class="col-12 col-md-4 d-flex justify-content-center mb-3 mb-md-0">
+            <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                class="rounded-circle">
+        </div>
+
+        <div id="profile-info" class="col-12 col-md-8">
+            <div class="name">
+                <h2 class="mb-0 full-name">Tran Nguyen Phuc Khang</h2>
+                <p class="username">phkhang</p>
+            </div>
+        </div>
+    </div>
+    <div class="bio mt-2">
+        <p>
+            Hello! I'm a human. I enjoy learning new technologies and improving my skills.
+            In my free time, I like to explore new places and read tech blogs.
+        </p>
+    </div>
+    <div class="info mt-2">
+        <div class="post-count">
+            <span>123</span>
+            posts
+        </div>
+        <div class="bar"></div>
+        <div class="follower-count" onclick="togglePopupFollower()">
+            <span>123</span>
+            followers
+        </div>
+        <div class="bar"></div>
+        <div class="following-count" onclick="togglePopupFollower()">
+            <span>123</span>
+            following
+        </div>
+    </div>
+    
+    {{#if isCurrentUser}}
+        <button type="button" class="edit edit-btn mt-3 mb-2" onclick="document.querySelector('.over').style.display = 'block'">
+            <p>Edit profile</p>
+        </button>
+    {{else}}
+        <button type="button" class="edit edit-btn mt-3 mb-2" onclick="toggleFollow(this)">
+            <p>Follow</p>
+        </button>
+    {{/if}}
+    
+    
+    <div class="add-post header" onclick="togglePopup()">
+        <div class="add-post-area">
+            <div class="add-post-user">
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                    class="profile-pic">
+            </div>
+            <div class="post-block">
+                <p class="comment-input hover-element">Share something...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="thread col-11 col-md-8 col-lg-5">
+    <div class="profile">
+        <div class="other-posts">
+            <!-- Posts will be added here -->
+        </div>
+    </div>
+    <div class="overlay-follower" id="overlay-follower"></div>
+    <div id="popup-follower" class="col-11 col-md-8 col-lg-5">
+        <div id="heading-follower">
+            <div class="follow-number">
+                <p class="tab active">Followers</p>
+                <p class="tab">Following</p>
+            </div>
+            <div class="hover-element">
+                <!-- <p  onclick="togglePopupFollower()">Cancel</p> -->
+            </div>
+        </div>
+        <div class="mt-2 follow-result">
+            <div class="search-result-item" data-type="user">
+                
+                <div class="profile-pic">
+                    <img src="/images/sample-profile.avif" alt="User Avatar">
+                </div>
+                <div class="search-text">
+                    <a class="search-username" href="/otherProfile.html">
+                        <p>username</p>
+                    </a>
+                    <p class="search-user-bio">Full Name</p>
+                    <p class="mt-1">305 followers</p>
+                </div>
+                <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                    <p>Follow</p>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/script/bio.js"></script>
+
+<script type="module">
+    import { app } from "/script/init-firebase.js"
+    import { getAuth, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
+
+    const auth = getAuth(app);
+
+    const fetchInfo = async () => {
+        const output = document.querySelector("#output")
+        const user = auth.currentUser;
+
+        if (user) {
+            output.innerHTML = JSON.stringify(auth.currentUser, undefined, 2)
+            document.querySelector(".username").innerHTML = user.displayName
+            document.querySelector(".header img").src = user.photoURL
+            // document.querySelector("").innerHTML = user.displayName
+        } else {
+            output.innerHTML = "null"
+        }
+    }
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            fetchInfo()
+        } else {
+            // No user is signed in.
+        }
+    });
+
+    const changeInfo = async () => {
+        updateProfile(auth.currentUser, {
+            photoURL: document.querySelector("#profile-picture").src,
+        }).then(() => {
+            // Profile updated!
+            console.log("Profile updated!")
+        }).catch((error) => {
+            // An error occurred
+            console.log("An error occurred")
+        });
+        fetchInfo()
+    }
+
+    const fetchButton = document.querySelector("#fetch")
+    fetchButton.addEventListener("click", fetchInfo)
+    // const changeButton = document.querySelector("")
+    // changeButton.addEventListener("click", changeInfo)
+
+    document.getElementById('file').addEventListener('change', function (event) {
+        document.querySelector('.over').style.display = 'none'
+        console.log("Hey")
+        return;
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64String = e.target.result.split(',')[1];
+                console.log(base64String);
+                document.querySelector('#profile-picture img').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+{{#if isCurrentUser}}
+    <h1>Welcome to your profile, {{username}}</h1>
+{{else}}
+    <h1>Welcome to {{username}}'s profile</h1>
+{{/if}}

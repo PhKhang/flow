@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link defer rel="stylesheet" href="./css/Bio.css">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.svg">
+    <link rel="stylesheet" href="./css/navigation-bar.css">
+    <link rel="stylesheet" href="./css/page-header.css">
+    <title>Tran Nguyen Phuc Khang (@phkhang) • flow</title>
+    <style>
+        .button {
+            transition: all 0.3s ease;
+        }
+
+        .button:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+
+<body style="margin-bottom: 5rem;">
+    <nav class="nav">
+        <div class="logo">
+            <a href="#">
+                <img src="./images/favicon.svg">
+            </a>
+        </div>
+        <ul class="nav-list">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="./FeedDisplay.html" class="custom-nav-link">
+                        <svg viewBox="0 0 24 24" width="24" height="24" class="nav-icon">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                        </svg>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="./search.html" class="custom-nav-link">
+                        <svg viewBox="0 0 24 24" width="24" height="24" class="nav-icon">
+                            <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </a>
+                </li>
+
+                <li class="nav-item create-post">
+                    <a class="custom-nav-link" onclick="togglePopup()">
+                        <svg viewBox="0 0 24 24" width="24" height="24" class="nav-icon">
+                            <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+                            <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="./notification.html" class="custom-nav-link">
+                        <svg viewBox="0 0 24 24" width="24" height="24" class="nav-icon">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                fill="none" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="./Profile.html" class="custom-nav-link active">
+                        <svg viewBox="0 0 24 24" width="24" height="24" class="nav-icon">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </ul>
+        <div class="nav-list" id="sign-out-btn">
+            <div class="nav-item">
+                <a href="./SignIn.html" class="custom-nav-link">
+                    <svg viewBox="0 0 24 24" width="25" height="25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M16 17L21 12M21 12L16 7M21 12H9M12 17C12 17.93 12 18.395 11.8978 18.7765C11.6204 19.8117 10.8117 20.6204 9.77646 20.8978C9.39496 21 8.92997 21 8 21H7.5C6.10218 21 5.40326 21 4.85195 20.7716C4.11687 20.4672 3.53284 19.8831 3.22836 19.1481C3 18.5967 3 17.8978 3 16.5V7.5C3 6.10217 3 5.40326 3.22836 4.85195C3.53284 4.11687 4.11687 3.53284 4.85195 3.22836C5.40326 3 6.10218 3 7.5 3H8C8.92997 3 9.39496 3 9.77646 3.10222C10.8117 3.37962 11.6204 4.18827 11.8978 5.22354C12 5.60504 12 6.07003 12 7"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                        </g>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="page-header">
+        <button class="page-back-button" onclick="goBack()">
+            <svg width="24px" height="24px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" stroke-width="19.456"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="currentColor" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="currentColor" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
+        </button>
+        <img class="page-title" src="./images/logo.svg" onclick="scrollToTop()" style="cursor: pointer;">
+        <!-- <h2 class="page-title">Thread</h2> -->
+        <div class="page-options" id="sign-out-btn-profile"> 
+            <div class="sign-out-item">
+                <a href="./SignIn.html" class="sign-out-item-link">
+                    <svg viewBox="0 0 24 24" width="25" height="25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M16 17L21 12M21 12L16 7M21 12H9M12 17C12 17.93 12 18.395 11.8978 18.7765C11.6204 19.8117 10.8117 20.6204 9.77646 20.8978C9.39496 21 8.92997 21 8 21H7.5C6.10218 21 5.40326 21 4.85195 20.7716C4.11687 20.4672 3.53284 19.8831 3.22836 19.1481C3 18.5967 3 17.8978 3 16.5V7.5C3 6.10217 3 5.40326 3.22836 4.85195C3.53284 4.11687 4.11687 3.53284 4.85195 3.22836C5.40326 3 6.10218 3 7.5 3H8C8.92997 3 9.39496 3 9.77646 3.10222C10.8117 3.37962 11.6204 4.18827 11.8978 5.22354C12 5.60504 12 6.07003 12 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="main col-11 col-md-8 col-lg-5">
+        <div class="over">
+            <div class="change col-11 col-md-8 col-lg-5">
+                <div class="top">
+                    <h1>Edit profile</h1>
+                    <button type="button" class="cancel" onclick="document.querySelector('.over').style.display = 'none'">
+                       Cancel
+                    </button> 
+                </div>
+                <!-- <form action=""> -->
+                <div id="profile-picture" class="">
+                    <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                        class="rounded-circle">
+                    <div class="avatar-upload">
+                        <label for="file" class="upload-label">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.2647 15.9377L12.5473 14.2346C11.758 13.4519 11.3633 13.0605 10.9089 12.9137C10.5092 12.7845 10.079 12.7845 9.67922 12.9137C9.22485 13.0605 8.83017 13.4519 8.04082 14.2346L4.04193 18.2622M14.2647 15.9377L14.606 15.5991C15.412 14.7999 15.8149 14.4003 16.2773 14.2545C16.6839 14.1262 17.1208 14.1312 17.5244 14.2688C17.9832 14.4253 18.3769 14.834 19.1642 15.6515L20 16.5001M14.2647 15.9377L18.22 19.9628M18.22 19.9628C17.8703 20 17.4213 20 16.8 20H7.2C6.07989 20 5.51984 20 5.09202 19.782C4.7157 19.5903 4.40973 19.2843 4.21799 18.908C4.12583 18.7271 4.07264 18.5226 4.04193 18.2622M18.22 19.9628C18.5007 19.9329 18.7175 19.8791 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V13M11 4H7.2C6.07989 4 5.51984 4 5.09202 4.21799C4.7157 4.40973 4.40973 4.71569 4.21799 5.09202C4 5.51984 4 6.0799 4 7.2V16.8C4 17.4466 4 17.9066 4.04193 18.2622M18 9V6M18 6V3M18 6H21M18 6H15" stroke="#b5b5b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </label>
+                        <input type="file" accept="image/*" id="file" style="visibility: hidden; width: 0; height: 0;">
+                    </div>
+                </div>
+
+                <label for="username">Username</label><br>
+                <input type="text" name="username" id="username" maxlength="15" placeholder="phkhang"><br>
+
+                <label class="mt-1" for="full-name">Full name</label><br>
+                <input type="text" name="full-name" id="full-name" placeholder="Tran Nguyen Phuc Khang"><br>
+
+                <label class="mt-1" for="bio">Bio</label><br>
+                <textarea name="bio" id="bio" cols="30" rows="6" maxlength="150"
+                    placeholder="Write bio (max 150 characters)"></textarea><br>
+
+                <label for="old-password">Change password</label><br>
+                <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
+                <input class="mt-1" type="password" name="new-password" id="new-password" placeholder="New password">
+
+                <button type="button" class="edit edit-btn mt-3 mb-2" id="change" onclick="document.querySelector('.over').style.display = 'none'">
+                    <p>Save all changes</p>
+                </button>
+                <!-- </form> -->
+            </div>
+        </div>
+        <div class="header col-11 row flex-column align-items-center flex-md-row-reverse">
+            <div id="profile-picture" class="col-12 col-md-4 d-flex justify-content-center mb-3 mb-md-0">
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                    class="rounded-circle">
+                <!-- <div>
+                    <label for="file">✏️</label>
+                    <input type="file" accept="image/*" id="file" style="visibility: hidden; width: 0; height: 0;">
+                </div> -->
+            </div>
+
+            <div id="profile-info" class="col-12 col-md-8">
+                <div class="name">
+                    <h2 class="mb-0 full-name">Tran Nguyen Phuc Khang</h2>
+                    <p class="username">phkhang</p>
+                </div>
+            </div>
+        </div>
+        <div class="bio mt-2">
+            <p>
+                Hello! I'm a human. I enjoy learning new technologies and improving my skills.
+                In my free time, I like to explore new places and read tech blogs.
+            </p>
+        </div>
+        <div class="info mt-2">
+            <div class="post-count">
+                <span>123</span>
+                posts
+            </div>
+            <div class="bar"></div>
+            <div class="follower-count" onclick="togglePopupFollower()">
+                <span>123</span>
+                followers
+            </div>
+            <div class="bar"></div>
+            <div class="following-count" onclick="togglePopupFollower()">
+                <span>123</span>
+                following
+            </div>
+        </div>
+        <button type="button" class="edit edit-btn mt-3 mb-2" id=""
+            onclick="document.querySelector('.over').style.display = 'block'">
+            <p>Edit profile</p>
+        </button>
+        <div class="add-post header" onclick="togglePopup()">
+            <div class="add-post-area">
+                <div class="add-post-user">
+                    <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                        class="profile-pic">
+                </div>
+                <div class="post-block">
+                    <p class="comment-input hover-element">Share something...</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+                    role="tab" aria-controls="home" aria-selected="true">Home</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                    role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">Home</div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Profile</div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Contact</div>
+        </div> -->
+
+    </div>
+    <div class="thread col-11 col-md-8 col-lg-5">
+        <div class="profile">
+            <!-- <div class="divider">
+                <span>Recent posts</span>
+                <span>Replies</span>
+            </div> -->
+            <div class="other-posts">
+                <!-- Posts will be added here -->
+            </div>
+        </div>
+        <!-- <button type="button" id="fetch">Fetch user info</button>
+        <pre id="output">No fetch yet</pre> -->
+
+        <div class="overlay" id="overlay"></div>
+        <div id="popup" class="post col-11 col-md-8 col-lg-5">
+            <div id="heading-add-post">
+                <h1>New Post</h1>
+                <p class="hover-element" onclick="togglePopup()">Cancel</p>
+            </div>
+            <form class="post-feed-form" action="" onsubmit="handleFormSubmit(event)">
+                <div class="post-block-popup">
+                    <div class="post-feed-header">
+                        <div class="post-user-info">
+                            <div class="profile-pic">
+                                <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg"
+                                    alt="Profile Picture">
+                            </div>
+                            <div class="post-text">
+                                <p><span class="post-username">username</span></p>
+                                <textarea id="captionInput" name="captionInput" placeholder="Share something..."
+                                    class="post-input"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="imagePreview" class="image-preview"></div>
+                </div>
+                <div class="post-button-wrapper">
+                    <div class="upload-actions">
+                        <label for="imageInput" class="upload-label">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M14.2647 15.9377L12.5473 14.2346C11.758 13.4519 11.3633 13.0605 10.9089 12.9137C10.5092 12.7845 10.079 12.7845 9.67922 12.9137C9.22485 13.0605 8.83017 13.4519 8.04082 14.2346L4.04193 18.2622M14.2647 15.9377L14.606 15.5991C15.412 14.7999 15.8149 14.4003 16.2773 14.2545C16.6839 14.1262 17.1208 14.1312 17.5244 14.2688C17.9832 14.4253 18.3769 14.834 19.1642 15.6515L20 16.5001M14.2647 15.9377L18.22 19.9628M18.22 19.9628C17.8703 20 17.4213 20 16.8 20H7.2C6.07989 20 5.51984 20 5.09202 19.782C4.7157 19.5903 4.40973 19.2843 4.21799 18.908C4.12583 18.7271 4.07264 18.5226 4.04193 18.2622M18.22 19.9628C18.5007 19.9329 18.7175 19.8791 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V13M11 4H7.2C6.07989 4 5.51984 4 5.09202 4.21799C4.7157 4.40973 4.40973 4.71569 4.21799 5.09202C4 5.51984 4 6.0799 4 7.2V16.8C4 17.4466 4 17.9066 4.04193 18.2622M18 9V6M18 6V3M18 6H21M18 6H15"
+                                        stroke="#b5b5b5" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </label>
+                    </div>
+                    <input type="file" id="imageInput" name="imageInput" accept="image/*" style="display: none;">
+                    <input type="submit" class="post-button" value="Post"></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="overlay-follower" id="overlay-follower"></div>
+        <div id="popup-follower" class="col-11 col-md-8 col-lg-5">
+            <div id="heading-follower">
+                <div class="follow-number">
+                    <p class="tab active">Followers</p>
+                    <p class="tab">Following</p>
+                </div>
+                <div class="hover-element">
+                    <!-- <p  onclick="togglePopupFollower()">Cancel</p> -->
+                </div>
+            </div>
+            <div class="mt-2 follow-result">
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+                <div class="search-result-item" data-type="user">
+                    
+                    <div class="profile-pic">
+                        <img src="./images/sample-profile.avif" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a class="search-username" href="./otherProfile.html">
+                            <p>username</p>
+                        </a>
+                        <p class="search-user-bio">Full Name</p>
+                        <p class="mt-1">305 followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
+                        <p>Follow</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<link rel="stylesheet" href="./css/style.css" />
+<link rel="stylesheet" href="./css/add-post.css">
+<script src="./script/bio.js"></script>
+<script src="./script/add-post.js"></script>
+<script>
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+    function goBack() {
+        window.history.back();
+    }
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0, 
+            behavior: "smooth"
+        });
+    }
+</script>
+<!-- <script defer type="module" src="../js/init-firebase.js"></script> -->
+<script type="module">
+    import { app } from "./script/init-firebase.js"
+    import { getAuth, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
+
+    const auth = getAuth(app);
+
+    const fetchInfo = async () => {
+        const output = document.querySelector("#output")
+        const user = auth.currentUser;
+
+        if (user) {
+            output.innerHTML = JSON.stringify(auth.currentUser, undefined, 2)
+            document.querySelector(".username").innerHTML = user.displayName
+            document.querySelector(".header img").src = user.photoURL
+            // document.querySelector("").innerHTML = user.displayName
+        } else {
+            output.innerHTML = "null"
+        }
+    }
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            fetchInfo()
+        } else {
+            // No user is signed in.
+        }
+    });
+
+    const changeInfo = async () => {
+        updateProfile(auth.currentUser, {
+            photoURL: document.querySelector("#profile-picture").src,
+        }).then(() => {
+            // Profile updated!
+            console.log("Profile updated!")
+        }).catch((error) => {
+            // An error occurred
+            console.log("An error occurred")
+        });
+        fetchInfo()
+    }
+
+    const fetchButton = document.querySelector("#fetch")
+    fetchButton.addEventListener("click", fetchInfo)
+    // const changeButton = document.querySelector("")
+    // changeButton.addEventListener("click", changeInfo)
+
+    document.getElementById('file').addEventListener('change', function (event) {
+        document.querySelector('.over').style.display = 'none'
+        console.log("Hey")
+        return;
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64String = e.target.result.split(',')[1];
+                console.log(base64String);
+                document.querySelector('#profile-picture img').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+</html>
