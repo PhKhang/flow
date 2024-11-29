@@ -6,11 +6,14 @@ const current_user = "Tran Nguyen Phuc Khang (@phkhang) • flow";
 const current_username = "@phkhang";
 import mongoose from 'mongoose';
 import dotenv from 'dotenv/config';
+import jwt from "jsonwebtoken"
+import cookieParser from "cookie-parser"
 
 import { getUser, getAllUsers } from "./api/controller/userController.js"
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { verifyToken } from './api/middleware/verifyToken.js';
 
 // connect to the atlas
 await mongoose.connect(process.env.ATLAS_URI);
@@ -19,6 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(express.static(__dirname + '/Pages'));
+app.use(cookieParser())
 app.engine('hbs', expressHbs.engine({
     layoutDir: __dirname + '/views/layouts',
     partialsDir: __dirname + '/views/partials',
@@ -115,5 +119,22 @@ app.get("/api/:name", async (req, res) => {
 
     res.json(user);
 });
+
+app.get("/auth", verifyToken, (req, res) => {
+    res.send("Hello world, programmed to work but not to feel")
+})
+
+app.get("/sign", (req, res) => {
+    const token = jwt.sign(
+        { userId: "123Khang" },
+        process.env.SECRET_KEY,
+        { expiresIn: '1s' }
+    )
+
+    res.cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+    }).status(200).json({ token })
+})
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
