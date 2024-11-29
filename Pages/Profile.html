@@ -567,24 +567,29 @@
     }
 
     const fetchButton = document.querySelector("#fetch")
-    fetchButton.addEventListener("click", fetchInfo)
+    // fetchButton.addEventListener("click", fetchInfo)
     // const changeButton = document.querySelector("")
     // changeButton.addEventListener("click", changeInfo)
 
     document.getElementById('file').addEventListener('change', function (event) {
         document.querySelector('.over').style.display = 'none'
         console.log("Hey")
-        return;
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const base64String = e.target.result.split(',')[1];
-                console.log(base64String);
-                document.querySelector('#profile-picture img').src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data.filename);
+            document.querySelector('#profile-picture img').src = data.filename;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     });
 </script>
 
