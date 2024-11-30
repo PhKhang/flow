@@ -1,21 +1,22 @@
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { fromEnv } from '@aws-sdk/credential-providers';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import { randomUUID } from 'crypto';
+import dotenv from 'dotenv/config';
 import express from 'express';
 import expressHbs from 'express-handlebars';
-import dotenv from 'dotenv/config';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import multer from 'multer';
-import multerS3 from 'multer-s3';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import multer from 'multer';
+import multerS3 from 'multer-s3';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { randomUUID } from 'crypto';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { fromEnv } from '@aws-sdk/credential-providers';
+import apiRouter from './server/routes/apiRouter.js';
 
+import { addPost, getAllPosts, getFollowPosts } from './server/controller/postController.js';
 import { getAllUsers, getUser } from './server/controller/userController.js';
-import { getAllPosts, getFollowPosts, addPost } from './server/controller/postController.js';
 
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -159,7 +160,7 @@ const uploadFileToS3 = async (file) => {
             Body: await file.arrayBuffer(),
         });
         await s3Client.send(command);
-
+        
         return {
             name: fileName,
             size: file.size,
@@ -196,3 +197,5 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
 });
+
+app.use("/api", apiRouter)
