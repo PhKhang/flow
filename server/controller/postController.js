@@ -1,3 +1,4 @@
+import mongoose, { mongo } from "mongoose";
 import Post from  "../model/post.js";
 
 const getAllPosts = async () => {
@@ -18,23 +19,27 @@ const getFollowPosts = async () => {
     }
 }
 
-const addPost = async (author, authorId, content, media) => {
+const addPost = async (authorId, content, typeOfMedia, urls, likes) => {
     const newPost = new Post({
-        author,
-        authorId,
+        author_id: authorId, 
         content,
         media: {
-            type: media.type || 'none',
-            urls: media.urls || []
-        }
+            type: typeOfMedia || 'none',
+            urls: urls || []
+        },
+        likes: likes || []
     });
+
     try {
         await newPost.save();
+        console.log('Post created:', newPost);
         return newPost;
     } catch (error) {
+        console.error('Error saving post:', error);
         return null;
     }
-}
+};
+
 
 const getPostsByAuthor = async (authorId) => {
     try {

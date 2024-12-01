@@ -2,17 +2,14 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const postSchema = new Schema({
-    author_id: { type: Schema.Types.ObjectId, ref: 'users', required: true },
-    content: { type: String, required: true },
-    likes: [{ type: Schema.Types.ObjectId, ref: 'users' }],
+    author_id: { type: Schema.Types.ObjectId},
+    content: { type: String, required: true }, 
+    likes: [{ type: Schema.Types.ObjectId}],
     media: {
-        type: {
-            type: String,
-            enum: ['image', 'none'],
-            required: true
-        },
-        urls: [{ type: String }]
+        type: { type: String},
+        urls: [ { type: String } ] 
     },
+    created_at: { type: Date, default: Date.now } 
 }, { collection: 'posts' });
 
 const Post = mongoose.model('posts', postSchema);

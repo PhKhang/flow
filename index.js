@@ -185,13 +185,39 @@ const upload = multer({
     }),
 });
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/uploadImg', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
-    console.log("File uploaded: ", req.file.key);
-    res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
+    console.log(req.file.key);
+    return res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
 });
+
+app.post('/uploadPost', async (req, res) => {
+    try {
+        if (!req.body.fileId) {
+            const {authorId, caption} = req.body;
+            try {
+                await addPost(authorId, caption);
+            }
+            catch (error) {
+                console.error('Error saving post:', error);
+                return res.status(500).send({ success: false });
+            }
+            return res.status(200).send({ success: true });
+        }
+        else {
+            const {authorId, caption, fileId} = req.body;
+            const urls = [fileId];
+            await addPost(authorId, caption, typeOfMedia, urls);
+            return res.status(200).send({ success: true });
+        }
+    }
+    catch (error) {
+        return res.status(500).send({ success: false });
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);

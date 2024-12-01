@@ -105,7 +105,7 @@
             <h1>New Post</h1>
             <p class="hover-element" onclick="togglePopup()">Cancel</p>
         </div>
-        <form class="post-feed-form" action="" onsubmit="handleFormSubmit(event)"> 
+        <form class="post-feed-form" id="uploadForm" enctype="multipart/form-data"> 
             <div class="post-block-popup">
                 <div class="post-feed-header">
                     <div class="post-user-info">
@@ -127,13 +127,88 @@
                     </label>
                 </div>
                 <input type="file" id="imageInput" name="imageInput" accept="image/*" style="display: none;">
-                <input type="submit" class="post-button" value="Post"></button>
+                <input type="submit" class="post-button" value="Post" ></button>
             </div>
         </form>
     </div>
 
     <script src="/script/add-post.js"></script>
     <script>
+        let selectedFile = null;
+        let selectedCaption = null;
+
+        document.getElementById('imageInput').addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+        });
+
+        document.getElementById('captionInput').addEventListener('input', (e) => {
+            selectedCaption = e.target.value;
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+ 
+            if (!selectedFile) {
+                 const captionResponse = await fetch('/uploadPost', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        authorId: "6744872f1e74c42b292cf196",
+                        caption: selectedCaption
+                    })
+                });
+                
+                const status = await captionResponse.json();
+
+                if (status.success) {
+                    console.log('Post successful');
+                } else {
+                    console.log('Post failed');
+                }
+                return;
+            }
+            else {
+                const fileFormData = new FormData();
+                fileFormData.append('file', selectedFile);
+                
+                const fileResponse = await fetch('/uploadImg', {
+                    method: 'POST',
+                    body: fileFormData
+                });
+                
+                const fileData = await fileResponse.json();
+                console.log(fileData.filename);
+                if (!fileResponse.ok) {
+                    throw new Error('Upload file thất bại');
+                }
+                const captionResponse = await fetch('/uploadPost', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        authorId: "6744872f1e74c42b292cf196",
+                        fileId: fileData.filename, 
+                        caption: selectedCaption
+                    })
+                });
+                
+                const status = await captionResponse.json();
+                if (status.success) {
+                    console.log('Post with file successful');
+                } else {
+                    console.log('Post with file failed');
+                }
+            }
+        });
+
+        document.getElementById('imageInput').addEventListener('change', (e) => {
+            console.log("File selection event triggered");
+            console.log("Files at selection:", e.target.files);
+        });
+
         function goBack() {
             window.history.back();
         }
