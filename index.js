@@ -1,7 +1,7 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { fromEnv } from '@aws-sdk/credential-providers';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+import {cookieParser as biscuitPaser} from 'cookie-parser';
 import cors from 'cors';
 import { randomUUID } from 'crypto';
 import dotenv from 'dotenv/config';
@@ -31,7 +31,7 @@ const __dirname = dirname(__filename);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(biscuitPaser());
 app.use(express.static(__dirname + '/Pages'));
 
 app.engine('hbs', expressHbs.engine({

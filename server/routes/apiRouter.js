@@ -1,11 +1,10 @@
 import express from "express"
 const apiRouter = express.Router();
-// const { init, showList, showDetails } = require('../controllers/blogController');
+import authRouter from "./authRouter.js"
 
-// apiRouter.use("/", () => { })
 apiRouter.get("/", (req, res) => {
     res.send("API Route")
 });
-apiRouter.get("/:id", () => { });
+apiRouter.use("/auth", authRouter);
 
 export default apiRouter;
