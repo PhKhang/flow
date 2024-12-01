@@ -17,7 +17,7 @@ import apiRouter from './server/routes/apiRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts } from './server/controller/postController.js';
 import { getAllUsers, getUser } from './server/controller/userController.js';
-
+import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 
 const app = express();
@@ -69,9 +69,9 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/following", async (req, res) => {
-    res.locals.posts = await getFollowPosts();
+    res.locals.posts = await getFollowPosts("6744872f1e74c42b292cf196");
     res.locals.title = "Following • flow";
-    res.render('following', { currentPath: "/following" });
+    res.render('index', { currentPath: "/index" });
 });
 
 app.get("/signin", (req, res) => {
@@ -186,6 +186,7 @@ const upload = multer({
     }),
 });
 
+//API
 app.post('/uploadImg', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
@@ -194,6 +195,7 @@ app.post('/uploadImg', upload.single('file'), async (req, res) => {
     return res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
 });
 
+//API
 app.post('/uploadPost', async (req, res) => {
     try {
         if (!req.body.fileId) {
@@ -217,6 +219,19 @@ app.post('/uploadPost', async (req, res) => {
     catch (error) {
         return res.status(500).send({ success: false });
     }
+});
+
+//API
+app.get('/followapi', async (req, res) => {
+    try {
+        const followers = await getFollowing("6744872f1e74c42b292cf196");
+        console.log("Followers: ", followers);
+    }
+    catch (error) {
+        console.error('Error following user:', error);
+        return res.status(500).send({ success: false });
+    }
+    return res.status(200).send({ success: true });
 });
 
 

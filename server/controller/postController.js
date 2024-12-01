@@ -1,5 +1,6 @@
 import mongoose, { mongo } from "mongoose";
 import Post from  "../model/post.js";
+import Follow from "../model/follow.js";
 
 const getAllPosts = async () => {
     try {
@@ -10,14 +11,26 @@ const getAllPosts = async () => {
     }
 }
 
-const getFollowPosts = async () => {
+const getFollowPosts = async (userId) => {
     try {
-        const posts = await Post.find();
+        // Get all users that userId follows
+        const following = await Follow.find({ follower_id: userId });
+        console.log('Following:', following);
+        const followingIds = following.map(follow => follow.following_id);
+        console.log('Following IDs:', followingIds);
+        // Get posts from followed users
+        const posts = await Post.find({ 
+            author_id: { $in: followingIds } 
+        })
+        .populate('author_id', 'username profile_pic_url fullName')
+        .sort({ created_at: -1 });
+        console.log('Follow posts:', posts);
         return posts;
     } catch (error) {
+        console.error('Error getting follow posts:', error);
         return null;
     }
-}
+};
 
 const addPost = async (authorId, content, typeOfMedia, urls, likes) => {
     const newPost = new Post({
