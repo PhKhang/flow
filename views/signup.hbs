@@ -14,21 +14,21 @@
                 <!-- Email -->
                 <div class="mt-2 border-lable-flt">
                     <input type="email" class="form-control" name="email" id="email" placeholder="Enter your Email"
-                        required>
+                        >
                     <label for="email">Email</label>
                 </div>
 
                 <!-- Password -->
                 <div class="mt-2 border-lable-flt">
                     <input type="password" class="form-control" name="password" id="password"
-                        placeholder="Enter your Password" required>
+                        placeholder="Enter your Password" >
                     <label for="password">Password</label>
                 </div>
 
                 <!-- Confirm Password -->
                 <div class="mt-2 mb-3 border-lable-flt">
                     <input type="password" class="form-control" name="password1" id="password1"
-                        placeholder="Reenter your Password" required>
+                        placeholder="Reenter your Password" >
                     <label for="password1">Confirm Password</label>
                 </div>
 
@@ -40,23 +40,24 @@
 </div>
 
 <script type="module">
-    const signUp = async () => {
-        window.location.href = '/signin'
-        const email = document.querySelector("#email").value;
-        const password = document.querySelector("#password").value;
-        // console.log(email, password)
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed up 
-                console.log("Sign up succ")
-                const user = userCredential.user;
-            })
-            .catch((error) => {
-                console.log("Failed")
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode, errorMessage)
-            });
-    }
+    document.querySelector("form").onsubmit = (e) => {
+        e.preventDefault()
 
+        console.log("AAA", new FormData(document.querySelector("form")))
+
+        const formData = new FormData(document.querySelector("form"));
+        formData.append("thing", "123");
+        fetch("/api/auth/signup", {
+            method: "POST",
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    document.querySelector("#out").innerText = data.error
+                } else {
+                    window.location.href = "/dashboard"
+                }
+            })
+    }
 </script>

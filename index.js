@@ -1,7 +1,7 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { fromEnv } from '@aws-sdk/credential-providers';
 import bodyParser from 'body-parser';
-import {cookieParser as biscuitPaser} from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { randomUUID } from 'crypto';
 import dotenv from 'dotenv/config';
@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts } from './server/controller/postController.js';
-import { getAllUsers, getUser } from './server/controller/userController.js';
+import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
 
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -31,7 +31,7 @@ const __dirname = dirname(__filename);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(biscuitPaser());
+app.use(cookieParser());
 app.use(express.static(__dirname + '/Pages'));
 
 app.engine('hbs', expressHbs.engine({
@@ -122,7 +122,7 @@ app.get("/server/all", async (req, res) => {
 });
 
 app.get("/server/:name", async (req, res) => {
-    const user = await getUser(req.params.name);
+    const user = await fetchUserByEmail(req.params.name);
     if (user) {
         console.log(user);
     } else {
@@ -133,14 +133,6 @@ app.get("/server/:name", async (req, res) => {
 
 app.get("/auth", verifyToken, (req, res) => {
     res.send("Hello world, programmed to work but not to feel");
-});
-
-app.get("/sign", (req, res) => {
-    const token = jwt.sign({ userId: "123Khang" }, process.env.SECRET_KEY, { expiresIn: '1s' });
-    res.cookie("access_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-    }).status(200).json({ token });
 });
 
 const s3Client = new S3Client({
@@ -194,8 +186,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
 });
 
+app.use("/api", apiRouter)
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
 });
-
-app.use("/api", apiRouter)
