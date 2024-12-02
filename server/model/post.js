@@ -12,5 +12,6 @@ const postSchema = new Schema({
     created_at: { type: Date, default: Date.now } 
 }, { collection: 'posts' });
 
+postSchema.index({ content: 'text' });
 const Post = mongoose.model('posts', postSchema);
 export default Post;

@@ -1,30 +1,41 @@
 import mongoose, { mongo } from "mongoose";
 import Post from  "../model/post.js";
 import Follow from "../model/follow.js";
+import { formatPostDate } from "../utils/postUtils.js"
 
 const getAllPosts = async () => {
     try {
-        const posts = await Post.find();
+        const posts = await Post.find()
+            .populate('author_id', 'username profile_pic_url full_name')
+            .sort({ created_at: -1 });
+        posts.forEach(post => {
+            const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+            post.modified_created_at = formattedDate;
+            post.timeAgo = timeAgo;
+        });
         return posts;
     } catch (error) {
+        console.error('Error getting all posts:', error);
         return null;
     }
 }
 
 const getFollowPosts = async (userId) => {
     try {
-        // Get all users that userId follows
         const following = await Follow.find({ follower_id: userId });
-        console.log('Following:', following);
         const followingIds = following.map(follow => follow.following_id);
-        console.log('Following IDs:', followingIds);
-        // Get posts from followed users
         const posts = await Post.find({ 
             author_id: { $in: followingIds } 
         })
-        .populate('author_id', 'username profile_pic_url fullName')
+        .populate('author_id', 'username profile_pic_url full_name')
         .sort({ created_at: -1 });
-        console.log('Follow posts:', posts);
+
+        posts.forEach(post => {
+            const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+            post.modified_created_at = formattedDate;
+            post.timeAgo = timeAgo;
+        });
+        
         return posts;
     } catch (error) {
         console.error('Error getting follow posts:', error);
@@ -72,4 +83,36 @@ const deletePostById = async (postId) => {
     }
 }
 
-export { getAllPosts, getFollowPosts, addPost, getPostsByAuthor, deletePostById };
+const likePost = async (postId, userId) => {
+    try {
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $addToSet: { likes: userId } }, 
+            { new: true }  
+        );
+        return updatedPost;
+    } catch (error) {
+        console.error('Error liking post:', error);
+        return null;
+    }
+};
+
+const searchPosts = async (searchString) => {
+    try {
+        const posts = await Post.find({ $text: { $search: searchString } })
+            .populate('author_id', 'username profile_pic_url full_name')
+            .sort({ created_at: -1 });
+
+        posts.forEach(post => {
+            const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+            post.modified_created_at = formattedDate;
+            post.timeAgo = timeAgo;
+        });
+        return posts;
+    } catch (error) {
+        console.error('Error searching posts:', error);
+        return null;
+    }
+};
+
+export { getAllPosts, getFollowPosts, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts };

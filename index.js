@@ -15,7 +15,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 
-import { addPost, getAllPosts, getFollowPosts } from './server/controller/postController.js';
+import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
 import { getAllUsers, getUser } from './server/controller/userController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
@@ -229,6 +229,32 @@ app.get('/followapi', async (req, res) => {
     }
     catch (error) {
         console.error('Error following user:', error);
+        return res.status(500).send({ success: false });
+    }
+    return res.status(200).send({ success: true });
+});
+
+//API
+app.get('/likePost', async (req, res) => {
+    try {
+        const post = await likePost("674be85ad25f6193dd96dd27", "6744872f1e74c42b292cf201");
+        console.log("Post liked: ", post);
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
+        return res.status(500).send({ success: false });
+    }
+    return res.status(200).send({ success: true });
+});
+
+//API
+app.get('/searchPost', async (req, res) => {
+    try {
+        const posts = await searchPosts("Programmed screen");
+        console.log(posts);
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
         return res.status(500).send({ success: false });
     }
     return res.status(200).send({ success: true });
