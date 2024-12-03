@@ -3,15 +3,9 @@ const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
 import {getAllComments, addComment, deleteComment, likeComment, getCommentsByAuthor} from '../controller/commentController.js';
 import {addPost, getAllPosts, getFollowPosts, likePost, searchPosts} from '../controller/postController.js';
-// apiRouter.use("/", () => { })
-apiRouter.get("/", (req, res) => {
-    res.send("API Route")
-});
-// apiRouter.get("/:id", () => { });
+import authRouter from "./authRouter.js"
 
-apiRouter.get("/abc", (req, res) => { 
-    res.send("API Route test")
-});
+apiRouter.use("/auth", authRouter);
 
 apiRouter.post("/addComment", async (req, res) => {
     try {

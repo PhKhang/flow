@@ -3,14 +3,14 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
     username: String,// String is shorthand for {type: String}
-    fullName: String,
+    full_name: String,
     email: String,
-    passwordHash: String,
-    profilePicURL: String,
+    password_hash: String,
+    profile_pic_url: String,
     bio: String,
-    createdAt: { type: Date, default: Date.now },
+    created_at: { type: Date, default: Date.now },
     likes: [String],
-}, { collection: 'users' });
+}, { collection: 'users', id: true });
 
 const User = mongoose.model('users', userSchema);
 export default User;

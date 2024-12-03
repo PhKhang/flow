@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
-import { getAllUsers, getUser } from './server/controller/userController.js';
+import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -122,7 +122,7 @@ app.get("/server/all", async (req, res) => {
 });
 
 app.get("/server/:name", async (req, res) => {
-    const user = await getUser(req.params.name);
+    const user = await fetchUserByEmail(req.params.name);
     if (user) {
         console.log(user);
     } else {
@@ -133,14 +133,6 @@ app.get("/server/:name", async (req, res) => {
 
 app.get("/auth", verifyToken, (req, res) => {
     res.send("Hello world, programmed to work but not to feel");
-});
-
-app.get("/sign", (req, res) => {
-    const token = jwt.sign({ userId: "123Khang" }, process.env.SECRET_KEY, { expiresIn: '1s' });
-    res.cookie("access_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-    }).status(200).json({ token });
 });
 
 const s3Client = new S3Client({
@@ -160,7 +152,7 @@ const uploadFileToS3 = async (file) => {
             Body: await file.arrayBuffer(),
         });
         await s3Client.send(command);
-        
+
         return {
             name: fileName,
             size: file.size,
@@ -197,8 +189,24 @@ app.post('/uploadImg', upload.single('file'), async (req, res) => {
 
 
 
+// Sample
+app.get("/send", (req, res) => {
+    const token = req.cookies.access_token
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
+    }
+    
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
+    const message = req.query.message;
+    console.log(decoded.username)
+    console.log("message: ", message)
+    
+    res.send("send: " + message);
+});
+
+app.use('/api', apiRouter);
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
 });
-
-app.use("/api", apiRouter)
