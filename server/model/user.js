@@ -10,7 +10,7 @@ const userSchema = new Schema({
     bio: String,
     created_at: { type: Date, default: Date.now },
     likes: [String],
-}, { collection: 'users' });
+}, { collection: 'users', id: true });
 
 const User = mongoose.model('users', userSchema);
 export default User;

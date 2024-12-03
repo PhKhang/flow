@@ -13,7 +13,7 @@ const postSchema = new Schema({
         },
         urls: [{ type: String }]
     },
-}, { collection: 'posts' });
+}, { collection: 'posts', id: true });
 
 const Post = mongoose.model('posts', postSchema);
 export default Post;

@@ -7,45 +7,23 @@ import { fetchUserByEmail, fetchUserByUsername, addUser } from "../controller/us
 const authRouter = express.Router()
 
 authRouter.get("/", (req, res) => {
-    res.send("Auth Route")
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY)
+    console.log("Decoded token: ", decoded)
+    console.log("Username: ", decoded.username)
+    res.json(decoded)
 });
 
-authRouter.post("/signup", async (req, res) => {
-    console.log(req.body)
-    const username = req.body.username
-    const email = req.body.email
-    const password = req.body.password
-    
-    console.log("Fetching user by username from router: ", username);
-
-    let fetched = await fetchUserByUsername(username)
-    if (fetch != null){
-        console.log("Username used: ", fetched)
-        return res.status(409).send("Username used")
-    }
-
-    fetched = await fetchUserByEmail(email)
-    if (fetched != null){
-        console.log("Email used: ", fetched)
-        return res.status(409).send("Email used")
-    }
-
-    console.log("Creating new user...")
-    return res.render("signup", {
-        error: "Error creating user",
-        layout: 'layout-signin' 
-    })
-    const salt = bcrypt.genSaltSync(420);
-    const hash = bcrypt.hashSync(password, salt);
-    
-    const user = await addUser(username, email, hash)
-    if (user == null) {
-        console.log("Error creating user")
-        return res.status(500).send("Error creating user")
-    }
-    
-    const token = jwt.sign(
+const createToken = (user) => {
+    return jwt.sign(
         {
+            id: user.id,
             username: user.username,
             full_name: user.full_name,
             email: user.email,
@@ -56,10 +34,45 @@ authRouter.post("/signup", async (req, res) => {
         },
         process.env.SECRET_KEY,
         { expiresIn: '7d' });
+}
+
+authRouter.post("/signup", async (req, res) => {
+    console.log(req.body)
+    const username = req.body.username
+    const email = req.body.email
+    const password = req.body.password
+
+    console.log("Fetching user by username from router: ", username);
+
+    let fetched = await fetchUserByUsername(username)
+    if (fetched != null) {
+        console.log("Username used: ", fetched)
+        return res.status(409).json({ type: "username", error: "Username used" })
+    }
+
+    fetched = await fetchUserByEmail(email)
+    if (fetched != null) {
+        console.log("Email used: ", fetched)
+        return res.status(409).json({ type: "email", error: "Email used" })
+    }
+
+    console.log("Creating new user...")
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+
+    const user = await addUser(username, email, hash)
+    if (user == null) {
+        console.log("Error creating user")
+        return res.status(500).send("Error creating user")
+    }
+    console.log("User created: ", user)
+
+    const token = createToken(user)
+    console.log("Sending token: ", token)
     res.cookie("access_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production"
-    }).status(200) 
+    }).status(200).json({ status: "logged in" })
 });
 
 authRouter.post("/signin", async (req, res) => {
@@ -81,22 +94,11 @@ authRouter.post("/signin", async (req, res) => {
 
     console.log("Correct login")
 
-    const token = jwt.sign(
-        {
-            username: user.username,
-            full_name: user.full_name,
-            email: user.email,
-            profile_pic_url: user.profile_pic_url,
-            bio: user.bio,
-            created_at: user.created_at,
-            likes: user.likes,
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: '7d' });
+    const token = createToken(user)
     res.cookie("access_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production"
-    }).status(200)
+    }).status(200).json({ status: "logged in" })
 });
 
 authRouter.post("/logout", async (req, res) => {

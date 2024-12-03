@@ -13,25 +13,25 @@
 
                 <!-- Email -->
                 <div class="mt-2 border-lable-flt">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter your Email"
-                        >
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter your Email">
                     <label for="email">Email</label>
                 </div>
 
                 <!-- Password -->
                 <div class="mt-2 border-lable-flt">
                     <input type="password" class="form-control" name="password" id="password"
-                        placeholder="Enter your Password" >
+                        placeholder="Enter your Password">
                     <label for="password">Password</label>
                 </div>
 
                 <!-- Confirm Password -->
                 <div class="mt-2 mb-3 border-lable-flt">
                     <input type="password" class="form-control" name="password1" id="password1"
-                        placeholder="Reenter your Password" >
+                        placeholder="Reenter your Password">
                     <label for="password1">Confirm Password</label>
                 </div>
 
+                <div id="out" style="color: red"></div>
                 <button type="submit" id="sign-up">Sign up</button>
             </form>
             <p>Already have an account? <a href="/signin">Sign in</a></p>
@@ -43,20 +43,20 @@
     document.querySelector("form").onsubmit = (e) => {
         e.preventDefault()
 
-        console.log("AAA", new FormData(document.querySelector("form")))
-
-        const formData = new FormData(document.querySelector("form"));
-        formData.append("thing", "123");
         fetch("/api/auth/signup", {
             method: "POST",
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Object.fromEntries(new FormData(document.querySelector("form"))))
         })
             .then(res => res.json())
             .then(data => {
+                console.log(data)
                 if (data.error) {
                     document.querySelector("#out").innerText = data.error
                 } else {
-                    window.location.href = "/dashboard"
+                    window.location.href = "/"
                 }
             })
     }
