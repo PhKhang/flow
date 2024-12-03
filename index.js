@@ -152,7 +152,7 @@ const uploadFileToS3 = async (file) => {
             Body: await file.arrayBuffer(),
         });
         await s3Client.send(command);
-        
+
         return {
             name: fileName,
             size: file.size,
@@ -191,7 +191,7 @@ app.post('/uploadImg', upload.single('file'), async (req, res) => {
 app.post('/uploadPost', async (req, res) => {
     try {
         if (!req.body.fileId) {
-            const {authorId, caption} = req.body;
+            const { authorId, caption } = req.body;
             try {
                 await addPost(authorId, caption);
             }
@@ -202,7 +202,7 @@ app.post('/uploadPost', async (req, res) => {
             return res.status(200).send({ success: true });
         }
         else {
-            const {authorId, caption, fileId} = req.body;
+            const { authorId, caption, fileId } = req.body;
             const urls = [fileId];
             await addPost(authorId, caption, typeOfMedia, urls);
             return res.status(200).send({ success: true });
@@ -252,6 +252,21 @@ app.get('/searchPost', async (req, res) => {
     return res.status(200).send({ success: true });
 });
 
+// Sample
+app.get("/send", (req, res) => {
+    const token = req.cookies.access_token
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
+    }
+    
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
+    const message = req.query.message;
+    console.log(decoded.username)
+    console.log("message: ", message)
+    
+    res.send("send: " + message);
+});
 
 app.use('/api', apiRouter);
 
