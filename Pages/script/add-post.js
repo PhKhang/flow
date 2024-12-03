@@ -46,7 +46,7 @@ function removeImage() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderFeed();
+    // renderFeed();
 
     const postInput = document.querySelector('.post-input');
     postInput.addEventListener('input', function() {

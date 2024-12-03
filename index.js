@@ -187,70 +187,7 @@ app.post('/uploadImg', upload.single('file'), async (req, res) => {
     return res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
 });
 
-//API
-app.post('/uploadPost', async (req, res) => {
-    try {
-        if (!req.body.fileId) {
-            const { authorId, caption } = req.body;
-            try {
-                await addPost(authorId, caption);
-            }
-            catch (error) {
-                console.error('Error saving post:', error);
-                return res.status(500).send({ success: false });
-            }
-            return res.status(200).send({ success: true });
-        }
-        else {
-            const { authorId, caption, fileId } = req.body;
-            const urls = [fileId];
-            await addPost(authorId, caption, typeOfMedia, urls);
-            return res.status(200).send({ success: true });
-        }
-    }
-    catch (error) {
-        return res.status(500).send({ success: false });
-    }
-});
 
-//API
-app.get('/followapi', async (req, res) => {
-    try {
-        const followers = await getFollowing("6744872f1e74c42b292cf196");
-        console.log("Followers: ", followers);
-    }
-    catch (error) {
-        console.error('Error following user:', error);
-        return res.status(500).send({ success: false });
-    }
-    return res.status(200).send({ success: true });
-});
-
-//API
-app.get('/likePost', async (req, res) => {
-    try {
-        const post = await likePost("674be85ad25f6193dd96dd27", "6744872f1e74c42b292cf201");
-        console.log("Post liked: ", post);
-    }
-    catch (error) {
-        console.error('Error liking post:', error);
-        return res.status(500).send({ success: false });
-    }
-    return res.status(200).send({ success: true });
-});
-
-//API
-app.get('/searchPost', async (req, res) => {
-    try {
-        const posts = await searchPosts("Programmed screen");
-        console.log(posts);
-    }
-    catch (error) {
-        console.error('Error liking post:', error);
-        return res.status(500).send({ success: false });
-    }
-    return res.status(200).send({ success: true });
-});
 
 // Sample
 app.get("/send", (req, res) => {

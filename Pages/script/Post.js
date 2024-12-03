@@ -104,7 +104,7 @@ function renderComments() {
     container.innerHTML = comments.map(comment => createCommentHTML(comment)).join('');
 }
 
-function addNewComment() {
+const addNewComment = async () => {
     const textarea = document.getElementById('newCommentInput');
     if (textarea) {
         textarea.style.height = 'auto'; 
@@ -114,7 +114,7 @@ function addNewComment() {
     const text = input.value.trim();
     const hasImage = commentImagePreview.style.display === 'block';
     
-    if (text || hasImage) {
+    if (text && hasImage) {
         const newComment = {
             username: "phkhang",
             profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
@@ -124,9 +124,45 @@ function addNewComment() {
             likes: 0,
             replies: 0
         };
-        
+
+
+        let selectedFile = document.getElementById('commentImageInput').files[0];
+        if(hasImage) {  
+            const fileFormData = new FormData();
+            fileFormData.append('file', selectedFile);
+            
+            const fileResponse = await fetch('/uploadImg', {
+                method: 'POST',
+                body: fileFormData
+            });
+            
+            const fileData = await fileResponse.json();
+
+            const newCommentResponse = await fetch('/api/addComment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    authorId: '6744872f1e74c42b292cf201',
+                    postId: '674be85ad25f6193dd96dd27',
+                    content: text,
+                    typeOfMedia: 'image',
+                    urls: [fileData.filename]
+                })
+            });
+            const status = await newCommentResponse.json();
+            
+            if (status.success) {
+                console.log('Post with file successful');
+            } else {
+                console.log('Post with file failed');
+            }
+        }
+
         comments.unshift(newComment);
         renderComments();
+
         
         // Reset form
         input.value = '';
@@ -134,6 +170,99 @@ function addNewComment() {
         commentImagePreview.src = '';
         commentImageInput.value = '';
     }
+    else if (text) {
+        const newComment = {
+            username: "phkhang",
+            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
+            time: "1s",
+            text: text || "", 
+            image: null,
+            likes: 0,
+            replies: 0
+        };
+
+        const newCommentResponse = await fetch('/api/addComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authorId: '6744872f1e74c42b292cf201',
+                postId: '674be85ad25f6193dd96dd27',
+                content: "",
+                typeOfMedia: 'none',
+                urls: []
+            })
+        });
+        const status = await newCommentResponse.json();
+        
+        if (status.success) {
+            console.log('Post without file successful');
+        } else {
+            console.log('Post without file failed');
+        }
+
+        comments.unshift(newComment);
+        renderComments();
+
+        // Reset form
+        input.value = '';
+    }
+    else if (hasImage) {
+        const newComment = {
+            username: "phkhang",
+            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
+            time: "1s",
+            text: text || "", 
+            image: hasImage ? commentImagePreview.src : null,
+            likes: 0,
+            replies: 0
+        };
+
+
+        let selectedFile = document.getElementById('commentImageInput').files[0];
+        if(hasImage) {  
+            const fileFormData = new FormData();
+            fileFormData.append('file', selectedFile);
+            
+            const fileResponse = await fetch('/uploadImg', {
+                method: 'POST',
+                body: fileFormData
+            });
+            
+            const fileData = await fileResponse.json();
+
+            const newCommentResponse = await fetch('/api/addComment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    authorId: '6744872f1e74c42b292cf201',
+                    postId: '674be85ad25f6193dd96dd27',
+                    content: "",
+                    typeOfMedia: 'image',
+                    urls: [fileData.filename]
+                })
+            });
+            const status = await newCommentResponse.json();
+            
+            if (status.success) {
+                console.log('Post with file successful');
+            } else {
+                console.log('Post with file failed');
+            }
+        }
+
+        comments.unshift(newComment);
+        renderComments();
+
+        // Reset form
+        commentImagePreview.style.display = 'none';
+        commentImagePreview.src = '';
+        commentImageInput.value = '';
+    }
+
 }
 
 renderComments();
@@ -146,17 +275,6 @@ function toggleLike(button) {
     button.classList.toggle('like-button-clicked');
 }
 
-function formatNumber(num) {
-    if (num >= 1_000_000_000) {
-        return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
-    } else if (num >= 1_000_000) {
-        return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-    } else if (num >= 1_000) {
-        return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
-    } else {
-        return num.toString();
-    }
-}
 
 function openFullscreen(index) {
     let modal = document.getElementById(`imageModal-${index}`);

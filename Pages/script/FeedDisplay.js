@@ -114,6 +114,16 @@ function formatNumber(num) {
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    renderFeed();
+
+    const postInput = document.querySelector('.post-input');
+    postInput.addEventListener('input', function() {
+        autoResize(this);
+    });
+});
+
+
 function renderFeed() {
     const otherPostsContainer = document.querySelector('.other-posts');
     
