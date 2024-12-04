@@ -17,7 +17,7 @@ import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
-import { getAllUsers, getUser } from './server/controller/userController.js';
+import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -130,7 +130,7 @@ app.get("/server/all", async (req, res) => {
 });
 
 app.get("/server/:name", async (req, res) => {
-    const user = await getUser(req.params.name);
+    const user = await fetchUserByEmail(req.params.name);
     if (user) {
         console.log(user);
     } else {
@@ -141,14 +141,6 @@ app.get("/server/:name", async (req, res) => {
 
 app.get("/auth", verifyToken, (req, res) => {
     res.send("Hello world, programmed to work but not to feel");
-});
-
-app.get("/sign", (req, res) => {
-    const token = jwt.sign({ userId: "123Khang" }, process.env.SECRET_KEY, { expiresIn: '1s' });
-    res.cookie("access_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-    }).status(200).json({ token });
 });
 
 const s3Client = new S3Client({
@@ -168,7 +160,7 @@ const uploadFileToS3 = async (file) => {
             Body: await file.arrayBuffer(),
         });
         await s3Client.send(command);
-        
+
         return {
             name: fileName,
             size: file.size,
@@ -203,74 +195,26 @@ app.post('/uploadImg', upload.single('file'), async (req, res) => {
     return res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
 });
 
-//API
-app.post('/uploadPost', async (req, res) => {
-    try {
-        if (!req.body.fileId) {
-            const {authorId, caption} = req.body;
-            try {
-                await addPost(authorId, caption);
-            }
-            catch (error) {
-                console.error('Error saving post:', error);
-                return res.status(500).send({ success: false });
-            }
-            return res.status(200).send({ success: true });
-        }
-        else {
-            const {authorId, caption, fileId} = req.body;
-            const urls = [fileId];
-            await addPost(authorId, caption, typeOfMedia, urls);
-            return res.status(200).send({ success: true });
-        }
+
+
+// Sample
+app.get("/send", (req, res) => {
+    const token = req.cookies.access_token
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
     }
-    catch (error) {
-        return res.status(500).send({ success: false });
-    }
+    
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
+    const message = req.query.message;
+    console.log(decoded.username)
+    console.log("message: ", message)
+    
+    res.send("send: " + message);
 });
 
-//API
-app.get('/followapi', async (req, res) => {
-    try {
-        const followers = await getFollowing("6744872f1e74c42b292cf196");
-        console.log("Followers: ", followers);
-    }
-    catch (error) {
-        console.error('Error following user:', error);
-        return res.status(500).send({ success: false });
-    }
-    return res.status(200).send({ success: true });
-});
-
-//API
-app.get('/likePost', async (req, res) => {
-    try {
-        const post = await likePost("674be85ad25f6193dd96dd27", "6744872f1e74c42b292cf201");
-        console.log("Post liked: ", post);
-    }
-    catch (error) {
-        console.error('Error liking post:', error);
-        return res.status(500).send({ success: false });
-    }
-    return res.status(200).send({ success: true });
-});
-
-//API
-app.get('/searchPost', async (req, res) => {
-    try {
-        const posts = await searchPosts("Programmed screen");
-        console.log(posts);
-    }
-    catch (error) {
-        console.error('Error liking post:', error);
-        return res.status(500).send({ success: false });
-    }
-    return res.status(200).send({ success: true });
-});
-
+app.use('/api', apiRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
 });
-
-app.use("/api", apiRouter)

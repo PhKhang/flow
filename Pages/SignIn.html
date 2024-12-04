@@ -42,7 +42,7 @@
                         <label for="password">Password</label>
                     </div>
                     <div class="text-end">
-                        <p><a href="ForgetPassword.html">Forget password?</a></p>
+                        <p><a href="ForgetPassword.html">Forgot password?</a></p>
                     </div>
                     <div id="out" style="color: red"></div>
     
@@ -99,6 +99,7 @@
         
         const signIn = async () => {
             window.location.href = 'FeedDisplay.html'
+            return
             const email = document.querySelector("#email").value;
             const password = document.querySelector("#password").value;
             signInWithEmailAndPassword(auth, email, password)

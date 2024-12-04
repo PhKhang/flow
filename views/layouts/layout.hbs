@@ -149,7 +149,7 @@
             event.preventDefault();
  
             if (!selectedFile) {
-                 const captionResponse = await fetch('/uploadPost', {
+                 const captionResponse = await fetch('/api/uploadPost', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -183,7 +183,7 @@
                 if (!fileResponse.ok) {
                     throw new Error('Upload file thất bại');
                 }
-                const captionResponse = await fetch('/uploadPost', {
+                const captionResponse = await fetch('/api/uploadPost', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function addNewPost(postData) {
     posts.unshift(postData);
-    renderFeed();
 }
 
 function openFullscreen(index) {
