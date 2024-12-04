@@ -7,15 +7,16 @@
     <div class="w-100 d-flex justify-content-center align-items-center mt-2">
         <div class="form">
             <img class="icon" src="/images/icon/search.svg">
-            <form>
-                <input type="text" class="form-control form-input" id="search-value" name="search-value" placeholder="Search">
+            <form id="search-form">
+                <input type="text" class="form-control form-input" id="search-value" name="keyword" placeholder="Search">
+                <input type="hidden" id="category" name="category" value="user">
             </form>
         </div>
     </div>
     <div class="search-settings">
         <div class="left-settings">
-            <button class="tab active">User</button>
-            <button class="tab">Post</button>
+            <button type="button" class="tab active" data-category="user">User</button>
+            <button type="button" class="tab" data-category="post">Post</button>
         </div>
     </div>
     <div id="search-results"></div>

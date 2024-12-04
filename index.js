@@ -14,6 +14,7 @@ import multerS3 from 'multer-s3';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
+import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
 import { getAllUsers, getUser } from './server/controller/userController.js';
@@ -63,15 +64,22 @@ app.set('view engine', 'hbs');
 await mongoose.connect(process.env.ATLAS_URI);
 
 app.get("/", async (req, res) => {
-    res.locals.posts = await getAllPosts();
-    res.locals.title = "Home • flow";
-    res.render('index', { currentPath: "/" });
+    try {
+        const posts = await getAllPosts(); 
+        res.locals.posts = posts; 
+        res.locals.title = "Home • flow";
+        res.render('index', { currentPath: "/" });
+    } catch (error) {
+        console.error('Error rendering home page:', error);
+        res.status(500).send('Error loading home page');
+    }
 });
+app.use('/post', postRouter);
 
 app.get("/following", async (req, res) => {
     res.locals.posts = await getFollowPosts("6744872f1e74c42b292cf196");
     res.locals.title = "Following • flow";
-    res.render('index', { currentPath: "/index" });
+    res.render('index', { currentPath: "/following" });
 });
 
 app.get("/signin", (req, res) => {
