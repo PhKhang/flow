@@ -1,15 +1,25 @@
 import express from "express"
 const apiRouter = express.Router();
-// import { init, showList, showDetails } from '../controllers/blogController.js';
 import {getAllComments, addComment, deleteComment, likeComment, getCommentsByAuthor} from '../controller/commentController.js';
 import {addPost, getAllPosts, getFollowPosts, likePost, searchPosts} from '../controller/postController.js';
 import authRouter from "./authRouter.js"
+import { verifyToken } from '../middleware/verifyToken.js';
+import jwt from 'jsonwebtoken';
 
 apiRouter.use("/auth", authRouter);
 
-apiRouter.post("/addComment", async (req, res) => {
+
+apiRouter.post("/addComment",verifyToken, async (req, res) => {
+    const token = req.cookies.access_token
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
+    }
+    
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
+ 
     try {
-        const newComment = await addComment(req.body.authorId, req.body.postId, req.body.content, req.body.typeOfMedia, req.body.urls);
+        const newComment = await addComment(decoded.id, req.body.postId, req.body.content, req.body.typeOfMedia, req.body.urls);
         return res.status(200).send({ success: true, comment: newComment });
     }
     catch (error) {
@@ -19,12 +29,20 @@ apiRouter.post("/addComment", async (req, res) => {
 });
 
 //API
-apiRouter.post('/uploadPost', async (req, res) => {
+apiRouter.post('/uploadPost',verifyToken, async (req, res) => {
+    const token = req.cookies.access_token
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
+    }
+    
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
+ 
     try {
         if (!req.body.fileId) {
-            const {authorId, caption} = req.body;
+            const {caption} = req.body;
             try {
-                await addPost(authorId, caption);
+                await addPost(decoded.id, caption);
             }
             catch (error) {
                 console.error('Error saving post:', error);
@@ -33,9 +51,9 @@ apiRouter.post('/uploadPost', async (req, res) => {
             return res.status(200).send({ success: true });
         }
         else {
-            const {authorId, caption, fileId} = req.body;
+            const {caption, fileId} = req.body;
             const urls = [fileId];
-            await addPost(authorId, caption, "image", urls);
+            await addPost(decoded.id, caption, "image", urls);
             return res.status(200).send({ success: true });
         }
     }

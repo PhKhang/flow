@@ -1,23 +1,8 @@
-const comments = [
-    {
-        username: "username",
-        profilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
-        time: "53m",
-        text: "Chúc bạn có một chuyến đi vui vẻ",
-        image: null,
-        likes: 1,
-        replies: 1
-    },
-    {
-        username: "username",
-        profilePic: "https://i.pinimg.com/736x/cd/9f/bd/cd9fbd7a5a930c7a5b24749da7052399.jpg",
-        time: "43s",
-        text: "What's a nice place!",
-        image: null,
-        likes: 1,
-        replies: 0
-    }
-];
+// Get comments when page loads
+const pathname = window.location.pathname;
+const postId = pathname.split('/').pop();
+
+let comments = []; // Initialize empty array
 
 // Xử lý preview hình ảnh
 const commentImageInput = document.getElementById('commentImageInput');
@@ -105,6 +90,10 @@ function renderComments() {
 }
 
 const addNewComment = async () => {
+    // Get postId from URL path
+    const pathname = window.location.pathname;  // Ví dụ: "/post/672c76e88aa7fdc97c8716f6"
+    const postId = pathname.split('/').pop();   // Lấy phần tử cuối cùng sau khi split theo "/"
+
     const textarea = document.getElementById('newCommentInput');
     if (textarea) {
         textarea.style.height = 'auto'; 
@@ -115,17 +104,6 @@ const addNewComment = async () => {
     const hasImage = commentImagePreview.style.display === 'block';
     
     if (text && hasImage) {
-        const newComment = {
-            username: "phkhang",
-            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
-            time: "1s",
-            text: text || "", 
-            image: hasImage ? commentImagePreview.src : null,
-            likes: 0,
-            replies: 0
-        };
-
-
         let selectedFile = document.getElementById('commentImageInput').files[0];
         if(hasImage) {  
             const fileFormData = new FormData();
@@ -144,8 +122,7 @@ const addNewComment = async () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    authorId: '6744872f1e74c42b292cf201',
-                    postId: '674be85ad25f6193dd96dd27',
+                    postId: postId,  
                     content: text,
                     typeOfMedia: 'image',
                     urls: [fileData.filename]
@@ -159,8 +136,6 @@ const addNewComment = async () => {
                 console.log('Post with file failed');
             }
         }
-
-        comments.unshift(newComment);
         renderComments();
 
         
@@ -171,24 +146,13 @@ const addNewComment = async () => {
         commentImageInput.value = '';
     }
     else if (text) {
-        const newComment = {
-            username: "phkhang",
-            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
-            time: "1s",
-            text: text || "", 
-            image: null,
-            likes: 0,
-            replies: 0
-        };
-
         const newCommentResponse = await fetch('/api/addComment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                authorId: '6744872f1e74c42b292cf201',
-                postId: '674be85ad25f6193dd96dd27',
+                postId: postId,  
                 content: "",
                 typeOfMedia: 'none',
                 urls: []
@@ -202,24 +166,12 @@ const addNewComment = async () => {
             console.log('Post without file failed');
         }
 
-        comments.unshift(newComment);
         renderComments();
 
         // Reset form
         input.value = '';
     }
     else if (hasImage) {
-        const newComment = {
-            username: "phkhang",
-            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
-            time: "1s",
-            text: text || "", 
-            image: hasImage ? commentImagePreview.src : null,
-            likes: 0,
-            replies: 0
-        };
-
-
         let selectedFile = document.getElementById('commentImageInput').files[0];
         if(hasImage) {  
             const fileFormData = new FormData();
@@ -238,8 +190,7 @@ const addNewComment = async () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    authorId: '6744872f1e74c42b292cf201',
-                    postId: '674be85ad25f6193dd96dd27',
+                    postId: postId,  
                     content: "",
                     typeOfMedia: 'image',
                     urls: [fileData.filename]
@@ -253,8 +204,6 @@ const addNewComment = async () => {
                 console.log('Post with file failed');
             }
         }
-
-        comments.unshift(newComment);
         renderComments();
 
         // Reset form

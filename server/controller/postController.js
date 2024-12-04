@@ -115,4 +115,14 @@ const searchPosts = async (searchString) => {
     }
 };
 
-export { getAllPosts, getFollowPosts, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts };
+const getPostById = async (postId) => {
+    try {
+        const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
+        return post;
+    } catch (error) {
+        console.error('Error getting post by id:', error);
+        return null;
+    }
+}
+
+export { getAllPosts, getFollowPosts, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, getPostById };

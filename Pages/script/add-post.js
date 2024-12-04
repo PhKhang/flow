@@ -84,3 +84,70 @@ document.querySelector('.post-button').addEventListener('click', function(event)
     }
 });
 
+let selectedFile = null;
+let selectedCaption = null;
+
+document.getElementById('imageInput').addEventListener('change', (e) => {
+    selectedFile = e.target.files[0];
+});
+
+document.getElementById('captionInput').addEventListener('input', (e) => {
+    selectedCaption = e.target.value;
+});
+
+document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!selectedFile) {
+         const captionResponse = await fetch('/api/uploadPost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                caption: selectedCaption
+            })
+        });
+        
+        const status = await captionResponse.json();
+
+        if (status.success) {
+            console.log('Post successful');
+        } else {
+            console.log('Post failed');
+        }
+        return;
+    }
+    else {
+        const fileFormData = new FormData();
+        fileFormData.append('file', selectedFile);
+        
+        const fileResponse = await fetch('/uploadImg', {
+            method: 'POST',
+            body: fileFormData
+        });
+        
+        const fileData = await fileResponse.json();
+        console.log(fileData.filename);
+        if (!fileResponse.ok) {
+            throw new Error('Upload file thất bại');
+        }
+        const captionResponse = await fetch('/api/uploadPost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fileId: fileData.filename, 
+                caption: selectedCaption
+            })
+        });
+        
+        const status = await captionResponse.json();
+        if (status.success) {
+            console.log('Post with file successful');
+        } else {
+            console.log('Post with file failed');
+        }
+    }
+});

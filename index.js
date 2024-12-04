@@ -14,6 +14,7 @@ import multerS3 from 'multer-s3';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
+import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
 import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
@@ -110,11 +111,6 @@ app.get("/profile/:username", (req, res) => {
     res.render("profile", { currentPath: `/profile/${username}`, username: username });
 });
 
-app.get("/post", async (req, res) => {
-    res.locals.posts = await getAllPosts();
-    res.locals.title = "Post • flow";
-    res.render("post", { currentPath: "/post" });
-});
 
 app.get("/server/all", async (req, res) => {
     const users = await getAllUsers();
@@ -179,7 +175,7 @@ const upload = multer({
 });
 
 //API
-app.post('/uploadImg', upload.single('file'), async (req, res) => {
+app.post('/uploadImg', verifyToken, upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
@@ -187,25 +183,9 @@ app.post('/uploadImg', upload.single('file'), async (req, res) => {
     return res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
 });
 
-
-
-// Sample
-app.get("/send", (req, res) => {
-    const token = req.cookies.access_token
-    if (!token) {
-        console.log("No token")
-        return res.status(401).json({ error: 'Not logged in' })
-    }
-    
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
-    const message = req.query.message;
-    console.log(decoded.username)
-    console.log("message: ", message)
-    
-    res.send("send: " + message);
-});
-
 app.use('/api', apiRouter);
+
+app.use('/post', postRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
