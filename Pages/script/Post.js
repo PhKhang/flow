@@ -35,7 +35,6 @@ commentImageInput.addEventListener('change', function(event) {
     }
 });
 
-// Xử lý nhấn Enter để đăng comment
 document.getElementById('newCommentInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault(); // Ngăn xuống dòng
@@ -43,7 +42,6 @@ document.getElementById('newCommentInput').addEventListener('keypress', function
     }
 });
 
-// Hàm tạo HTML cho một comment
 function createCommentHTML(comment) {
     let commentHTML = `
         <div class="comment">
@@ -164,7 +162,6 @@ const addNewComment = async () => {
         renderComments();
 
         
-        // Reset form
         input.value = '';
         commentImagePreview.style.display = 'none';
         commentImagePreview.src = '';
@@ -279,16 +276,24 @@ function toggleLike(button) {
 function openFullscreen(index) {
     let modal = document.getElementById(`imageModal-${index}`);
     let closeButton = document.getElementById(`closeButton-${index}`);
-    modal.style.display = 'flex';
-    closeButton.style.display = 'block';
-    modal.addEventListener('click', function(event) {
-        if (event.target === modal) { 
-          closeFullscreen(index);
-        }
-    });
+    if (modal && closeButton) {
+        modal.style.display = 'flex';
+        closeButton.style.display = 'block';
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) { 
+                closeFullscreen(index);
+            }
+        });
+    } else {
+        console.error("Modal or close button not found for index:", index);
+    }
 }
 
 function closeFullscreen(index) {
     let modal = document.getElementById(`imageModal-${index}`);
-    modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+    } else {
+        console.error("Modal not found for index:", index);
+    }
 }

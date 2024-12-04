@@ -1,7 +1,12 @@
+const controller = {};
 import mongoose, { mongo } from "mongoose";
 import Post from  "../model/post.js";
 import Follow from "../model/follow.js";
 import { formatPostDate } from "../utils/postUtils.js"
+
+const init = async (req, res, next) => {
+    next();
+};
 
 const getAllPosts = async () => {
     try {
@@ -40,6 +45,26 @@ const getFollowPosts = async (userId) => {
     } catch (error) {
         console.error('Error getting follow posts:', error);
         return null;
+    }
+};
+
+const getPostById = async (req, res) => {
+    const postId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+        console.error('Invalid Post ID');
+        return res.status(400).send('Invalid Post ID');
+    }
+    try {
+        const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
+        if (!post) {
+            return res.status(404).send('Post not found');
+        }
+        res.locals.post = post
+        res.render('post');
+    } catch (error) {
+        console.error('Error getting post by id:', error);
+        return res.status(500).send('Internal Server Error');
     }
 };
 
@@ -115,4 +140,4 @@ const searchPosts = async (searchString) => {
     }
 };
 
-export { getAllPosts, getFollowPosts, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts };
+export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts };
