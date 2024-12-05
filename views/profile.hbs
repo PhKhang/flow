@@ -10,7 +10,7 @@
         <div id="profile-info" class="col-12 col-md-8">
             <div class="name">
                 <h2 class="mb-0 full-name">{{user.username}}</h2>
-                <p class="username">@{{user.username}}</p>
+                <p class="username">{{user.full_name}}</p>
             </div>
         </div>
     </div>
@@ -19,17 +19,17 @@
     </div>
     <div class="info mt-2">
         <div class="post-count">
-            <span>123</span>
+            <span>{{user.posts.length}}</span>
             posts
         </div>
         <div class="bar"></div>
         <div class="follower-count" onclick="togglePopupFollower()">
-            <span>123</span>
+            <span>{{user.followers.length}}</span>
             followers
         </div>
         <div class="bar"></div>
         <div class="following-count" onclick="togglePopupFollower()">
-            <span>123</span>
+            <span>{{user.followings.length}}</span>
             following
         </div>
     </div>
@@ -124,22 +124,23 @@
             </div>
         </div>
         <div class="mt-2 follow-result">
+            {{#each user.followers}}
             <div class="search-result-item" data-type="user">
-
                 <div class="profile-pic">
                     <img src="/images/sample-profile.avif" alt="User Avatar">
                 </div>
                 <div class="search-text">
                     <a class="search-username" href="/otherProfile.html">
-                        <p>username</p>
+                        <p>{{username}}</p>
                     </a>
-                    <p class="search-user-bio">Full Name</p>
+                    <p class="search-user-bio">{{full_name}}</p>
                     <p class="mt-1">305 followers</p>
                 </div>
                 <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
                     <p>Follow</p>
                 </button>
             </div>
+            {{/each}}
         </div>
     </div>
 </div>

@@ -118,7 +118,7 @@ app.get("/profile/:username", async (req, res) => {
     if (!user) {
         return res.status(404).send("User not found");
     }
-    const usr = user.toObject({ getters: true, virtuals: false })
+    const usr = user[0]
     // const usr = user
     console.log(usr);
     res.locals.title = `${usr.username} • flow`;

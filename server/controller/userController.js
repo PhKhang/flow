@@ -39,8 +39,24 @@ const fetchUserByUsername = async (username) => {
                     $lookup: {
                         from: "follows",
                         localField: "_id",
-                        foreignField: "following_id",
+                        foreignField: "follower_id",
                         as: "followers",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "follows",
+                        localField: "_id",
+                        foreignField: "following_id",
+                        as: "followings",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "posts",
+                        localField: "_id",
+                        foreignField: "author_id",
+                        as: "posts",
                     },
                 }
             ]
