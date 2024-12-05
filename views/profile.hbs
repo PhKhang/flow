@@ -9,16 +9,13 @@
 
         <div id="profile-info" class="col-12 col-md-8">
             <div class="name">
-                <h2 class="mb-0 full-name">Tran Nguyen Phuc Khang</h2>
-                <p class="username">phkhang</p>
+                <h2 class="mb-0 full-name">{{user.username}}</h2>
+                <p class="username">@{{user.username}}</p>
             </div>
         </div>
     </div>
     <div class="bio mt-2">
-        <p>
-            Hello! I'm a human. I enjoy learning new technologies and improving my skills.
-            In my free time, I like to explore new places and read tech blogs.
-        </p>
+        <p>{{user.bio}}</p>
     </div>
     <div class="info mt-2">
         <div class="post-count">
@@ -36,7 +33,7 @@
             following
         </div>
     </div>
-    
+
     {{#if isCurrentUser}}
     <div class="over">
         <div class="change col-11 col-md-8 col-lg-5">
@@ -44,7 +41,7 @@
                 <h1>Edit profile</h1>
                 <button type="button" class="cancel" onclick="document.querySelector('.over').style.display = 'none'">
                     Cancel
-                </button> 
+                </button>
             </div>
             <!-- <form action=""> -->
             <div id="profile-picture" class="">
@@ -52,7 +49,16 @@
                     class="rounded-circle">
                 <div class="avatar-upload">
                     <label for="file" class="upload-label">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.2647 15.9377L12.5473 14.2346C11.758 13.4519 11.3633 13.0605 10.9089 12.9137C10.5092 12.7845 10.079 12.7845 9.67922 12.9137C9.22485 13.0605 8.83017 13.4519 8.04082 14.2346L4.04193 18.2622M14.2647 15.9377L14.606 15.5991C15.412 14.7999 15.8149 14.4003 16.2773 14.2545C16.6839 14.1262 17.1208 14.1312 17.5244 14.2688C17.9832 14.4253 18.3769 14.834 19.1642 15.6515L20 16.5001M14.2647 15.9377L18.22 19.9628M18.22 19.9628C17.8703 20 17.4213 20 16.8 20H7.2C6.07989 20 5.51984 20 5.09202 19.782C4.7157 19.5903 4.40973 19.2843 4.21799 18.908C4.12583 18.7271 4.07264 18.5226 4.04193 18.2622M18.22 19.9628C18.5007 19.9329 18.7175 19.8791 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V13M11 4H7.2C6.07989 4 5.51984 4 5.09202 4.21799C4.7157 4.40973 4.40973 4.71569 4.21799 5.09202C4 5.51984 4 6.0799 4 7.2V16.8C4 17.4466 4 17.9066 4.04193 18.2622M18 9V6M18 6V3M18 6H21M18 6H15" stroke="#b5b5b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path
+                                    d="M14.2647 15.9377L12.5473 14.2346C11.758 13.4519 11.3633 13.0605 10.9089 12.9137C10.5092 12.7845 10.079 12.7845 9.67922 12.9137C9.22485 13.0605 8.83017 13.4519 8.04082 14.2346L4.04193 18.2622M14.2647 15.9377L14.606 15.5991C15.412 14.7999 15.8149 14.4003 16.2773 14.2545C16.6839 14.1262 17.1208 14.1312 17.5244 14.2688C17.9832 14.4253 18.3769 14.834 19.1642 15.6515L20 16.5001M14.2647 15.9377L18.22 19.9628M18.22 19.9628C17.8703 20 17.4213 20 16.8 20H7.2C6.07989 20 5.51984 20 5.09202 19.782C4.7157 19.5903 4.40973 19.2843 4.21799 18.908C4.12583 18.7271 4.07264 18.5226 4.04193 18.2622M18.22 19.9628C18.5007 19.9329 18.7175 19.8791 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V13M11 4H7.2C6.07989 4 5.51984 4 5.09202 4.21799C4.7157 4.40973 4.40973 4.71569 4.21799 5.09202C4 5.51984 4 6.0799 4 7.2V16.8C4 17.4466 4 17.9066 4.04193 18.2622M18 9V6M18 6V3M18 6H21M18 6H15"
+                                    stroke="#b5b5b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                            </g>
+                        </svg>
                     </label>
                     <input type="file" accept="image/*" id="file" style="visibility: hidden; width: 0; height: 0;">
                 </div>
@@ -72,13 +78,15 @@
             <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
             <input class="mt-1" type="password" name="new-password" id="new-password" placeholder="New password">
 
-            <button type="button" class="edit edit-btn mt-3 mb-2" id="change" onclick="document.querySelector('.over').style.display = 'none'">
+            <button type="button" class="edit edit-btn mt-3 mb-2" id="change"
+                onclick="document.querySelector('.over').style.display = 'none'">
                 <p>Save all changes</p>
             </button>
             <!-- </form> -->
         </div>
     </div>
-    <button type="button" class="edit edit-btn mt-3 mb-2" onclick="document.querySelector('.over').style.display = 'block'">
+    <button type="button" class="edit edit-btn mt-3 mb-2"
+        onclick="document.querySelector('.over').style.display = 'block'">
         <p>Edit profile</p>
     </button>
     <div class="add-post header" onclick="togglePopup()">
@@ -117,7 +125,7 @@
         </div>
         <div class="mt-2 follow-result">
             <div class="search-result-item" data-type="user">
-                
+
                 <div class="profile-pic">
                     <img src="/images/sample-profile.avif" alt="User Avatar">
                 </div>
@@ -201,7 +209,7 @@
 </script>
 
 {{#if isCurrentUser}}
-    <h1>Welcome to your profile, {{username}}</h1>
+<h1>Welcome to your profile, {{username}}</h1>
 {{else}}
-    <h1>Welcome to {{username}}'s profile</h1>
+<h1>Welcome to {{username}}'s profile</h1>
 {{/if}}

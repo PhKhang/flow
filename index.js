@@ -17,7 +17,7 @@ import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
-import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
+import { getAllUsers, fetchUserByEmail, fetchUserByUsername } from './server/controller/userController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -65,8 +65,8 @@ await mongoose.connect(process.env.ATLAS_URI);
 
 app.get("/", async (req, res) => {
     try {
-        const posts = await getAllPosts(); 
-        res.locals.posts = posts; 
+        const posts = await getAllPosts();
+        res.locals.posts = posts;
         res.locals.title = "Home • flow";
         res.render('index', { currentPath: "/" });
     } catch (error) {
@@ -112,10 +112,17 @@ app.get("/search", (req, res) => {
     res.render("search", { currentPath: "/search" });
 });
 
-app.get("/profile/:username", (req, res) => {
+app.get("/profile/:username", async (req, res) => {
     const username = req.params.username;
-    res.locals.title = `${username} • flow`;
-    res.render("profile", { currentPath: `/profile/${username}`, username: username });
+    const user = await fetchUserByUsername(username)
+    if (!user) {
+        return res.status(404).send("User not found");
+    }
+    const usr = user.toObject({ getters: true, virtuals: false })
+    // const usr = user
+    console.log(usr);
+    res.locals.title = `${usr.username} • flow`;
+    res.render("profile", { currentPath: `/profile/${usr.username}`, user: usr });
 });
 
 app.get("/post", async (req, res) => {
@@ -204,12 +211,12 @@ app.get("/send", (req, res) => {
         console.log("No token")
         return res.status(401).json({ error: 'Not logged in' })
     }
-    
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const message = req.query.message;
     console.log(decoded.username)
     console.log("message: ", message)
-    
+
     res.send("send: " + message);
 });
 
