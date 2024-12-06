@@ -3,14 +3,17 @@
 <div class="main col-11 col-md-8 col-lg-5">
     <div class="header col-11 row flex-column align-items-center flex-md-row-reverse">
         <div id="profile-picture" class="col-12 col-md-4 d-flex justify-content-center mb-3 mb-md-0">
-            <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
-                class="rounded-circle">
+            <img src="{{user.profile_pic_url}}" alt="Profile picture" class="rounded-circle">
         </div>
 
         <div id="profile-info" class="col-12 col-md-8">
             <div class="name">
+                {{#if full_name }}
                 <h2 class="mb-0 full-name">{{user.username}}</h2>
-                <p class="username">{{user.full_name}}</p>
+                {{else}}
+                <h2 class="mb-0 full-name">{{user.full_name}}</h2>
+                {{/if}}
+                <p class="username">{{user.username}}</p>
             </div>
         </div>
     </div>
@@ -127,7 +130,7 @@
             {{#each user.followers}}
             <div class="search-result-item" data-type="user">
                 <div class="profile-pic">
-                    <img src="/images/sample-profile.avif" alt="User Avatar">
+                    <img src="{{profile_pic_url}}" alt="User Avatar">
                 </div>
                 <div class="search-text">
                     <a class="search-username" href="/otherProfile.html">

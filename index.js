@@ -120,8 +120,7 @@ app.get("/profile/:username", async (req, res) => {
     }
     const usr = user[0]
     // const usr = user
-    console.log(usr);
-    res.locals.title = `${usr.username} • flow`;
+    res.locals.title = `${usr.full_name} • flow`;
     res.render("profile", { currentPath: `/profile/${usr.username}`, user: usr });
 });
 
