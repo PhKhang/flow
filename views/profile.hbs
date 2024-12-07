@@ -151,45 +151,6 @@
 <script src="/script/bio.js"></script>
 
 <script type="module">
-    import { app } from "/script/init-firebase.js"
-    import { getAuth, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"
-
-    const auth = getAuth(app);
-
-    const fetchInfo = async () => {
-        const output = document.querySelector("#output")
-        const user = auth.currentUser;
-
-        if (user) {
-            output.innerHTML = JSON.stringify(auth.currentUser, undefined, 2)
-            document.querySelector(".username").innerHTML = user.displayName
-            document.querySelector(".header img").src = user.photoURL
-            // document.querySelector("").innerHTML = user.displayName
-        } else {
-            output.innerHTML = "null"
-        }
-    }
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            fetchInfo()
-        } else {
-            // No user is signed in.
-        }
-    });
-
-    const changeInfo = async () => {
-        updateProfile(auth.currentUser, {
-            photoURL: document.querySelector("#profile-picture").src,
-        }).then(() => {
-            // Profile updated!
-            console.log("Profile updated!")
-        }).catch((error) => {
-            // An error occurred
-            console.log("An error occurred")
-        });
-        fetchInfo()
-    }
-
     const fetchButton = document.querySelector("#fetch")
     fetchButton.addEventListener("click", fetchInfo)
     // const changeButton = document.querySelector("")
