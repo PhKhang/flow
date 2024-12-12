@@ -57,6 +57,9 @@ const getPostById = async (req, res) => {
     }
     try {
         const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
+        const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+        post.modified_created_at = formattedDate;
+        post.timeAgo = timeAgo;
         if (!post) {
             return res.status(404).send('Post not found');
         }
