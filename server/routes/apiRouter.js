@@ -3,6 +3,7 @@ const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
 import {getAllComments, addComment, deleteComment, likeComment, getCommentsByAuthor} from '../controller/commentController.js';
 import {addPost, getAllPosts, getFollowPosts, likePost, searchPosts} from '../controller/postController.js';
+import {searchUsersByName} from '../controller/userController.js';
 import authRouter from "./authRouter.js"
 
 apiRouter.use("/auth", authRouter);
@@ -84,4 +85,15 @@ apiRouter.get('/searchPost', async (req, res) => {
     return res.status(200).send({ success: true });
 });
 
+apiRouter.get('/searchUsers', async (req, res) => {
+    try {
+        const users = await searchUsersByName("J");
+        console.log(users);
+    }
+    catch (error) {
+        console.error('Error searching users:', error);
+        return res.status(500).send({ success: false });
+    }
+    return res.status(200).send({ success: true });
+});
 export default apiRouter;

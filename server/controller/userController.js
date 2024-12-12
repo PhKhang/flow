@@ -37,4 +37,15 @@ const fetchUserByUsername = async (username) => {
         return null;
     }
 }
-export { addUser, fetchUserByEmail, fetchUserByUsername, getAllUsers };
+
+const searchUsersByName = async (searchString) => {
+    try {
+        const users = await User.find({ username: { $regex: searchString, $options: 'i' } });
+        return users;
+    } catch (error) {
+        console.error('Error searching users by name:', error);
+        return null;
+    }
+};
+
+export { addUser, fetchUserByEmail, fetchUserByUsername, getAllUsers, searchUsersByName };
