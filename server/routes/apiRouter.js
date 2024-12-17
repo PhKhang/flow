@@ -1,12 +1,23 @@
 import express from "express"
 const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
-import {getAllComments, addComment, deleteComment, likeComment, getCommentsByAuthor} from '../controller/commentController.js';
+import {addComment, likeComment, getCommentsByPost} from '../controller/commentController.js';
 import {addPost, getAllPosts, getFollowPosts, likePost, searchPosts} from '../controller/postController.js';
 import {searchUsersByName} from '../controller/userController.js';
 import authRouter from "./authRouter.js"
 
 apiRouter.use("/auth", authRouter);
+
+apiRouter.get("/getCommentsByPost", async(req, res) => {
+    try {
+        const comments = await getCommentsByPost(req.body.postId);
+        return res.status(200).send({ success: true, comment: comments });
+    }
+    catch (error) {
+        console.error('Error getting comments:', error);
+        return res.status(500).send({ success: false });
+    }
+});
 
 apiRouter.post("/addComment", async (req, res) => {
     try {
@@ -19,7 +30,6 @@ apiRouter.post("/addComment", async (req, res) => {
     }
 });
 
-//API
 apiRouter.post('/uploadPost', async (req, res) => {
     try {
         if (!req.body.fileId) {
@@ -46,8 +56,7 @@ apiRouter.post('/uploadPost', async (req, res) => {
     }
 });
 
-//API
-apiRouter.get('/followapi', async (req, res) => {
+apiRouter.get('/follow', async (req, res) => {
     try {
         const followers = await getFollowing("6744872f1e74c42b292cf196");
         console.log("Followers: ", followers);
@@ -59,41 +68,39 @@ apiRouter.get('/followapi', async (req, res) => {
     return res.status(200).send({ success: true });
 });
 
-//API
+
 apiRouter.get('/likePost', async (req, res) => {
     try {
-        const post = await likePost("674be85ad25f6193dd96dd27", "6744872f1e74c42b292cf201");
-        console.log("Post liked: ", post);
+        const post = await likePost(req.body.postId, req.body.userId);
+        return res.status(200).send({ success: true, post: post });
     }
     catch (error) {
         console.error('Error liking post:', error);
         return res.status(500).send({ success: false });
     }
-    return res.status(200).send({ success: true });
 });
 
-//API
+
 apiRouter.get('/searchPost', async (req, res) => {
     try {
-        const posts = await searchPosts("Programmed screen");
-        console.log(posts);
+        const posts = await searchPosts(req.body.search_string);
+        return res.status(200).send({ success: true, posts: posts });
     }
     catch (error) {
         console.error('Error liking post:', error);
         return res.status(500).send({ success: false });
     }
-    return res.status(200).send({ success: true });
 });
 
-apiRouter.get('/searchUsers', async (req, res) => {
+apiRouter.get('/searchUser', async (req, res) => {
     try {
-        const users = await searchUsersByName("J");
-        console.log(users);
+        const users = await searchUsersByName(req.body.search_string);
+        return res.status(200).send({ success: true, users: users });
     }
     catch (error) {
         console.error('Error searching users:', error);
         return res.status(500).send({ success: false });
     }
-    return res.status(200).send({ success: true });
 });
+
 export default apiRouter;
