@@ -1,7 +1,12 @@
+const controller = {};
 import Notification from '../model/notification.js';
 import Post from '../model/post.js';
 import Comment from '../model/comment.js';
 import User from '../model/user.js';
+
+const init = async (req, res, next) => {
+    next();
+};
 
 const getNotificationDetails = async (notificationId) => {
     try {
@@ -36,4 +41,30 @@ const getNotificationDetails = async (notificationId) => {
     }
 };
 
-export { getNotificationDetails };
+const getNotificationsById = async (userId) => {
+    try {
+        const notifications = await Notification.find({ receiver_id: userId })
+            .populate('sender_id', 'username profile_pic_url')
+            .sort({ created_at: -1 });
+        return notifications;
+    } catch (error) {
+        console.error('Error getting notifications:', error);
+        return [];
+    }
+};
+
+const getAllNotifications = async () => {
+    try {
+        const notifications = await Notification.find()
+            .populate('sender_id', 'username profile_pic_url')
+            .sort({ created_at: -1 });
+        console.log('Notifications:', notifications);
+        return notifications;
+    } catch (error) {
+        console.error('Error getting all notifications:', error);
+        return null;
+    }
+};
+
+
+export { init, getNotificationDetails, getNotificationsById, getAllNotifications };

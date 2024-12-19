@@ -18,6 +18,7 @@ import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
 import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
+import { getNotificationDetails, getNotificationsById, getAllNotifications } from './server/controller/notificationController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -102,9 +103,19 @@ app.get("/resetpassword", (req, res) => {
     res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin' });
 });
 
-app.get("/notifications", (req, res) => {
-    res.locals.title = "Activity • flow";
-    res.render("notifications", { currentPath: "/notifications" });
+app.get("/notifications", async (req, res) => {
+    try {
+        // Fetch notifications data
+        const notifications = await getAllNotifications(); // Use await here
+        res.locals.notifications = notifications;
+        res.locals.title = "Activity • flow";
+
+        // Render the "notifications" view with currentPath
+        res.render("notifications", { currentPath: "/notifications" });
+    } catch (error) {
+        console.error("Error loading notifications:", error);
+        res.status(500).send("Server Error");
+    }
 });
 
 app.get("/search", (req, res) => {
