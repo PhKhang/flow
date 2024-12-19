@@ -80,10 +80,23 @@ const getCommentsByAuthor = async (authorId) => {
     }
 };
 
+const getCommentsByPost = async (postId) => {
+    try {
+        const comments = await Comment.find({ post_id: postId })
+            .populate('author_id', 'username profile_pic_url full_name')
+            .sort({ created_at: -1 });
+        return comments;
+    } catch (error) {
+        console.error('Error getting comments by post:', error);
+        return null;
+    }
+};
+
 export { 
     getAllComments, 
     addComment, 
     deleteComment, 
     likeComment, 
-    getCommentsByAuthor 
+    getCommentsByAuthor,
+    getCommentsByPost
 };
