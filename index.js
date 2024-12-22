@@ -77,7 +77,10 @@ app.get("/", async (req, res) => {
 app.use('/post', postRouter);
 
 app.get("/following", async (req, res) => {
-    res.locals.posts = await getFollowPosts("6744872f1e74c42b292cf196");
+    if (!res.locals.username) {
+        return res.redirect('/signin');
+    }
+    res.locals.posts = await getFollowPosts(res.locals.username);
     res.locals.title = "Following • flow";
     res.render('index', { currentPath: "/following" });
 });

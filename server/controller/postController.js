@@ -122,6 +122,20 @@ const likePost = async (postId, userId) => {
     }
 };
 
+const unlikePost = async (postId, userId) => {
+    try {
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $pull: { likes: userId } },
+            { new: true }
+        );
+        return updatedPost;
+    } catch (error) {
+        console.error('Error unliking post:', error);
+        return null;
+    }
+}
+
 const searchPosts = async (searchString) => {
     try {
         const posts = await Post.find({ $text: { $search: searchString } })
@@ -140,4 +154,4 @@ const searchPosts = async (searchString) => {
     }
 };
 
-export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts };
+export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, unlikePost };

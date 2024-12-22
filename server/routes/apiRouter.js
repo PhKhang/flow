@@ -1,9 +1,10 @@
 import express from "express"
 const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
-import {addComment, likeComment, getCommentsByPost} from '../controller/commentController.js';
-import {addPost, getAllPosts, getFollowPosts, likePost, searchPosts} from '../controller/postController.js';
+import {addComment, likeComment, unlikeComment, getCommentsByPost} from '../controller/commentController.js';
+import {addPost, likePost, searchPosts, unlikePost} from '../controller/postController.js';
 import {searchUsersByName} from '../controller/userController.js';
+import {followUser, unfollowUser} from '../controller/followController.js';
 import authRouter from "./authRouter.js"
 
 apiRouter.use("/auth", authRouter);
@@ -56,20 +57,29 @@ apiRouter.post('/uploadPost', async (req, res) => {
     }
 });
 
-apiRouter.get('/follow', async (req, res) => {
+apiRouter.post('/follow', async (req, res) => {
     try {
-        const followers = await getFollowing("6744872f1e74c42b292cf196");
-        console.log("Followers: ", followers);
+        const followers = await followUser(req.body.followerId, req.body.followingId);
+        return res.status(200).send({ success: true, followers: followers });
     }
     catch (error) {
         console.error('Error following user:', error);
         return res.status(500).send({ success: false });
     }
-    return res.status(200).send({ success: true });
 });
 
+apiRouter.post('/unfollow', async (req, res) => {
+    try {
+        const followers = await unfollowUser(req.body.followerId, req.body.followingId);
+        return res.status(200).send({ success: true, followers: followers });
+    }
+    catch (error) {
+        console.error('Error following user:', error);
+        return res.status(500).send({ success: false });
+    }
+});
 
-apiRouter.get('/likePost', async (req, res) => {
+apiRouter.post('/likePost', async (req, res) => {
     try {
         const post = await likePost(req.body.postId, req.body.userId);
         return res.status(200).send({ success: true, post: post });
@@ -80,6 +90,38 @@ apiRouter.get('/likePost', async (req, res) => {
     }
 });
 
+apiRouter.post('/unlikePost', async (req, res) => {
+    try {
+        const post = await unlikePost(req.body.postId, req.body.userId);
+        return res.status(200).send({ success: true, post: post });
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.post('/likeComment', async (req, res) => {
+    try {
+        const comment = await likeComment(req.body.commentId, req.body.userId);
+        return res.status(200).send({ success: true, comment: comment });
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.post('/unlikeComment', async (req, res) => {
+    try {
+        const comment = await unlikeComment(req.body.commentId, req.body.userId);
+        return res.status(200).send({ success: true, comment: comment });
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
+        return res.status(500).send({ success: false });
+    }
+});
 
 apiRouter.get('/searchPost', async (req, res) => {
     try {
