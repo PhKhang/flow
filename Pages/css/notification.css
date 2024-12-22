@@ -44,6 +44,11 @@ header {
     border-bottom: 1px solid var(--outline);
     margin-bottom: 10px;
     margin-left: 5px;
+    padding-bottom: 8px;
+}
+
+.notifications-container {
+    width: 100%;
 }
 
 .tab {
@@ -55,6 +60,7 @@ header {
     cursor: pointer;
     font-weight: 600;
     font-family: var(--font-family-system);
+    text-decoration: none;
 }
 
 .tab.active {

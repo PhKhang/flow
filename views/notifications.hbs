@@ -7,8 +7,8 @@
     </header>
     <div class="notification-settings">
         <div class="left-settings">
-            <button class="tab active">All</button>
-            <button class="tab">Unread</button>
+            <a href="/notifications" class="tab {{#if (eq currentPath "/notifications")}}active{{/if}}">All</a>
+            <a href="/notifications/unread" class="tab {{#if (eq currentPath "/notifications/unread")}}active{{/if}}">Unread</a>
         </div>
         <div class="right-settings">
             
@@ -16,52 +16,52 @@
     </div>
     <div class="notifications-container">
         {{#each notifications}}
-        <div class="notification-item" data-read="{{status}}">
-            <div class="overlay"></div>
-            <div class="profile-pic">
-                <img src="{{sender_id.profile_pic_url}}" alt="Profile Picture">
+        <div class="notification-item" data-read="{{#if (eq status 'read')}}true{{else}}false{{/if}}">
+        <div class="overlay"></div>
+        <div class="profile-pic">
+            <img src="{{sender_id.profile_pic_url}}" alt="Profile Picture">
+        </div>
+        <div class="notification-text">
+            <p>
+                <span class="notification-username">{{sender_id.username}}</span>
+                <span> • </span>
+                <span class="time">{{time}}</span>
+            </p>
+            <p>
+                {{#if (eq type 'comment_post')}}
+                    commented on your post
+                {{else if (eq type 'like_post')}}
+                    liked your post
+                {{else if (eq type 'like_comment')}}
+                    liked your comment
+                {{else if (eq type 'following')}}
+                    started following you
+                {{/if}}
+            </p>
+        </div>
+        {{#if postImgSrc}}
+        <div class="post-pic">
+            <img src="{{postImgSrc}}" alt="Post Image">
+        </div>
+        {{/if}}
+        <div class="noti-setting-wrapper">
+            <div class="noti-setting-icon-wrapper">
+                <img src="/images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
             </div>
-            <div class="notification-text">
-                <p>
-                    <span class="notification-username">{{sender_id.username}}</span>
-                    <span> • </span>
-                    <span class="time">{{time}}</span>
-                </p>
-                <p>
-                    {{#if (eq type 'comment_post')}}
-                        has commented on your post
-                    {{else if (eq type 'like_post')}}
-                        liked your post
-                    {{else if (eq type 'like_comment')}}
-                        liked your comment
-                    {{else if (eq type 'following')}}
-                        is following you
-                    {{/if}}
-                </p>
+            <div class="noti-menu hidden">
+                <button class="menu-item" onclick="toggleReadStatus({{id}})">
+                    <img src="/images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
+                    {{#if (eq status 'read')}}Mark as Unread{{else}}Mark as Read{{/if}}
+                </button>
+                <button class="menu-item" onclick="deleteNotification({{id}})">
+                    <img src="/images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
+                    Delete
+                </button>
             </div>
-            {{#if postImgSrc}}
-            <div class="post-pic">
-                <img src="{{postImgSrc}}" alt="Post Image">
-            </div>
-            {{/if}}
-            <div class="noti-setting-wrapper">
-                <div class="noti-setting-icon-wrapper">
-                    <img src="/images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
-                </div>
-                <div class="noti-menu hidden">
-                    <button class="menu-item" onclick="toggleReadStatus({{id}})">
-                        <img src="/images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
-                        {{#if (eq status 'read')}}Mark as Unread{{else}}Mark as Read{{/if}}
-                    </button>
-                    <button class="menu-item" onclick="deleteNotification({{id}})">
-                        <img src="/images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
-                        Delete
-                    </button>
-                </div>
-            </div>
+        </div>
         </div>
         {{/each}}
     </div>
 </main>
 
-{{!-- <script src="/script/notification.js"></script> --}}
+<script src="/script/notification.js"></script>

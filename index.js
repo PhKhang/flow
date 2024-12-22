@@ -18,7 +18,7 @@ import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
 import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
-import { getNotificationDetails, getNotificationsById, getAllNotifications } from './server/controller/notificationController.js';
+import { getNotificationDetails, getNotificationsById, getAllNotifications, getUnreadNotifications } from './server/controller/notificationController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -104,18 +104,15 @@ app.get("/resetpassword", (req, res) => {
 });
 
 app.get("/notifications", async (req, res) => {
-    try {
-        // Fetch notifications data
-        const notifications = await getAllNotifications(); // Use await here
-        res.locals.notifications = notifications;
-        res.locals.title = "Activity • flow";
+    res.locals.notifications = await getAllNotifications(); ;
+    res.locals.title = "Activity • flow";
+    res.render("notifications", { currentPath: "/notifications" });
+});
 
-        // Render the "notifications" view with currentPath
-        res.render("notifications", { currentPath: "/notifications" });
-    } catch (error) {
-        console.error("Error loading notifications:", error);
-        res.status(500).send("Server Error");
-    }
+app.get("/notifications/unread", async (req, res) => {
+    res.locals.notifications = await getUnreadNotifications();
+    res.locals.title = "Activity • flow";
+    res.render('notifications', { currentPath: "/notifications/unread" });
 });
 
 app.get("/search", (req, res) => {

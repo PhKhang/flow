@@ -66,5 +66,36 @@ const getAllNotifications = async () => {
     }
 };
 
+const getUnreadNotifications = async (userId) => {
+    try {
+        const unreadNotifications = await Notification.find({
+            status: 'unread',
+        })
+            .populate('sender_id', 'username profile_pic_url')
+            .sort({ created_at: -1 });
 
-export { init, getNotificationDetails, getNotificationsById, getAllNotifications };
+        return unreadNotifications;
+    } catch (error) {
+        console.error('Error getting unread notifications:', error);
+        return [];
+    }
+};
+
+const getUnreadNotificationsByUserId = async (userId) => {
+    try {
+        const unreadNotifications = await Notification.find({
+            receiver_id: userId,
+            status: 'unread',
+        })
+            .populate('sender_id', 'username profile_pic_url')
+            .sort({ created_at: -1 });
+
+        return unreadNotifications;
+    } catch (error) {
+        console.error('Error getting unread notifications:', error);
+        return [];
+    }
+};
+
+
+export { init, getNotificationDetails, getNotificationsById, getAllNotifications, getUnreadNotifications, getUnreadNotificationsByUserId};
