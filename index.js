@@ -77,10 +77,21 @@ app.get("/", async (req, res) => {
 app.use('/post', postRouter);
 
 app.get("/following", async (req, res) => {
+    const token = req.cookies.access_token;
+    
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY)
+    console.log("Decoded token following: ", decoded)
+
     if (!res.locals.username) {
         return res.redirect('/signin');
     }
-    res.locals.posts = await getFollowPosts(res.locals.username);
+
+    res.locals.posts = await getFollowPosts(decoded.id);
     res.locals.title = "Following • flow";
     res.render('index', { currentPath: "/following" });
 });
