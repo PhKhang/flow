@@ -20,6 +20,7 @@ import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './s
 import { getAllUsers, fetchUserByEmail, fetchUserByUsername } from './server/controller/userController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
+import DecodeUserInfo from './server/utils/decodeUserInfo.js';
 
 const app = express();
 const port = 3000;
@@ -113,15 +114,13 @@ app.get("/search", (req, res) => {
 });
 
 app.get("/profile/:username", async (req, res) => {
-    const username = req.params.username;
-    const user = await fetchUserByUsername(username)
+    const user = DecodeUserInfo.decode(req);
     if (!user) {
         return res.status(404).send("User not found");
     }
-    const usr = user[0]
-    // const usr = user
-    res.locals.title = `${usr.full_name} • flow`;
-    res.render("profile", { currentPath: `/profile/${usr.username}`, user: usr });
+    console.log(user)
+    res.locals.title = `${user.full_name} • flow`;
+    res.render("profile", { currentPath: `/profile/${user.username}`, user: user });
 });
 
 app.get("/post", async (req, res) => {

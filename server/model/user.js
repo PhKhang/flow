@@ -6,7 +6,7 @@ const userSchema = new Schema({
     full_name: String,
     email: String,
     password_hash: String,
-    profile_pic_url: String,
+    profile_pic_url: { type: String, default: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/default%20avatar.png" },
     bio: String,
     created_at: { type: Date, default: Date.now },
     likes: [String],

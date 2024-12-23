@@ -47,7 +47,7 @@ authRouter.post("/signup", async (req, res) => {
     let fetched = await fetchUserByUsername(username)
     if (fetched != null) {
         console.log("Username used: ", fetched)
-        return res.status(409).json({ type: "username", error: "Username used" })
+        return res.status(409).json({ type: "username", error: "Username already used" })
     }
 
     fetched = await fetchUserByEmail(email)

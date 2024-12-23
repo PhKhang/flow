@@ -31,7 +31,6 @@ const fetchUserByEmail = async (email) => {
 const fetchUserByUsername = async (username) => {
     console.log("Fetching user by username: ", username);
     try {
-        // const user = await User.findOne({ username: username });
         const user = await User.aggregate(
             [
                 { "$match": { "username": username } },
@@ -61,7 +60,7 @@ const fetchUserByUsername = async (username) => {
                 }
             ]
         );
-        return user;
+        return user[0];
     } catch (error) {
         console.log("Error fetching user by username: ", error);
         return null;
