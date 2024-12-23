@@ -68,9 +68,33 @@ app.get("/", async (req, res) => {
     res.locals.title = "Home • flow";
     res.render('index', { currentPath: "/" });
 });
+<<<<<<< Updated upstream
+=======
+
+app.use('/post', postRouter);
+>>>>>>> Stashed changes
+
+app.get("/post", async (req, res) => {
+    res.locals.posts = await getAllPosts();
+    res.locals.title = "Post • flow";
+    res.render("post", { currentPath: "/post" });
+});
 
 app.get("/following", async (req, res) => {
+<<<<<<< Updated upstream
     res.locals.posts = await getFollowPosts("6744872f1e74c42b292cf196");
+=======
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        res.redirect('/signin');
+        return;
+    }
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    console.log("Decoded token following: ", decoded);
+
+    res.locals.posts = await getFollowPosts(decoded.id);
+>>>>>>> Stashed changes
     res.locals.title = "Following • flow";
     res.render('index', { currentPath: "/index" });
 });
@@ -111,7 +135,10 @@ app.get("/profile/:username", (req, res) => {
     res.render("profile", { currentPath: `/profile/${username}`, username: username });
 });
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 app.get("/server/all", async (req, res) => {
     const users = await getAllUsers();
     res.send(users.length.toString());

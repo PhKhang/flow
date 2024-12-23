@@ -1,7 +1,9 @@
 import mongoose, { mongo } from "mongoose";
 import Post from  "../model/post.js";
+import Comment from  "../model/comment.js";
 import Follow from "../model/follow.js";
 import { formatPostDate } from "../utils/postUtils.js"
+import jwt from "jsonwebtoken";
 
 const getAllPosts = async () => {
     try {
@@ -43,6 +45,41 @@ const getFollowPosts = async (userId) => {
     }
 };
 
+<<<<<<< Updated upstream
+=======
+const getPostById = async (req, res) => {
+    const postId = req.params.id;
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        return res.redirect('/signin');
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
+        if (!post) {
+            return res.status(404).send('Post not found');
+        }
+
+        const comments = await Comment.find({ post_id: postId })
+            .populate('author_id', '_id username profile_pic_url full_name')
+            .sort({ created_at: -1 });
+
+        res.locals.title = `${post.content} • flow`;
+        console.log('User:', decoded);
+        res.render('post', {
+            post,
+            comments,
+            user: decoded,
+        });
+    } catch (error) {
+        console.error('Error fetching post or comments:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+>>>>>>> Stashed changes
 const addPost = async (authorId, content, typeOfMedia, urls, likes) => {
     const newPost = new Post({
         author_id: authorId, 
