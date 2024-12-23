@@ -162,7 +162,8 @@ header {
 .post-pic {
     width: 40px;
     height: 40px;
-    margin-right: 10px;
+    margin-right: 5px;
+    margin-left: 5px;
     border-radius: 5px;
     overflow: hidden;
     z-index: 2; 
@@ -176,7 +177,7 @@ header {
 }
 
 .noti-setting-wrapper {
-    align-self: center;
+    margin-top: 7px;
     position: relative;
 }
 

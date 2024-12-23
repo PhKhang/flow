@@ -18,6 +18,8 @@ const getNotificationDetails = async (notificationId) => {
         let attachmentDetails;
         switch (notification.type) {
             case 'like_post':
+                attachmentDetails = await Post.findById(notification.attachment);
+                break;
             case 'comment_post':
                 attachmentDetails = await Post.findById(notification.attachment);
                 break;
@@ -58,8 +60,31 @@ const getAllNotifications = async () => {
         const notifications = await Notification.find()
             .populate('sender_id', 'username profile_pic_url')
             .sort({ created_at: -1 });
-        console.log('Notifications:', notifications);
-        return notifications;
+
+        const commentAttachmentIds = notifications
+            .filter(({ type }) => type === 'like_comment')
+            .map(({ attachment }) => attachment)
+            .filter(Boolean);
+
+        const postAttachmentIds = notifications
+            .filter(({ type }) => ['like_post', 'comment_post'].includes(type))
+            .map(({ attachment }) => attachment)
+            .filter(Boolean);
+
+        const [comments, posts] = await Promise.all([
+            Comment.find({ _id: { $in: commentAttachmentIds } }, 'content media _id post_id'),
+            Post.find({ _id: { $in: postAttachmentIds } }, 'content media _id')  
+        ]);
+
+        return notifications.map(notification => ({
+            ...notification.toObject(),
+            attachment:
+                notification.type === 'like_comment'
+                    ? comments.find(({ _id }) => _id.equals(notification.attachment)) || null
+                    : ['like_post', 'comment_post'].includes(notification.type)
+                    ? posts.find(({ _id }) => _id.equals(notification.attachment)) || null
+                    : null
+        }));
     } catch (error) {
         console.error('Error getting all notifications:', error);
         return null;
@@ -74,6 +99,7 @@ const getUnreadNotifications = async (userId) => {
             .populate('sender_id', 'username profile_pic_url')
             .sort({ created_at: -1 });
 
+        console.log(unreadNotifications);
         return unreadNotifications;
     } catch (error) {
         console.error('Error getting unread notifications:', error);
@@ -96,6 +122,5 @@ const getUnreadNotificationsByUserId = async (userId) => {
         return [];
     }
 };
-
 
 export { init, getNotificationDetails, getNotificationsById, getAllNotifications, getUnreadNotifications, getUnreadNotificationsByUserId};

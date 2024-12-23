@@ -15,11 +15,13 @@ const notificationSchema = new Schema({
         default: 'unread',
     },
     created_at: { type: Date, default: Date.now },
-    attachment: {
-        type: Schema.Types.ObjectId,
+    attachment: { type: Schema.Types.ObjectId, refPath: 'onModel', required: true, },
+    onModel: {
+        type: String,
         required: true,
-        // Dynamically populate based on `type`
-    },
+        enum: ['posts', 'comments']
+      },
+
 }, { collection: 'notifications' });
 
 const Notification = mongoose.model('notifications', notificationSchema);

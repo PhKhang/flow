@@ -7,8 +7,8 @@
     </header>
     <div class="notification-settings">
         <div class="left-settings">
-            <a href="/notifications" class="tab {{#if (eq currentPath "/notifications")}}active{{/if}}">All</a>
-            <a href="/notifications/unread" class="tab {{#if (eq currentPath "/notifications/unread")}}active{{/if}}">Unread</a>
+            <a href="" class="tab active" data-tab="all">All</a>
+            <a href="" class="tab" data-tab="unread">Unread</a>
         </div>
         <div class="right-settings">
             
@@ -16,7 +16,14 @@
     </div>
     <div class="notifications-container">
         {{#each notifications}}
-        <div class="notification-item" data-read="{{#if (eq status 'read')}}true{{else}}false{{/if}}">
+        <div class="notification-item" 
+            data-read="{{#if (eq status 'read')}}true{{else}}false{{/if}}"
+            data-id="{{_id}}"
+            data-type="{{type}}"
+            data-post-id="{{#if (eq type 'comment_post')}}{{attachment._id}}
+                            {{else if (eq type 'like_post')}}{{attachment._id}}
+                            {{else}}{{attachment.post_id}}{{/if}}"
+            data-comment-id="{{#if (eq type 'like_comment')}}{{attachment._id}}{{/if}}">
         <div class="overlay"></div>
         <div class="profile-pic">
             <img src="{{sender_id.profile_pic_url}}" alt="Profile Picture">
@@ -29,20 +36,21 @@
             </p>
             <p>
                 {{#if (eq type 'comment_post')}}
-                    commented on your post
+                    commented on your post: <span class="post-content">{{attachment.content}}</span>
                 {{else if (eq type 'like_post')}}
-                    liked your post
+                    liked your post: <span class="post-content">{{attachment.content}}</span>
                 {{else if (eq type 'like_comment')}}
-                    liked your comment
+                    liked your comment: <span class="post-content">{{attachment.content}}</span>
                 {{else if (eq type 'following')}}
                     started following you
                 {{/if}}
             </p>
         </div>
-        {{#if postImgSrc}}
-        <div class="post-pic">
-            <img src="{{postImgSrc}}" alt="Post Image">
-        </div>
+
+        {{#if attachment.media.urls}}
+            <div class="post-pic">
+                <img src="{{attachment.media.urls.[0]}}" alt="Post Image">
+            </div>
         {{/if}}
         <div class="noti-setting-wrapper">
             <div class="noti-setting-icon-wrapper">
