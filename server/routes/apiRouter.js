@@ -2,7 +2,7 @@ import express from "express"
 const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
 import {addComment, likeComment, unlikeComment, getCommentsByPost} from '../controller/commentController.js';
-import {addPost, likePost, searchPosts, unlikePost} from '../controller/postController.js';
+import {addPost, likePost, searchPosts, unlikePost, getPostsByAuthor} from '../controller/postController.js';
 import {searchUsersByName} from '../controller/userController.js';
 import {followUser, unfollowUser} from '../controller/followController.js';
 import authRouter from "./authRouter.js"
@@ -11,7 +11,7 @@ apiRouter.use("/auth", authRouter);
 
 apiRouter.get("/getCommentsByPost", async(req, res) => {
     try {
-        const comments = await getCommentsByPost(req.body.postId);
+        const comments = await getCommentsByPost(req.query.postId);
         return res.status(200).send({ success: true, comment: comments });
     }
     catch (error) {
@@ -125,7 +125,7 @@ apiRouter.post('/unlikeComment', async (req, res) => {
 
 apiRouter.get('/searchPost', async (req, res) => {
     try {
-        const posts = await searchPosts(req.body.search_string);
+        const posts = await searchPosts(req.query.search_string);
         return res.status(200).send({ success: true, posts: posts });
     }
     catch (error) {
@@ -136,11 +136,22 @@ apiRouter.get('/searchPost', async (req, res) => {
 
 apiRouter.get('/searchUser', async (req, res) => {
     try {
-        const users = await searchUsersByName(req.body.search_string);
+        const users = await searchUsersByName(req.query.search_string);
         return res.status(200).send({ success: true, users: users });
     }
     catch (error) {
         console.error('Error searching users:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.get('/getPostsByAuthor', async (req, res) => {
+    try {
+        const posts = await getPostsByAuthor(req.query.authorId);
+        return res.status(200).send({ success: true, posts: posts });
+    }
+    catch (error) {
+        console.error('Error getting posts:', error);
         return res.status(500).send({ success: false });
     }
 });
