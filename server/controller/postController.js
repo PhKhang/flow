@@ -1,9 +1,13 @@
+const controller = {};
 import mongoose, { mongo } from "mongoose";
 import Post from  "../model/post.js";
 import Comment from  "../model/comment.js";
 import Follow from "../model/follow.js";
 import { formatPostDate } from "../utils/postUtils.js"
-import jwt from "jsonwebtoken";
+
+const init = async (req, res, next) => {
+    next();
+};
 
 const getAllPosts = async () => {
     try {
@@ -47,33 +51,21 @@ const getFollowPosts = async (userId) => {
 
 const getPostById = async (req, res) => {
     const postId = req.params.id;
-    const token = req.cookies.access_token;
 
-    if (!token) {
-        return res.redirect('/signin');
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+        console.error('Invalid Post ID');
+        return res.status(400).send('Invalid Post ID');
     }
-
     try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
         const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
         if (!post) {
             return res.status(404).send('Post not found');
         }
-
-        const comments = await Comment.find({ post_id: postId })
-            .populate('author_id', '_id username profile_pic_url full_name')
-            .sort({ created_at: -1 });
-
-        res.locals.title = `${post.content} • flow`;
-        console.log('User:', decoded);
-        res.render('post', {
-            post,
-            comments,
-            user: decoded,
-        });
+        res.locals.post = post
+        res.render('post');
     } catch (error) {
-        console.error('Error fetching post or comments:', error);
-        res.status(500).send('Internal Server Error');
+        console.error('Error getting post by id:', error);
+        return res.status(500).send('Internal Server Error');
     }
 };
 
@@ -131,6 +123,20 @@ const likePost = async (postId, userId) => {
     }
 };
 
+const unlikePost = async (postId, userId) => {
+    try {
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $pull: { likes: userId } },
+            { new: true }
+        );
+        return updatedPost;
+    } catch (error) {
+        console.error('Error unliking post:', error);
+        return null;
+    }
+}
+
 const searchPosts = async (searchString) => {
     try {
         const posts = await Post.find({ $text: { $search: searchString } })
@@ -149,4 +155,4 @@ const searchPosts = async (searchString) => {
     }
 };
 
-export { getAllPosts, getFollowPosts, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, getPostById };
+export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, unlikePost };

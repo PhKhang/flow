@@ -230,3 +230,16 @@ function closeFullscreen(index) {
     let modal = document.getElementById(`imageModal-${index}`);
     modal.style.display = 'none';
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.tab');
+    const categoryInput = document.getElementById('category');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active')
+            categoryInput.value = tab.getAttribute('data-category');
+        });
+    });
+});

@@ -1,25 +1,30 @@
 import express from "express"
 const apiRouter = express.Router();
-import {getAllComments, addComment, deleteComment, likeComment, getCommentsByAuthor} from '../controller/commentController.js';
-import {addPost, getAllPosts, getFollowPosts, likePost, searchPosts} from '../controller/postController.js';
+// import { init, showList, showDetails } from '../controllers/blogController.js';
+import {addComment, likeComment, unlikeComment, getCommentsByPost} from '../controller/commentController.js';
+import {addPost, likePost, searchPosts, unlikePost, getPostsByAuthor} from '../controller/postController.js';
+import {searchUsersByName} from '../controller/userController.js';
+import {followUser, unfollowUser} from '../controller/followController.js';
 import authRouter from "./authRouter.js"
 import { verifyToken } from '../middleware/verifyToken.js';
 import jwt from 'jsonwebtoken';
 
 apiRouter.use("/auth", authRouter);
 
-
-apiRouter.post("/addComment",verifyToken, async (req, res) => {
-    const token = req.cookies.access_token
-    if (!token) {
-        console.log("No token")
-        return res.status(401).json({ error: 'Not logged in' })
-    }
-    
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
- 
+apiRouter.get("/getCommentsByPost", async(req, res) => {
     try {
-        const newComment = await addComment(decoded.id, req.body.postId, req.body.content, req.body.typeOfMedia, req.body.urls);
+        const comments = await getCommentsByPost(req.query.postId);
+        return res.status(200).send({ success: true, comment: comments });
+    }
+    catch (error) {
+        console.error('Error getting comments:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.post("/addComment", async (req, res) => {
+    try {
+        const newComment = await addComment(req.body.authorId, req.body.postId, req.body.content, req.body.typeOfMedia, req.body.urls);
         return res.status(200).send({ success: true, comment: newComment });
     }
     catch (error) {
@@ -28,16 +33,7 @@ apiRouter.post("/addComment",verifyToken, async (req, res) => {
     }
 });
 
-//API
-apiRouter.post('/uploadPost',verifyToken, async (req, res) => {
-    const token = req.cookies.access_token
-    if (!token) {
-        console.log("No token")
-        return res.status(401).json({ error: 'Not logged in' })
-    }
-    
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
- 
+apiRouter.post('/uploadPost', async (req, res) => {
     try {
         if (!req.body.fileId) {
             const {caption} = req.body;
@@ -63,43 +59,103 @@ apiRouter.post('/uploadPost',verifyToken, async (req, res) => {
     }
 });
 
-//API
-apiRouter.get('/followapi', async (req, res) => {
+apiRouter.post('/follow', async (req, res) => {
     try {
-        const followers = await getFollowing("6744872f1e74c42b292cf196");
-        console.log("Followers: ", followers);
+        const followers = await followUser(req.body.followerId, req.body.followingId);
+        return res.status(200).send({ success: true, followers: followers });
     }
     catch (error) {
         console.error('Error following user:', error);
         return res.status(500).send({ success: false });
     }
-    return res.status(200).send({ success: true });
 });
 
-//API
-apiRouter.get('/likePost', async (req, res) => {
+apiRouter.post('/unfollow', async (req, res) => {
     try {
-        const post = await likePost("674be85ad25f6193dd96dd27", "6744872f1e74c42b292cf201");
-        console.log("Post liked: ", post);
+        const followers = await unfollowUser(req.body.followerId, req.body.followingId);
+        return res.status(200).send({ success: true, followers: followers });
+    }
+    catch (error) {
+        console.error('Error following user:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.post('/likePost', async (req, res) => {
+    try {
+        const post = await likePost(req.body.postId, req.body.userId);
+        return res.status(200).send({ success: true, post: post });
     }
     catch (error) {
         console.error('Error liking post:', error);
         return res.status(500).send({ success: false });
     }
-    return res.status(200).send({ success: true });
 });
 
-//API
+apiRouter.post('/unlikePost', async (req, res) => {
+    try {
+        const post = await unlikePost(req.body.postId, req.body.userId);
+        return res.status(200).send({ success: true, post: post });
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.post('/likeComment', async (req, res) => {
+    try {
+        const comment = await likeComment(req.body.commentId, req.body.userId);
+        return res.status(200).send({ success: true, comment: comment });
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.post('/unlikeComment', async (req, res) => {
+    try {
+        const comment = await unlikeComment(req.body.commentId, req.body.userId);
+        return res.status(200).send({ success: true, comment: comment });
+    }
+    catch (error) {
+        console.error('Error liking post:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
 apiRouter.get('/searchPost', async (req, res) => {
     try {
-        const posts = await searchPosts("Programmed screen");
-        console.log(posts);
+        const posts = await searchPosts(req.query.search_string);
+        return res.status(200).send({ success: true, posts: posts });
     }
     catch (error) {
         console.error('Error liking post:', error);
         return res.status(500).send({ success: false });
     }
-    return res.status(200).send({ success: true });
+});
+
+apiRouter.get('/searchUser', async (req, res) => {
+    try {
+        const users = await searchUsersByName(req.query.search_string);
+        return res.status(200).send({ success: true, users: users });
+    }
+    catch (error) {
+        console.error('Error searching users:', error);
+        return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.get('/getPostsByAuthor', async (req, res) => {
+    try {
+        const posts = await getPostsByAuthor(req.query.authorId);
+        return res.status(200).send({ success: true, posts: posts });
+    }
+    catch (error) {
+        console.error('Error getting posts:', error);
+        return res.status(500).send({ success: false });
+    }
 });
 
 export default apiRouter;

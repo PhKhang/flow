@@ -17,7 +17,7 @@ import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
-import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
+import { getAllUsers, fetchUserByEmail, fetchUserByUsername } from './server/controller/userController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 
@@ -64,32 +64,21 @@ app.set('view engine', 'hbs');
 await mongoose.connect(process.env.ATLAS_URI);
 
 app.get("/", async (req, res) => {
-    res.locals.posts = await getAllPosts();
-    res.locals.title = "Home • flow";
-    res.render('index', { currentPath: "/" });
-});
-
-app.use('/post', postRouter);
-
-app.get("/post", async (req, res) => {
-    res.locals.posts = await getAllPosts();
-    res.locals.title = "Post • flow";
-    res.render("post", { currentPath: "/post" });
+    try {
+        const posts = await getAllPosts();
+        res.locals.posts = posts;
+        res.locals.title = "Home • flow";
+        res.render('index', { currentPath: "/" });
+    } catch (error) {
+        console.error('Error rendering home page:', error);
+        res.status(500).send('Error loading home page');
+    }
 });
 
 app.get("/following", async (req, res) => {
-    const token = req.cookies.access_token;
-
-    if (!token) {
-        res.redirect('/signin');
-        return;
-    }
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    console.log("Decoded token following: ", decoded);
-
-    res.locals.posts = await getFollowPosts(decoded.id);
+    res.locals.posts = await getFollowPosts("6744872f1e74c42b292cf196");
     res.locals.title = "Following • flow";
-    res.render('index', { currentPath: "/index" });
+    res.render('index', { currentPath: "/following" });
 });
 
 app.get("/signin", (req, res) => {
@@ -122,10 +111,16 @@ app.get("/search", (req, res) => {
     res.render("search", { currentPath: "/search" });
 });
 
-app.get("/profile/:username", (req, res) => {
+app.get("/profile/:username", async (req, res) => {
     const username = req.params.username;
-    res.locals.title = `${username} • flow`;
-    res.render("profile", { currentPath: `/profile/${username}`, username: username });
+    const user = await fetchUserByUsername(username)
+    if (!user) {
+        return res.status(404).send("User not found");
+    }
+    const usr = user[0]
+    // const usr = user
+    res.locals.title = `${usr.full_name} • flow`;
+    res.render("profile", { currentPath: `/profile/${usr.username}`, user: usr });
 });
 
 app.get("/server/all", async (req, res) => {
@@ -197,6 +192,24 @@ app.post('/uploadImg', verifyToken, upload.single('file'), async (req, res) => {
     }
     console.log(req.file.key);
     return res.status(200).send({ filename: `https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/${req.file.key}` });
+});
+
+
+
+// Sample
+app.get("/send", (req, res) => {
+    const token = req.cookies.access_token
+    if (!token) {
+        console.log("No token")
+        return res.status(401).json({ error: 'Not logged in' })
+    }
+    
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);  
+    const message = req.query.message;
+    console.log(decoded.username)
+    console.log("message: ", message)
+    
+    res.send("send: " + message);
 });
 
 app.use('/api', apiRouter);
