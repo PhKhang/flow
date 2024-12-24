@@ -72,9 +72,6 @@ const getPostById = async (req, res) => {
             .populate('author_id', '_id username profile_pic_url full_name')
             .sort({ created_at: -1 });
 
-        const { formattedDate, timeAgo } = formatPostDate(post.created_at);
-        post.modified_created_at = formattedDate;
-        post.timeAgo = timeAgo;
         comments.forEach(comment => {
             const { formattedDate, timeAgo } = formatPostDate(comment.created_at);
             comment.modified_created_at = formattedDate;

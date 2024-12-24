@@ -1,3 +1,4 @@
+
 commentImageInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -31,11 +32,17 @@ function formatNumber(num) {
 
 function renderComments() {
     const container = document.getElementById('commentsContainer');
-    container.innerHTML = comments.map(comment => createCommentHTML(comment)).join('');
+    if (!container) {
+        console.error('Comments container not found');
+        return;
+    }
+
+    //const commentsHTML = comments.map(comment => createCommentHTML(comment)).join('');
+    //container.innerHTML = commentsHTML;
 }
 
-const addNewComment = async ({ postId, authorId, username, profilePicUrl }) => {
-    console.log('Adding new comment:', postId, authorId, username, profilePicUrl);
+const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAuthorId }) => {
+    console.log('Adding new comment:', postId, authorId, username, profilePicUrl, postAuthorId);
     const textarea = document.getElementById('newCommentInput');
     const commentImagePreview = document.getElementById('commentImagePreview');
     const commentImageInput = document.getElementById('commentImageInput');
@@ -92,9 +99,26 @@ const addNewComment = async ({ postId, authorId, username, profilePicUrl }) => {
 
         if (status.success) {
             console.log('Comment added successfully');
-            comments.unshift(newComment);
-            renderComments();
-
+            // comments.unshift(newComment);
+            // renderComments();
+            const notificationResponse = await fetch('/api/createNotification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'comment_post',
+                    sender_id: authorId,
+                    receiver_id: postAuthorId,
+                    attachment: postId,
+                }),
+            });
+            const notificationStatus = await notificationResponse.json();
+            console.log(notificationStatus);
+            if (notificationStatus.success) {
+                console.log('Notification created successfully');
+            } else {
+                console.error('Failed to create notification');
+            }
+            
             if (textarea) textarea.value = '';
             const commentImagePreview = document.getElementById('commentImagePreview');
             const commentImageInput = document.getElementById('commentImageInput');

@@ -89,4 +89,72 @@ const getUnreadNotificationsByUserId = async (userId) => {
     }
 };
 
-export { init, getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser};
+const createNotification = async (req, res) => {
+    try {
+        const { type, sender_id, receiver_id, attachment, onModel } = req.body;
+
+        const newNotification = new Notification({
+            type,
+            sender_id,
+            receiver_id,
+            attachment,
+            onModel
+        });
+
+        await newNotification.save();
+        res.status(201).json({success: true, newNotification});
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message });
+    }
+};
+
+const deleteNotification = async (req, res) => {
+    try {
+        const  id  = req.body.commentId;
+        const notification = await Notification.findByIdAndDelete(id);
+        if (!notification) {
+            res.status(404).json({success: true, message: 'Notification not found' });
+        } else {
+            res.status(200).json({success: false, notification});
+        }
+    }
+    catch (error) {
+        res.status(500).json({success: false, message: error.message });
+    }
+}
+
+const updateReadStatus = async (req, res) => {
+    try {
+        const  id  = req.body.notificationId;
+        const notification = await Notification
+            .findByIdAndUpdate(id, { status: 'read' }, { new: true });
+        if (!notification) {
+            res.status(404).json({success: true, message: 'Notification not found' });
+        }
+        else {
+            res.status(200).json({success: false,notification});
+        }
+    }
+    catch (error) {
+        res.status(500).json({success: false, message: error.message });
+    }
+}
+
+const updateUnreadStatus = async (req, res) => {
+    try {
+        const  id  = req.body.notificationId;
+        const notification = await Notification
+            .findByIdAndUpdate(id, { status: 'unread' }, { new: true });
+        if (!notification) {
+            res.status(404).json({success: true, message: 'Notification not found' });
+        }
+        else {
+            res.status(200).json({success: false, notification});
+        }
+    }
+    catch (error) {
+        res.status(500).json({success: false, message: error.message });
+    }
+}
+
+export { init, getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser, createNotification, getUnreadNotificationsByUserId, deleteNotification, updateReadStatus, updateUnreadStatus };

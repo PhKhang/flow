@@ -3,7 +3,7 @@
 <main class="notifications col-11 col-md-8 col-lg-5 pe-3 ps-3">
     <header>
         <h1>Notifications</h1>
-        <button class="mark-read">Mark all as read</button>
+        <button class="mark-read" onclick="markAllAsRead()">Mark all as read</button>
     </header>
     <div class="notification-settings">
         <div class="left-settings">
@@ -57,7 +57,13 @@
                 <img src="/images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
             </div>
             <div class="noti-menu hidden">
-                <button class="menu-item" onclick="toggleReadStatus({{id}})">
+                <button class="menu-item" 
+                {{#if (eq status 'read')}}
+                    onclick="markAsUnread('{{_id}}')"
+                {{else}}
+                    onclick="markAsRead('{{_id}}')"
+                {{/if}}
+                >
                     <img src="/images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
                     {{#if (eq status 'read')}}Mark as Unread{{else}}Mark as Read{{/if}}
                 </button>

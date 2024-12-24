@@ -18,7 +18,6 @@ const notificationSchema = new Schema({
     attachment: { type: Schema.Types.ObjectId, refPath: 'onModel', required: true, },
     onModel: {
         type: String,
-        required: true,
         enum: ['posts', 'comments']
       },
 
