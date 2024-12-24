@@ -17,9 +17,11 @@ import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
-import { getAllUsers, fetchUserByEmail, fetchUserByUsername } from './server/controller/userController.js';
+import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
+import { getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser } from './server/controller/notificationController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
+import { decode } from 'punycode';
 
 const app = express();
 const port = 3000;
@@ -93,16 +95,11 @@ app.get("/following", async (req, res) => {
     const token = req.cookies.access_token;
     
     if (!token) {
-        console.log("No token")
-        return res.status(401).json({ error: 'Not logged in' })
+        console.log("No token");
+        return res.redirect("/signin");
     }
 
-    const decoded = jwt.verify(token, process.env.SECRET_KEY)
-    console.log("Decoded token following: ", decoded)
-
-    if (!res.locals.username) {
-        return res.redirect('/signin');
-    }
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
     res.locals.posts = await getFollowPosts(decoded.id);
     res.locals.title = "Following • flow";
@@ -129,9 +126,24 @@ app.get("/resetpassword", (req, res) => {
     res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin' });
 });
 
-app.get("/notifications", (req, res) => {
-    res.locals.title = "Activity • flow";
-    res.render("notifications", { currentPath: "/notifications" });
+app.get("/notifications", async (req, res) => {
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        console.log("No token");
+        return res.redirect("/signin"); // Redirect to /signin if not logged in
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+        res.locals.notifications = await getAllNotificationsOfUser(decoded.id);
+        res.locals.title = "Activity • flow";
+        res.render("notifications", { currentPath: "/notifications" });
+    } catch (error) {
+        console.error("Error verifying token or fetching notifications:", error);
+        return res.redirect("/signin"); // Redirect to /signin if token verification fails
+    }
 });
 
 app.get("/search", (req, res) => {

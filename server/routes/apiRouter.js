@@ -5,6 +5,7 @@ import {addComment, likeComment, unlikeComment, getCommentsByPost} from '../cont
 import {addPost, likePost, searchPosts, unlikePost, getPostsByAuthor} from '../controller/postController.js';
 import {searchUsersByName} from '../controller/userController.js';
 import {followUser, unfollowUser} from '../controller/followController.js';
+import {createNotification, deleteNotification, updateReadStatus, updateUnreadStatus} from '../controller/notificationController.js';
 import authRouter from "./authRouter.js"
 
 apiRouter.use("/auth", authRouter);
@@ -155,5 +156,14 @@ apiRouter.get('/getPostsByAuthor', async (req, res) => {
         return res.status(500).send({ success: false });
     }
 });
+
+apiRouter.post('/createNotification', createNotification);
+
+apiRouter.post('/deleteNotification', deleteNotification);
+
+apiRouter.post('/updateReadStatus', updateReadStatus);
+
+apiRouter.post('/updateUnreadStatus', updateUnreadStatus);
+
 
 export default apiRouter;

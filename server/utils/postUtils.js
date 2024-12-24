@@ -14,22 +14,22 @@ const formatPostDate = (created_at) => {
     let timeAgo;
     if (diff < 3600) { 
         const mins = Math.floor(diff / 60);
-        timeAgo = `${mins} min`;
+        timeAgo = `${mins}min`;
     } else if (diff < 86400) { 
         const hours = Math.floor(diff / 3600);
-        timeAgo = `${hours} h`;
+        timeAgo = `${hours}h`;
     } else if (diff < 604800) { 
         const days = Math.floor(diff / 86400);
-        timeAgo = `${days} d`;
+        timeAgo = `${days}d`;
     } else if (diff < 2592000) { 
         const weeks = Math.floor(diff / 604800);
-        timeAgo = `${weeks} w`;
+        timeAgo = `${weeks}w`;
     } else if (diff < 31536000) { 
         const months = Math.floor(diff / 2592000);
-        timeAgo = `${months} mo`;
+        timeAgo = `${months}mo`;
     } else {
         const years = Math.floor(diff / 31536000);
-        timeAgo = `${years} y`;
+        timeAgo = `${years}y`;
     }
 
     return {
