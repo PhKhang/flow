@@ -12,7 +12,7 @@ commentImageInput.addEventListener('change', function(event) {
 
 document.getElementById('newCommentInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // Ngăn xuống dòng
+        e.preventDefault(); 
         addNewComment();
     }
 });

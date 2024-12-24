@@ -8,41 +8,6 @@ const init = async (req, res, next) => {
     next();
 };
 
-const getNotificationDetails = async (notificationId) => {
-    try {
-        const notification = await Notification.findById(notificationId);
-        if (!notification) {
-            throw new Error('Notification not found');
-        }
-
-        let attachmentDetails;
-        switch (notification.type) {
-            case 'like_post':
-                attachmentDetails = await Post.findById(notification.attachment);
-                break;
-            case 'comment_post':
-                attachmentDetails = await Post.findById(notification.attachment);
-                break;
-            case 'like_comment':
-                attachmentDetails = await Comment.findById(notification.attachment);
-                break;
-            case 'following':
-                attachmentDetails = await User.findById(notification.attachment);
-                break;
-            default:
-                throw new Error('Unknown notification type');
-        }
-
-        return {
-            ...notification.toObject(),
-            attachmentDetails,
-        };
-    } catch (error) {
-        console.error('Error getting notification details:', error);
-        return null;
-    }
-};
-
 const getNotificationsById = async (userId) => {
     try {
         const notifications = await Notification.find({ receiver_id: userId })
@@ -55,9 +20,9 @@ const getNotificationsById = async (userId) => {
     }
 };
 
-const getAllNotifications = async () => {
+const getAllNotificationsOfUser = async (userId) => {
     try {
-        const notifications = await Notification.find()
+        const notifications = await Notification.find({ receiver_id: userId })
             .populate('sender_id', 'username profile_pic_url')
             .sort({ created_at: -1 });
 
@@ -76,6 +41,7 @@ const getAllNotifications = async () => {
             Post.find({ _id: { $in: postAttachmentIds } }, 'content media _id')  
         ]);
 
+        console.log(notifications);
         return notifications.map(notification => ({
             ...notification.toObject(),
             attachment:
@@ -123,4 +89,4 @@ const getUnreadNotificationsByUserId = async (userId) => {
     }
 };
 
-export { init, getNotificationDetails, getNotificationsById, getAllNotifications, getUnreadNotifications, getUnreadNotificationsByUserId};
+export { init, getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser};
