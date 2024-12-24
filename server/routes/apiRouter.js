@@ -2,7 +2,7 @@ import express from "express"
 const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
 import {addComment, likeComment, unlikeComment, getCommentsByPost} from '../controller/commentController.js';
-import {addPost, likePost, searchPosts, unlikePost, getPostsByAuthor} from '../controller/postController.js';
+import {addPost, likePost, searchPosts, unlikePost, getPostsByAuthor, getAllPostsPagination} from '../controller/postController.js';
 import {searchUsersByName} from '../controller/userController.js';
 import {followUser, unfollowUser} from '../controller/followController.js';
 import {createNotification, deleteNotification, updateReadStatus, updateUnreadStatus} from '../controller/notificationController.js';
@@ -154,6 +154,17 @@ apiRouter.get('/getPostsByAuthor', async (req, res) => {
     catch (error) {
         console.error('Error getting posts:', error);
         return res.status(500).send({ success: false });
+    }
+});
+
+apiRouter.get("/posts", async (req, res) => {
+    try {
+        const { offset = 0, limit = 10, userId } = req.query;
+        const posts = await getAllPostsPagination(userId, parseInt(limit), parseInt(offset));
+        console.log(posts);
+        res.json(posts);
+    } catch (error) {
+        res.status(500).json({ error: 'Error loading posts', posts: posts });
     }
 });
 

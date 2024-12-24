@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
-import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
+import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts, getAllPostsPagination } from './server/controller/postController.js';
 import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
 import { getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser } from './server/controller/notificationController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
@@ -72,7 +72,7 @@ app.get("/", async (req, res) => {
             return res.render('signin', { currentPath: "/signin", layout: 'layout-signin' });
         }
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
-        const posts = await getAllPosts(decoded.id);
+        const posts = await getAllPostsPagination(decoded.id, 10, 0);
         res.locals.posts = posts;
         res.locals.user = decoded;
         res.locals.title = "Home • flow";

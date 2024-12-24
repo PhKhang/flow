@@ -34,6 +34,31 @@ const getAllPosts = async (userId) => {
     }
 };
 
+const getAllPostsPagination = async (userId, limit = 10, offset = 0) => {
+    try {
+        const posts = await Post.find()
+            .populate('author_id', 'username profile_pic_url full_name')
+            .sort({ created_at: -1 })
+            .skip(offset)
+            .limit(limit);
+        for (const post of posts) {
+            const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+            post.modified_created_at = formattedDate;
+            post.timeAgo = timeAgo;
+
+            post.isLiked = post.likes.some(like => like.toString() === userId.toString());
+
+            const commentsLength = await Comment.countDocuments({ post_id: post._id });
+            post.comments_length = commentsLength;
+        }
+        console.log(posts);
+        return posts;
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return null;
+    }
+};
+
 const getFollowPosts = async (userId) => {
     try {
         const following = await Follow.find({ follower_id: userId });
@@ -184,4 +209,4 @@ const searchPosts = async (searchString) => {
     }
 };
 
-export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, unlikePost };
+export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, unlikePost, getAllPostsPagination };
