@@ -18,7 +18,6 @@ import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
 import { getAllUsers, fetchUserByEmail, fetchUserByUsername } from './server/controller/userController.js';
-import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 import DecodeUserInfo from './server/utils/decodeUserInfo.js';
 
@@ -114,10 +113,13 @@ app.get("/search", (req, res) => {
 });
 
 app.get("/profile/:username", async (req, res) => {
-    const user = DecodeUserInfo.decode(req);
+    let user = DecodeUserInfo.decode(req);
     if (!user) {
         return res.status(404).send("User not found");
     }
+    
+    user = await fetchUserByUsername(user.username);
+    
     console.log(user)
     res.locals.title = `${user.full_name} • flow`;
     res.render("profile", { currentPath: `/profile/${user.username}`, user: user });

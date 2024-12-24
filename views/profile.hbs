@@ -8,36 +8,48 @@
 
         <div id="profile-info" class="col-12 col-md-8">
             <div class="name">
-                {{#if full_name }}
-                <h2 class="mb-0 full-name">{{user.username}}</h2>
-                {{else}}
-                <h2 class="mb-0 full-name">{{user.full_name}}</h2>
+                {{#if user.full_name }}
+                <h2 class="mb-0 full-name">{{ user.full_name }}</h2>
+                {{ else}}
+                <h2 class="mb-0 full-name">{{ user.username }}</h2>
                 {{/if}}
-                <p class="username">{{user.username}}</p>
+                <p class="username">{{ user.username }}</p>
             </div>
         </div>
     </div>
     <div class="bio mt-2">
-        <p>{{user.bio}}</p>
+        <p>{{ user.bio }}</p>
     </div>
     <div class="info mt-2">
         <div class="post-count">
-            <span>{{user.posts.length}}</span>
+            <span>{{#if user.posts }}
+                {{ user.posts.length }}
+                {{ else}}
+                0
+                {{/if}}</span>
             posts
         </div>
         <div class="bar"></div>
         <div class="follower-count" onclick="togglePopupFollower()">
-            <span>{{user.followers.length}}</span>
+            <span>{{#if user.followers.length }}
+                {{ user.followers.length }}
+                {{ else}}
+                0
+                {{/if}}</span>
             followers
         </div>
         <div class="bar"></div>
         <div class="following-count" onclick="togglePopupFollower()">
-            <span>{{user.followings.length}}</span>
+            <span>{{#if user.followings.length }}
+                {{ user.followings.length }}
+                {{ else}}
+                0
+                {{/if}}</span>
             following
         </div>
     </div>
 
-    {{#if isCurrentUser}}
+    {{#if isCurrentUser }}
     <div class="over">
         <div class="change col-11 col-md-8 col-lg-5">
             <div class="top">
@@ -103,7 +115,7 @@
             </div>
         </div>
     </div>
-    {{else}}
+    {{ else}}
     <button type="button" class="edit edit-btn mt-3 mb-2" onclick="toggleFollow(this)">
         <p>Follow</p>
     </button>
@@ -123,27 +135,27 @@
                 <p class="tab">Following</p>
             </div>
             <div class="hover-element">
-                <!-- <p  onclick="togglePopupFollower()">Cancel</p> -->
+                <!-- <p onclick="togglePopupFollower()">Cancel</p> -->
             </div>
         </div>
         <div class="mt-2 follow-result">
-            {{#each user.followers}}
+            {{#each user.followers }}
             <div class="search-result-item" data-type="user">
                 <div class="profile-pic">
                     <img src="{{profile_pic_url}}" alt="User Avatar">
                 </div>
                 <div class="search-text">
                     <a class="search-username" href="/otherProfile.html">
-                        <p>{{username}}</p>
+                        <p>{{ username }}</p>
                     </a>
-                    <p class="search-user-bio">{{full_name}}</p>
+                    <p class="search-user-bio">{{ full_name }}</p>
                     <p class="mt-1">305 followers</p>
                 </div>
                 <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
                     <p>Follow</p>
                 </button>
             </div>
-            {{/each}}
+            {{/ each}}
         </div>
     </div>
 </div>
@@ -173,8 +185,8 @@
     });
 </script>
 
-{{#if isCurrentUser}}
-<h1>Welcome to your profile, {{username}}</h1>
-{{else}}
-<h1>Welcome to {{username}}'s profile</h1>
+{{#if isCurrentUser }}
+<h1>Welcome to your profile, {{ username }}</h1>
+{{ else}}
+<h1>Welcome to {{ username }}'s profile</h1>
 {{/if}}
