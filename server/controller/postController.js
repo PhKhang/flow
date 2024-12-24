@@ -45,8 +45,6 @@ const getFollowPosts = async (userId) => {
     }
 };
 
-<<<<<<< Updated upstream
-=======
 const getPostById = async (req, res) => {
     const postId = req.params.id;
     const token = req.cookies.access_token;
@@ -79,7 +77,6 @@ const getPostById = async (req, res) => {
     }
 };
 
->>>>>>> Stashed changes
 const addPost = async (authorId, content, typeOfMedia, urls, likes) => {
     const newPost = new Post({
         author_id: authorId, 
@@ -151,15 +148,5 @@ const searchPosts = async (searchString) => {
         return null;
     }
 };
-
-const getPostById = async (postId) => {
-    try {
-        const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
-        return post;
-    } catch (error) {
-        console.error('Error getting post by id:', error);
-        return null;
-    }
-}
 
 export { getAllPosts, getFollowPosts, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, getPostById };

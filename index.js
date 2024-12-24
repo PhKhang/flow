@@ -68,11 +68,8 @@ app.get("/", async (req, res) => {
     res.locals.title = "Home • flow";
     res.render('index', { currentPath: "/" });
 });
-<<<<<<< Updated upstream
-=======
 
 app.use('/post', postRouter);
->>>>>>> Stashed changes
 
 app.get("/post", async (req, res) => {
     res.locals.posts = await getAllPosts();
@@ -81,9 +78,6 @@ app.get("/post", async (req, res) => {
 });
 
 app.get("/following", async (req, res) => {
-<<<<<<< Updated upstream
-    res.locals.posts = await getFollowPosts("6744872f1e74c42b292cf196");
-=======
     const token = req.cookies.access_token;
 
     if (!token) {
@@ -94,7 +88,6 @@ app.get("/following", async (req, res) => {
     console.log("Decoded token following: ", decoded);
 
     res.locals.posts = await getFollowPosts(decoded.id);
->>>>>>> Stashed changes
     res.locals.title = "Following • flow";
     res.render('index', { currentPath: "/index" });
 });
@@ -135,10 +128,6 @@ app.get("/profile/:username", (req, res) => {
     res.render("profile", { currentPath: `/profile/${username}`, username: username });
 });
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 app.get("/server/all", async (req, res) => {
     const users = await getAllUsers();
     res.send(users.length.toString());
@@ -211,8 +200,6 @@ app.post('/uploadImg', verifyToken, upload.single('file'), async (req, res) => {
 });
 
 app.use('/api', apiRouter);
-
-app.use('/post', postRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
