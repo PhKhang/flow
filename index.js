@@ -139,6 +139,7 @@ app.get("/notifications", async (req, res) => {
 
         res.locals.notifications = await getAllNotificationsOfUser(decoded.id);
         res.locals.title = "Activity • flow";
+        res.locals.user = decoded;
         res.render("notifications", { currentPath: "/notifications" });
     } catch (error) {
         console.error("Error verifying token or fetching notifications:", error);
