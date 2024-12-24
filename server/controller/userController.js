@@ -31,9 +31,39 @@ const fetchUserByEmail = async (email) => {
 const fetchUserByUsername = async (username) => {
     console.log("Fetching user by username: ", username);
     try {
-        const user = await User.findOne({ username: username });
+        // const user = await User.findOne({ username: username });
+        const user = await User.aggregate(
+            [
+                { "$match": { "username": username } },
+                {
+                    $lookup: {
+                        from: "follows",
+                        localField: "_id",
+                        foreignField: "follower_id",
+                        as: "followers",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "follows",
+                        localField: "_id",
+                        foreignField: "following_id",
+                        as: "followings",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "posts",
+                        localField: "_id",
+                        foreignField: "author_id",
+                        as: "posts",
+                    },
+                }
+            ]
+        );
         return user;
     } catch (error) {
+        console.log("Error fetching user by username: ", error);
         return null;
     }
 }
