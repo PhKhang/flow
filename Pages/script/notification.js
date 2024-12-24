@@ -75,27 +75,62 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    const markAllReadButton = document.querySelector('.mark-read');
-    if (markAllReadButton) {
-        markAllReadButton.addEventListener('click', async function() {
-            try {
-                const response = await fetch('/api/notifications/mark-all-read', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    notificationItems.forEach(item => {
-                        item.setAttribute('data-read', 'true');
-                        item.classList.add('read');
-                    });
-                }
-            } catch (error) {
-                console.error('Error marking all notifications as read:', error);
-            }
-        });
-    }
 });
+
+const markAsUnread = async (id) => {
+    console.log(`Toggling read status for notification ID: ${id}`);
+    const response = await fetch('/api/updateUnreadStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ notificationId: id })
+    })
+
+    if (response.ok) {
+        console.log(`Notification ID: ${id} is now unread`);
+    } else {
+        console.error(`Failed to mark notification ID: ${id} as unread`);
+    }
+}
+
+const markAsRead = async (id) => {
+    const response = await fetch('/api/updateReadStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ notificationId: id })
+    })
+
+    if (response.ok) {
+        console.log(`Notification ID: ${id} is now read`);
+    } else {
+        console.error(`Failed to mark notification ID: ${id} as read`);
+    }
+}
+
+const markAllAsRead = async () => {
+    const notifications = document.querySelectorAll('.notification-item');
+    console.log(notifications);
+    notifications.forEach((notification) => {
+        const id = notification.getAttribute('data-id');
+        markAsRead(id);
+    });
+}
+
+const deleteNotification = async (id) => {
+    const response = await fetch('/api/deleteNotification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ notificationId: id })
+    })
+
+    if (response.ok) {
+        console.log(`Notification ID: ${id} has been deleted`);
+    } else {
+        console.error(`Failed to delete notification ID: ${id}`);
+    }
+}
