@@ -18,7 +18,8 @@ document.getElementById('newCommentInput').addEventListener('keypress', function
     }
 });
 
-async function toggleLike({ postId, userId, isLiked, button }) {
+async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
+    console.log(postId, userId, isLiked, button, postAuthorId);
     try {
         button.classList.toggle('like-button-clicked');
         let endpoint;
@@ -34,6 +35,25 @@ async function toggleLike({ postId, userId, isLiked, button }) {
             },
             body: JSON.stringify({ postId, userId }),
         });
+        if(endpoint === '/api/likePost') {
+            const notificationResponse = await fetch('/api/createNotification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'like_post',
+                    sender_id: userId,
+                    receiver_id: postAuthorId,
+                    attachment: postId
+                }),
+            });
+            const notificationStatus = await notificationResponse.json();
+            console.log(notificationStatus);
+            if (notificationStatus.success) {
+                console.log('Notification created successfully');
+            } else {
+                console.error('Failed to create notification');
+            }
+        }
 
         const result = await response.json();
         
@@ -50,7 +70,8 @@ async function toggleLike({ postId, userId, isLiked, button }) {
                 postId,
                 userId,
                 isLiked: isLiked === 'true' ? 'false' : 'true',
-                button
+                button,
+                postAuthorId,
             });
         };
     } catch (error) {
