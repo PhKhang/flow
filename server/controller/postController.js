@@ -2,7 +2,9 @@ const controller = {};
 import mongoose, { mongo } from "mongoose";
 import Post from  "../model/post.js";
 import Follow from "../model/follow.js";
+import Comment from "../model/comment.js";
 import { formatPostDate } from "../utils/postUtils.js"
+import jwt from "jsonwebtoken";
 
 const init = async (req, res, next) => {
     next();
@@ -50,21 +52,34 @@ const getFollowPosts = async (userId) => {
 
 const getPostById = async (req, res) => {
     const postId = req.params.id;
+    const token = req.cookies.access_token;
 
-    if (!mongoose.Types.ObjectId.isValid(postId)) {
-        console.error('Invalid Post ID');
-        return res.status(400).send('Invalid Post ID');
+    if (!token) {
+        return res.redirect('/signin');
     }
+
     try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
         const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
         if (!post) {
             return res.status(404).send('Post not found');
         }
-        res.locals.post = post
-        res.render('post');
+
+        const comments = await Comment.find({ post_id: postId })
+            .populate('author_id', '_id username profile_pic_url full_name')
+            .sort({ created_at: -1 });
+
+        res.locals.title = `${post.content} • flow`;
+        console.log('User:', decoded);
+        console.log('Post:', comments);
+        res.render('post', {
+            post,
+            comments,
+            user: decoded,
+        });
     } catch (error) {
-        console.error('Error getting post by id:', error);
-        return res.status(500).send('Internal Server Error');
+        console.error('Error fetching post or comments:', error);
+        res.status(500).send('Internal Server Error');
     }
 };
 

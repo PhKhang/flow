@@ -76,6 +76,12 @@ app.get("/", async (req, res) => {
 });
 app.use('/post', postRouter);
 
+app.get("/post", async (req, res) => {
+    res.locals.posts = await getAllPosts();
+    res.locals.title = "Post • flow";
+    res.render("post", { currentPath: "/post" });
+});
+
 app.get("/following", async (req, res) => {
     const token = req.cookies.access_token;
     
