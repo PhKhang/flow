@@ -20,6 +20,7 @@ import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './s
 import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
 import { getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser } from './server/controller/notificationController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
+import { getAllFoundUsers, getAllFoundPosts } from './server/controller/searchController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 import { decode } from 'punycode';
 
@@ -146,9 +147,51 @@ app.get("/notifications", async (req, res) => {
     }
 });
 
-app.get("/search", (req, res) => {
+app.get('/search', async (req, res) => {
+    var { keyword, category } = req.query;
+    if (!category) {
+        category = 'user';
+    }
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        console.log("No token");
+        return res.redirect("/signin");
+    }
+
     res.locals.title = "Search • flow";
-    res.render("search", { currentPath: "/search" });
+    
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        let results = [];
+
+        if (!keyword) {
+            return res.render('search', {
+                keyword,
+                category,
+                results,
+                user: decoded,
+                currentPath: '/search',
+            });
+        }
+        
+        if (category === 'user') {
+            results = await getAllFoundUsers(decoded.id, keyword);
+        } else if (category === 'post') {
+            results = await getAllFoundPosts(decoded.id, keyword);
+        }
+
+        res.render('search', {
+            keyword,
+            category,
+            results,
+            user: decoded,
+            currentPath: '/search',
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.get("/profile/:username", async (req, res) => {

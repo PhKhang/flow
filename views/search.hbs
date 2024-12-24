@@ -7,20 +7,105 @@
     <div class="w-100 d-flex justify-content-center align-items-center mt-2">
         <div class="form">
             <img class="icon" src="/images/icon/search.svg">
-            <form id="search-form">
-                <input type="text" class="form-control form-input" id="search-value" name="keyword" placeholder="Search">
-                <input type="hidden" id="category" name="category" value="user">
+            <form id="search-form" action="/search" method="get">
+                <input type="text" class="form-control form-input" id="search-value" name="keyword" placeholder="Search" value="{{keyword}}">
+                <input type="hidden" id="category" name="category" value="{{category}}">
             </form>
         </div>
     </div>
     <div class="search-settings">
         <div class="left-settings">
-            <button type="button" class="tab active" data-category="user">User</button>
-            <button type="button" class="tab" data-category="post">Post</button>
+            <button type="button" class="tab {{#if (eq category 'user')}}active{{/if}}" data-category="user">User</button>
+            <button type="button" class="tab {{#if (eq category 'post')}}active{{/if}}" data-category="post">Post</button>
         </div>
     </div>
-    <div id="search-results"></div>
-</main>     
+    {{#if results.length}}
+        {{#if (eq category 'user')}}
+            <div id="search-results">
+                {{#each results}}
+                <div class="search-result-item" data-type="user">
+                    <div class="overlay"></div>
+                    <div class="profile-pic">
+                        <img src="{{profile_pic_url}}" alt="User Avatar">
+                    </div>
+                    <div class="search-text">
+                        <a href="/profile/{{username}}" class="search-username">
+                            <p>{{username}}</p>
+                        </a>
+                        <p class="search-user-bio">{{full_name}}</p>
+                        <p class="mt-1">{{followers}} followers</p>
+                    </div>
+                    <button class="follow-btn mt-1 me-1 {{#if isFollowed}}following{{/if}}">
+                        <p>{{#if isFollowed}}Following{{else}}Follow{{/if}}</p>
+                    </button>
+                </div>
+                {{/each}}
+            </div>
+</main>
+        {{else if (eq category 'post')}}
+</main>
+        <div class="thread col-11 col-md-8 col-lg-5">
+            {{#each results}}
+                <div id="{{id}}" class="post" onclick="window.location.href='/post/{{id}}'">
+                    <div class="user-info">
+                        <img src="{{author_id.profile_pic_url}}" alt="{{author_id.username}}" class="profile-pic">
+                        <div class="post-info">
+                            <a href="/profile/{{author_id.username}}"><p class="username">{{author_id.username}}</p></a>
+                            <span class="time">{{timeAgo}}</span>
+                        </div>
+                    </div>
+                    <div class="content-wrapper">
+                        <p class="text">{{content}}</p>
+                        {{#if media.urls.length}}
+                        <div class="media">
+                            <img src="{{media.urls.[0]}}" alt="Post media" class="post-image" onclick="openFullscreen('{{id}}')">
+                        </div>
+
+                        <div class="modal" id="imageModal-{{id}}">
+                            <svg style="display: none;" id="closeButton-{{id}}" class="close-full-image" onclick="closeFullscreen('{{id}}')" fill="#fff" viewBox="-3.5 0 19 19" xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M11.383 13.644A1.03 1.03 0 0 1 9.928 15.1L6 11.172 2.072 15.1a1.03 1.03 0 1 1-1.455-1.456l3.928-3.928L.617 5.79a1.03 1.03 0 1 1 1.455-1.456L6 8.261l3.928-3.928a1.03 1.03 0 0 1 1.455 1.456L7.455 9.716z"></path>
+                                </g>
+                            </svg>
+                            <img src="{{media.urls.[0]}}" alt="Full Image" class="full-image">
+                        </div>
+                        {{/if}}
+                    </div>
+                    
+                    <div class="actions container text-center">
+                        <button 
+                            class="like-button button hover-icon {{#if isLiked}}like-button-clicked{{/if}}" 
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleLike({
+                                        postId: '{{_id}}',
+                                        userId: '{{../user.id}}',
+                                        isLiked: '{{isLiked}}',
+                                        button: this
+                                    })">
+                            <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                            </svg>
+                            <p id="like-count-{{id}}">{{likes.length}}</p>
+                        </button>
+                        <button class="comment-button button hover-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_iconCarrier"> 
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg> 
+                            <p>{{comments_length}}</p>
+                        </button>
+                    </div>
+                </div>
+            {{/each}}
+            </div>
+        {{/if}}
+    {{else}}
+        <p class="information">No results found</p>
+    {{/if}}
+    </div>
 
 <link rel="stylesheet" href="/css/FeedDisplay.css">
 <script src="/script/search.js"></script>
+<script src="/script/Post.js"></script>
