@@ -16,7 +16,7 @@
     </div>
     <div class="other-posts">
         {{#each posts}}
-        <div class="post" onclick="window.location.href='/post/{{id}}'">
+        <div id="{{id}}" class="post" onclick="window.location.href='/post/{{id}}'">
             <div class="user-info">
                 <img src="{{author_id.profile_pic_url}}" alt="{{author_id.username}}" class="profile-pic">
                 <div class="post-info">
@@ -46,17 +46,24 @@
                 {{/if}}
             </div>
             <div class="actions container text-center">
-                <button class="like-button button hover-icon" onclick="event.stopPropagation(); toggleLike(this)">
+                <button 
+                    class="like-button button hover-icon {{#if isLiked}}like-button-clicked{{/if}}"
+                    onclick="event.preventDefault(); event.stopPropagation(); toggleLike({
+                        postId: '{{id}}',
+                        userId: '{{../user.id}}',
+                        isLiked: '{{isLiked}}',
+                        button: this
+                    })">
                     <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
                     </svg>
-                    <p>{{likes.length}}</p>
+                    <p id="like-count-{{id}}">{{likes.length}}</p>
                 </button>
                 <button class="comment-button button hover-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
-                    <p>{{comments.length}}</p>
+                    <p>{{comments_length}}</p>
                 </button>
             </div>
         </div>
@@ -66,6 +73,7 @@
 
 <link rel="stylesheet" href="/css/FeedDisplay.css">
 <script src="/script/FeedDisplay.js"></script>
+<script src="/script/Post.js"></script>
 <script>
     function handleFormSubmit(event) {
         event.preventDefault();

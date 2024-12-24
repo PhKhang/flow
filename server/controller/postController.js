@@ -10,22 +10,29 @@ const init = async (req, res, next) => {
     next();
 };
 
-const getAllPosts = async () => {
+const getAllPosts = async (userId) => {
     try {
         const posts = await Post.find()
             .populate('author_id', 'username profile_pic_url full_name')
             .sort({ created_at: -1 });
-        posts.forEach(post => {
+
+        for (const post of posts) {
             const { formattedDate, timeAgo } = formatPostDate(post.created_at);
             post.modified_created_at = formattedDate;
             post.timeAgo = timeAgo;
-        });
+
+            post.isLiked = post.likes.some(like => like.toString() === userId.toString());
+
+            const commentsLength = await Comment.countDocuments({ post_id: post._id });
+            post.comments_length = commentsLength;
+        }
+
         return posts;
     } catch (error) {
         console.error('Error getting all posts:', error);
         return null;
     }
-}
+};
 
 const getFollowPosts = async (userId) => {
     try {
@@ -61,6 +68,10 @@ const getPostById = async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
         const post = await Post.findById(postId).populate('author_id', 'username profile_pic_url full_name');
+        const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+        post.modified_created_at = formattedDate;
+        post.timeAgo = timeAgo;
+        post.isLiked = post.likes.some(like => like.toString() === decoded.id.toString());
         if (!post) {
             return res.status(404).send('Post not found');
         }
@@ -68,22 +79,17 @@ const getPostById = async (req, res) => {
         const comments = await Comment.find({ post_id: postId })
             .populate('author_id', '_id username profile_pic_url full_name')
             .sort({ created_at: -1 });
-
-        const { formattedDate, timeAgo } = formatPostDate(post.created_at);
-        post.modified_created_at = formattedDate;
-        post.timeAgo = timeAgo;
         comments.forEach(comment => {
             const { formattedDate, timeAgo } = formatPostDate(comment.created_at);
             comment.modified_created_at = formattedDate;
             comment.timeAgo = timeAgo;
         });
-        
+        const commentsCount = comments.length;
         res.locals.title = `${post.content} • flow`;
-        console.log('User:', decoded);
-        console.log('Post:', comments);
         res.render('post', {
             post,
             comments,
+            commentsCount,
             user: decoded,
         });
     } catch (error) {

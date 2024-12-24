@@ -65,8 +65,14 @@ await mongoose.connect(process.env.ATLAS_URI);
 
 app.get("/", async (req, res) => {
     try {
-        const posts = await getAllPosts();
+        const token = req.cookies.access_token;
+        if (!token) {
+            return res.render('signin', { currentPath: "/signin", layout: 'layout-signin' });
+        }
+        const decoded = jwt.verify(token, process.env.SECRET_KEY)
+        const posts = await getAllPosts(decoded.id);
         res.locals.posts = posts;
+        res.locals.user = decoded;
         res.locals.title = "Home • flow";
         res.render('index', { currentPath: "/" });
     } catch (error) {
@@ -74,6 +80,7 @@ app.get("/", async (req, res) => {
         res.status(500).send('Error loading home page');
     }
 });
+
 app.use('/post', postRouter);
 
 app.get("/post", async (req, res) => {
@@ -140,7 +147,7 @@ app.get("/profile/:username", async (req, res) => {
     }
     const usr = user[0]
     // const usr = user
-    res.locals.title = `${usr.full_name} • flow`;
+    res.locals.title = `${user.full_name} • flow`;
     res.render("profile", { currentPath: `/profile/${usr.username}`, user: usr });
 });
 
