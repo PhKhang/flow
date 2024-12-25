@@ -138,7 +138,14 @@
             const textareas = document.getElementsByTagName('textarea');
             for(let textarea of textareas) {
                 textarea.addEventListener('input', function() {
-                    this.value = DOMPurify.sanitize(this.value);
+                    // Check if content contains HTML tags
+                    const containsHTML = /<[a-z][\s\S]*>/i.test(this.value);
+                    
+                    if (containsHTML) {
+                        // Only sanitize if HTML tags detected
+                        this.value = DOMPurify.sanitize(this.value);
+                    }
+                    // If no HTML tags, keep original content unchanged
                 });
             }
         });

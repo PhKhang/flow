@@ -151,14 +151,21 @@
 <script src="/script/bio.js"></script>
 
 <script type="module">
-    document.addEventListener('DOMContentLoaded', function() {
-        const textareas = document.getElementsByTagName('textarea');
-        for(let textarea of textareas) {
-            textarea.addEventListener('input', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.getElementsByTagName('textarea');
+    for(let textarea of textareas) {
+        textarea.addEventListener('input', function() {
+            // Check if content contains HTML tags
+            const containsHTML = /<[a-z][\s\S]*>/i.test(this.value);
+            
+            if (containsHTML) {
+                // Only sanitize if HTML tags detected
                 this.value = DOMPurify.sanitize(this.value);
-            });
-        }
-    });
+            }
+            // If no HTML tags, keep original content unchanged
+        });
+    }
+});
     const fetchButton = document.querySelector("#fetch")
     fetchButton.addEventListener("click", fetchInfo)
     // const changeButton = document.querySelector("")

@@ -144,12 +144,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
 <script src="/script/Post.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const textareas = document.getElementsByTagName('textarea');
-        for(let textarea of textareas) {
-            textarea.addEventListener('input', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.getElementsByTagName('textarea');
+    for(let textarea of textareas) {
+        textarea.addEventListener('input', function() {
+            // Check if content contains HTML tags
+            const containsHTML = /<[a-z][\s\S]*>/i.test(this.value);
+            
+            if (containsHTML) {
+                // Only sanitize if HTML tags detected
                 this.value = DOMPurify.sanitize(this.value);
-            });
-        }
-    });
+            }
+            // If no HTML tags, keep original content unchanged
+        });
+    }
+});
 </script>
