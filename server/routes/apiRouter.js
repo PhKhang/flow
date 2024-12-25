@@ -7,6 +7,7 @@ import {searchUsersByName} from '../controller/userController.js';
 import {followUser, unfollowUser} from '../controller/followController.js';
 import {createNotification, deleteNotification, updateReadStatus, updateUnreadStatus} from '../controller/notificationController.js';
 import authRouter from "./authRouter.js"
+import { formatPostDate } from "../utils/postUtils.js"
 
 apiRouter.use("/auth", authRouter);
 
@@ -161,8 +162,16 @@ apiRouter.get("/posts", async (req, res) => {
     try {
         const { offset = 0, limit = 10, userId } = req.query;
         const posts = await getAllPostsPagination(userId, parseInt(limit), parseInt(offset));
-        console.log(posts);
-        res.json(posts);
+        const plainPosts = posts.map(post => post.toObject());
+        
+        // Add the timeAgo property to each plain object
+        plainPosts.forEach(post => {
+            const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+            post.timeAgo = timeAgo;
+            post.modified_created_at = formattedDate;
+        });
+
+        res.json(plainPosts);
     } catch (error) {
         res.status(500).json({ error: 'Error loading posts', posts: posts });
     }
