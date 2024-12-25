@@ -79,6 +79,7 @@
 <script src="/script/FeedDisplay.js"></script>
 <script src="/script/Post.js"></script>
 <script>
+    const currentPath = '{{currentPath}}';
     let loading = false;
     let offset = 10;
     const limit = 10;
@@ -97,24 +98,18 @@
             loading = true;
             document.getElementById('loading-spinner').style.display = 'block';
             
-            const response = await fetch(`/api/posts?offset=${offset}&limit=${limit}&userId=${user.id}`);
+            // Choose API endpoint based on current path
+            const endpoint = currentPath === '/following' ? 'followPosts' : 'posts';
+            const response = await fetch(`/api/${endpoint}?offset=${offset}&limit=${limit}&userId=${user.id}`);
             const posts = await response.json();
             
             if (posts && posts.length > 0) {
                 const postsContainer = document.querySelector('#posts-container');
                 posts.forEach(post => {
-                    // Convert post data to HTML using same structure as index.hbs
                     const postHTML = createPostHTML(post);
                     postsContainer.insertAdjacentHTML('beforeend', postHTML);
                 });
                 offset += limit;
-                canFetchMore = true;
-            } 
-            else {
-                canFetchMore = false;
-                setTimeout(() => {
-                    canFetchMore = true;
-                }, 1000); // 5 second delay before allowing next fetch
             }
         } catch (error) {
             console.error('Error loading more posts:', error);
