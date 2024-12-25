@@ -16,8 +16,11 @@ import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
-import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
+import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts, getAllPostsPagination, getFollowPostsPagination } from './server/controller/postController.js';
 import UserController from './server/controller/userController.js';
+import { getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser } from './server/controller/notificationController.js';
+import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
+import { getAllFoundUsers, getAllFoundPosts } from './server/controller/searchController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 import DecodeUserInfo from './server/utils/decodeUserInfo.js';
 
@@ -65,8 +68,14 @@ await mongoose.connect(process.env.ATLAS_URI);
 
 app.get("/", async (req, res) => {
     try {
-        const posts = await getAllPosts();
+        const token = req.cookies.access_token;
+        if (!token) {
+            return res.render('signin', { currentPath: "/signin", layout: 'layout-signin' });
+        }
+        const decoded = jwt.verify(token, process.env.SECRET_KEY)
+        const posts = await getAllPostsPagination(decoded.id, 10, 0);
         res.locals.posts = posts;
+        res.locals.user = decoded;
         res.locals.title = "Home • flow";
         res.render('index', { currentPath: "/" });
     } catch (error) {
@@ -74,12 +83,30 @@ app.get("/", async (req, res) => {
         res.status(500).send('Error loading home page');
     }
 });
+
 app.use('/post', postRouter);
 
+app.get("/post", async (req, res) => {
+    res.locals.title = "Post • flow";
+    res.render("post", { currentPath: "/post" });
+});
+
 app.get("/following", async (req, res) => {
-    res.locals.posts = await getFollowPosts("6744872f1e74c42b292cf196");
-    res.locals.title = "Following • flow";
-    res.render('index', { currentPath: "/following" });
+    try {
+        const token = req.cookies.access_token;
+        if (!token) {
+            return res.render('signin', { currentPath: "/signin", layout: 'layout-signin' });
+        }
+        const decoded = jwt.verify(token, process.env.SECRET_KEY)
+        const posts = await getFollowPostsPagination(decoded.id, 10, 0);
+        res.locals.posts = posts;
+        res.locals.user = decoded;
+        res.locals.title = "Home following • flow";
+        res.render('index', { currentPath: "/following" });
+    } catch (error) {
+        console.error('Error rendering home following page:', error);
+        res.status(500).send('Error loading home following page');
+    }
 });
 
 app.get("/signin", (req, res) => {
@@ -102,14 +129,71 @@ app.get("/resetpassword", (req, res) => {
     res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin' });
 });
 
-app.get("/notifications", (req, res) => {
-    res.locals.title = "Activity • flow";
-    res.render("notifications", { currentPath: "/notifications" });
+app.get("/notifications", async (req, res) => {
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        console.log("No token");
+        return res.redirect("/signin"); // Redirect to /signin if not logged in
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+        res.locals.notifications = await getAllNotificationsOfUser(decoded.id);
+        res.locals.title = "Activity • flow";
+        res.locals.user = decoded;
+        res.render("notifications", { currentPath: "/notifications" });
+    } catch (error) {
+        console.error("Error verifying token or fetching notifications:", error);
+        return res.redirect("/signin"); // Redirect to /signin if token verification fails
+    }
 });
 
-app.get("/search", (req, res) => {
+app.get('/search', async (req, res) => {
+    var { keyword, category } = req.query;
+    if (!category) {
+        category = 'user';
+    }
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        console.log("No token");
+        return res.redirect("/signin");
+    }
+
     res.locals.title = "Search • flow";
-    res.render("search", { currentPath: "/search" });
+    
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        let results = [];
+
+        if (!keyword) {
+            return res.render('search', {
+                keyword,
+                category,
+                results,
+                user: decoded,
+                currentPath: '/search',
+            });
+        }
+        
+        if (category === 'user') {
+            results = await getAllFoundUsers(decoded.id, keyword);
+        } else if (category === 'post') {
+            results = await getAllFoundPosts(decoded.id, keyword);
+        }
+        res.render('search', {
+            keyword,
+            category,
+            results,
+            user: decoded,
+            currentPath: '/search',
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.get("/profile/:username", async (req, res) => {

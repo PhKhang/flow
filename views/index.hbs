@@ -2,7 +2,7 @@
     <div class="add-post header">
         <div class="add-post-area">
             <div class="add-post-user-info">
-                <img src="https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg" alt="Profile picture" class="profile-pic">
+                <img src="{{user.profile_pic_url}}" alt="Profile picture" class="profile-pic">
             </div>
             <div class="add-post-block" onclick="togglePopup()">
                 <p class="comment-input hover-element">Share something...</p>
@@ -14,9 +14,9 @@
         <a href="/" class="tab-post {{#if (eq currentPath "/")}}active{{/if}}">From all users</a>
         <a href="/following" class="tab-post {{#if (eq currentPath "/following")}}active{{/if}}">From following users</a>
     </div>
-    <div class="other-posts">
+    <div class="other-posts" id="posts-container">
         {{#each posts}}
-        <div class="post" onclick="window.location.href='/post/{{id}}'">
+        <div id="{{id}}" class="post" onclick="window.location.href='/post/{{id}}'">
             <div class="user-info">
                 <img src="{{author_id.profile_pic_url}}" alt="{{author_id.username}}" class="profile-pic">
                 <div class="post-info">
@@ -46,27 +46,124 @@
                 {{/if}}
             </div>
             <div class="actions container text-center">
-                <button class="like-button button hover-icon" onclick="event.stopPropagation(); toggleLike(this)">
+                <button 
+                    class="like-button button hover-icon {{#if isLiked}}like-button-clicked{{/if}}"
+                    onclick="event.preventDefault(); event.stopPropagation(); toggleLike({
+                        postId: '{{id}}',
+                        userId: '{{../user.id}}',
+                        isLiked: '{{isLiked}}',
+                        button: this,
+                        postAuthorId: '{{author_id._id}}'
+                    })">
                     <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
                     </svg>
-                    <p>{{likes.length}}</p>
+                    <p id="like-count-{{id}}">{{likes.length}}</p>
                 </button>
                 <button class="comment-button button hover-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
-                    <p>{{comments.length}}</p>
+                    <p>{{comments_length}}</p>
                 </button>
             </div>
         </div>
         {{/each}}
     </div>
+    <div id="loading-spinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
 </div>
 
 <link rel="stylesheet" href="/css/FeedDisplay.css">
 <script src="/script/FeedDisplay.js"></script>
+<script src="/script/Post.js"></script>
 <script>
+    const currentPath = '{{currentPath}}';
+    let loading = false;
+    let offset = 10;
+    const limit = 10;
+    let canFetchMore = true;
+
+    window.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 100) {
+            if (!loading && canFetchMore) {
+                loadMorePosts();
+            }
+        }
+    });
+
+    async function loadMorePosts() {
+        try {
+            loading = true;
+            document.getElementById('loading-spinner').style.display = 'block';
+            
+            // Choose API endpoint based on current path
+            const endpoint = currentPath === '/following' ? 'followPosts' : 'posts';
+            const response = await fetch(`/api/${endpoint}?offset=${offset}&limit=${limit}&userId=${user.id}`);
+            const posts = await response.json();
+            
+            if (posts && posts.length > 0) {
+                const postsContainer = document.querySelector('#posts-container');
+                posts.forEach(post => {
+                    const postHTML = createPostHTML(post);
+                    postsContainer.insertAdjacentHTML('beforeend', postHTML);
+                });
+                offset += limit;
+            }
+        } catch (error) {
+            console.error('Error loading more posts:', error);
+        } finally {
+            loading = false;
+            document.getElementById('loading-spinner').style.display = 'none';
+        }
+    }
+
+    function createPostHTML(post) {
+        return `
+            <div id="${post._id}" class="post" onclick="window.location.href='/post/${post._id}'">
+                <div class="user-info">
+                    <img src="${post.author_id.profile_pic_url}" alt="${post.author_id.username}" class="profile-pic">
+                    <div class="post-info">
+                        <a href="/profile/${post.author_id.username}">
+                            <p class="username">${post.author_id.username}</p>
+                        </a>
+                        <span class="time">${post.timeAgo}</span>
+                    </div>
+                </div>
+                <div class="content-wrapper">
+                    <p class="text">${post.content}</p>
+                    ${post.media && post.media.urls && post.media.urls.length ? `
+                        <div class="media">
+                            <img src="${post.media.urls[0]}" alt="Post media" class="post-image" onclick="event.stopPropagation(); openFullscreen('${post._id}');">
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="actions container text-center">
+                    <button class="like-button button hover-icon ${post.isLiked ? 'like-button-clicked' : ''}"
+                        onclick="event.preventDefault(); event.stopPropagation(); toggleLike({
+                            postId: '${post._id}',
+                            userId: '${post.author_id._id}',
+                            isLiked: ${post.isLiked},
+                            button: this,
+                            postAuthorId: '${post.author_id._id}'
+                        })">
+                        <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                        </svg>
+                        <p id="like-count-${post._id}">${post.likes ? post.likes.length : 0}</p>
+                    </button>
+                    <button class="comment-button button hover-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <p>${post.comments_length || 0}</p>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
     function handleFormSubmit(event) {
         event.preventDefault();
         

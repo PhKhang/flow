@@ -67,6 +67,31 @@ const likeComment = async (commentId, userId) => {
     }
 };
 
+const unlikeComment = async (commentId, userId) => {
+    try {
+        const updatedComment = await Comment.findByIdAndUpdate(
+            commentId,
+            { $pull: { likes: userId } },
+            { new: true }
+        );
+        return updatedComment;
+    }
+    catch (error) {
+        console.error('Error unliking comment:', error);
+        return null;
+    }
+};
+
+const getCommentId = async (postId, authorId) => {
+    try {
+        const comment = await Comment.findOne({ post_id: postId, author_id: authorId });
+        return comment;
+    } catch (error) {
+        console.error('Error getting comment:', error);
+        return null;
+    }
+};
+
 const getCommentsByAuthor = async (authorId) => {
     try {
         const comments = await Comment.find({ author_id: authorId })
@@ -80,10 +105,24 @@ const getCommentsByAuthor = async (authorId) => {
     }
 };
 
+const getCommentsByPost = async (postId) => {
+    try {
+        const comments = await Comment.find({ post_id: postId })
+            .populate('author_id', 'username profile_pic_url full_name')
+            .sort({ created_at: -1 });
+        return comments;
+    } catch (error) {
+        console.error('Error getting comments by post:', error);
+        return null;
+    }
+};
+
 export { 
     getAllComments, 
     addComment, 
     deleteComment, 
     likeComment, 
-    getCommentsByAuthor 
+    unlikeComment,
+    getCommentsByAuthor,
+    getCommentsByPost
 };

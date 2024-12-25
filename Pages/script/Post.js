@@ -1,27 +1,3 @@
-const comments = [
-    {
-        username: "username",
-        profilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
-        time: "53m",
-        text: "Chúc bạn có một chuyến đi vui vẻ",
-        image: null,
-        likes: 1,
-        replies: 1
-    },
-    {
-        username: "username",
-        profilePic: "https://i.pinimg.com/736x/cd/9f/bd/cd9fbd7a5a930c7a5b24749da7052399.jpg",
-        time: "43s",
-        text: "What's a nice place!",
-        image: null,
-        likes: 1,
-        replies: 0
-    }
-];
-
-// Xử lý preview hình ảnh
-const commentImageInput = document.getElementById('commentImageInput');
-const commentImagePreview = document.getElementById('commentImagePreview');
 
 commentImageInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -37,241 +13,285 @@ commentImageInput.addEventListener('change', function(event) {
 
 document.getElementById('newCommentInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // Ngăn xuống dòng
+        e.preventDefault(); 
         addNewComment();
     }
 });
 
-function createCommentHTML(comment) {
-    let commentHTML = `
-        <div class="comment">
-            <img src="${comment.profilePic}" alt="Profile picture" class="profile-pic">
-            <div class="user-info">
-                <div class="username">
-                    <a href="/profile/${comment.username}"><span class="username" style="font-weight: 600;">${comment.username}</span></a>
-                    <span> • </span>
-                    <span class="time">${comment.time}</span>
-                </div>
-                <div class="comment-block">
-            </div>
-            `;
-    
-    // Chỉ hiển thị text nếu có
-    if (comment.text) {
-        commentHTML += `<p class="text">${comment.text}</p>`;
+async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
+    console.log(postId, userId, isLiked, button, postAuthorId);
+    try {
+        button.classList.toggle('like-button-clicked');
+        let endpoint;
+        if (isLiked === "true") {
+            endpoint = '/api/unlikePost';
+        } else {
+            endpoint = '/api/likePost';
+        }
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ postId, userId }),
+        });
+        if (endpoint === '/api/likePost') {
+            const notificationResponse = await fetch('/api/createNotification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'like_post',
+                    sender_id: userId,
+                    receiver_id: postAuthorId,
+                    attachment: postId
+                }),
+            });
+            const notificationStatus = await notificationResponse.json();
+
+            if (notificationStatus.success) {
+                console.log('Notification created successfully');
+            } else {
+                console.error('Failed to create notification');
+            }
+        }
+
+        const result = await response.json();
+        
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Failed to like or unlike the post');
+        }
+
+        let updatedLikesCount = result.post.likes.length;
+        document.querySelector(`#like-count-${postId}`).textContent = updatedLikesCount;
+        button.onclick = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleLike({
+                postId,
+                userId,
+                isLiked: isLiked === 'true' ? 'false' : 'true',
+                button,
+                postAuthorId,
+            });
+        };
+    } catch (error) {
+        button.classList.toggle('like-button-clicked');
+        alert('An error occurred while toggling like. Please try again.');
     }
-    
-    // Hiển thị hình nếu có
-    if (comment.image) {
-        commentHTML += `<img src="${comment.image}" alt="Comment image" class="mt-1 comment-image">`;
+}
+
+async function toggleLikeComment({ commentId, userId, isLiked, button, commentAuthorId }) {
+    console.log(commentId, userId, isLiked, button, commentAuthorId);
+
+    try {
+        button.classList.toggle('like-button-clicked');
+        let endpoint;
+
+        if (isLiked === "true") {
+            endpoint = '/api/unlikeComment';
+        } else {
+            endpoint = '/api/likeComment';
+        }
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ commentId, userId }),
+        });
+
+        if(endpoint === '/api/likeComment') {
+            const notificationResponse = await fetch('/api/createNotification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'like_comment',
+                    sender_id: userId,
+                    receiver_id: commentAuthorId,
+                    attachment: commentId
+                }),
+            });
+            const notificationStatus = await notificationResponse.json();
+            
+            if (notificationStatus.success) {
+                console.log('Notification created successfully');
+            } else {
+                console.error('Failed to create notification');
+            }
+        }
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Failed to like or unlike the comment');
+        }
+
+        const updatedLikesCount = result.comment.likes.length;
+        document.querySelector(`#comment-like-count-${commentId}`).textContent = updatedLikesCount;
+
+        button.onclick = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleLikeComment({
+                commentId,
+                userId,
+                isLiked: isLiked === 'true' ? 'false' : 'true',
+                button,
+                commentAuthorId
+            });
+        };
+    } catch (error) {
+        button.classList.toggle('like-button-clicked');
+        alert('An error occurred while toggling like. Please try again.');
+    }
+}
+
+function renderComments(newComment) {
+    const container = document.getElementById('commentsContainer');
+    if (!container) {
+        console.error('Comments container not found');
+        return;
     }
 
-    commentHTML += `
-                <div class="actions container text-center">
-                    <button style="margin-left: -10px" class="me-2 like-button button hover-icon" onclick="toggleLike(this)">
-                        <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
-                        </svg>
-                        <p>${formatNumber(comment.likes)}</p>
-                    </button>
-                    <button style="margin-left: -10px" class="me-2 comment-button button hover-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> 
-                        <p>${formatNumber(comment.replies)}</p>
-                    </button>
+    const commentHTML = `
+        <div id="comment-${newComment.id}" class="comment">
+            <img src="${newComment.profilePic}" alt="Profile picture" class="profile-pic">
+            <div class="user-info">
+                <div class="username">
+                    <a href="/profile/${newComment.username}">
+                        <span class="username" style="font-weight: 600;">${newComment.username}</span>
+                    </a>
+                    <span> • </span>
+                    <span class="time">${newComment.time}</span>
+                </div>
+                <div class="comment-block">
+                    ${newComment.text ? `<p class="text">${newComment.text}</p>` : ''}
+                    ${newComment.image ? `<img src="${newComment.image}" alt="Comment image" class="mt-1 comment-image">` : ''}
+                    <div class="actions container text-center">
+                        <button 
+                            style="margin-left: -10px" 
+                            class="me-2 like-button button hover-icon ${newComment.isLiked ? 'like-button-clicked' : ''}" 
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleLikeComment({
+                                commentId: '${newComment.id}',
+                                userId: '${newComment.userId}',
+                                isLiked: ${newComment.isLiked},
+                                button: this,
+                                commentAuthorId: '${newComment.commentAuthorId}'
+                            })">
+                            <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                            </svg>
+                            <p id="comment-like-count-${newComment.id}">${newComment.likes}</p>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     `;
-    return commentHTML;
+
+    container.insertAdjacentHTML('afterbegin', commentHTML);
 }
 
-function formatNumber(num) {
-    if (num >= 1_000_000_000) {
-        return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
-    } else if (num >= 1_000_000) {
-        return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-    } else if (num >= 1_000) {
-        return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
-    } else {
-        return num.toString();
-    }
-}
-
-function renderComments() {
-    const container = document.getElementById('commentsContainer');
-    container.innerHTML = comments.map(comment => createCommentHTML(comment)).join('');
-}
-
-const addNewComment = async () => {
+const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAuthorId }) => {
+    console.log('Adding new comment:', postId, authorId, username, profilePicUrl, postAuthorId);
     const textarea = document.getElementById('newCommentInput');
-    if (textarea) {
-        textarea.style.height = 'auto'; 
-    }
+    const commentImagePreview = document.getElementById('commentImagePreview');
+    const commentImageInput = document.getElementById('commentImageInput');
 
-    const input = document.getElementById('newCommentInput');
-    const text = input.value.trim();
-    const hasImage = commentImagePreview.style.display === 'block';
-    
-    if (text && hasImage) {
-        const newComment = {
-            username: "phkhang",
-            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
-            time: "1s",
-            text: text || "", 
-            image: hasImage ? commentImagePreview.src : null,
-            likes: 0,
-            replies: 0
+    if (textarea) textarea.style.height = 'auto';
+
+    const text = textarea.value.trim();
+    const hasImage = commentImagePreview && commentImagePreview.style.display === 'block';
+    const selectedFile = commentImageInput && commentImageInput.files[0];
+
+    if (!text && !hasImage) return; 
+
+    const newComment = {
+        userId: authorId,
+        username: username,
+        profilePic: profilePicUrl,
+        commentAuthorId: authorId,
+        time: "0min",
+        text,
+        image: hasImage ? selectedFile : null,
+        likes: 0,
+        replies: 0,
+    };
+
+    try {
+        const payload = {
+            authorId,
+            postId,
+            content: text,
+            typeOfMedia: hasImage ? 'image' : 'none',
+            urls: [],
         };
 
-
-        let selectedFile = document.getElementById('commentImageInput').files[0];
-        if(hasImage) {  
+        if (hasImage && selectedFile) {
             const fileFormData = new FormData();
             fileFormData.append('file', selectedFile);
-            
+
             const fileResponse = await fetch('/uploadImg', {
                 method: 'POST',
-                body: fileFormData
+                body: fileFormData,
             });
-            
             const fileData = await fileResponse.json();
-
-            const newCommentResponse = await fetch('/api/addComment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    authorId: '6744872f1e74c42b292cf201',
-                    postId: '674be85ad25f6193dd96dd27',
-                    content: text,
-                    typeOfMedia: 'image',
-                    urls: [fileData.filename]
-                })
-            });
-            const status = await newCommentResponse.json();
-            
-            if (status.success) {
-                console.log('Post with file successful');
-            } else {
-                console.log('Post with file failed');
-            }
+            payload.urls = [fileData.filename];
+            newComment.image = fileData.filename; 
         }
 
-        comments.unshift(newComment);
-        renderComments();
+        console.log( JSON.stringify(payload))
 
-        
-        input.value = '';
-        commentImagePreview.style.display = 'none';
-        commentImagePreview.src = '';
-        commentImageInput.value = '';
-    }
-    else if (text) {
-        const newComment = {
-            username: "phkhang",
-            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
-            time: "1s",
-            text: text || "", 
-            image: null,
-            likes: 0,
-            replies: 0
-        };
-
-        const newCommentResponse = await fetch('/api/addComment', {
+        const response = await fetch('/api/addComment', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                authorId: '6744872f1e74c42b292cf201',
-                postId: '674be85ad25f6193dd96dd27',
-                content: "",
-                typeOfMedia: 'none',
-                urls: []
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
         });
-        const status = await newCommentResponse.json();
         
-        if (status.success) {
-            console.log('Post without file successful');
-        } else {
-            console.log('Post without file failed');
-        }
+        const status = await response.json();
 
-        comments.unshift(newComment);
-        renderComments();
+        if (status.success) { 
+            newComment.id = status.comment._id; 
+            renderComments(newComment);
 
-        // Reset form
-        input.value = '';
-    }
-    else if (hasImage) {
-        const newComment = {
-            username: "phkhang",
-            profilePic: "https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064",
-            time: "1s",
-            text: text || "", 
-            image: hasImage ? commentImagePreview.src : null,
-            likes: 0,
-            replies: 0
-        };
-
-
-        let selectedFile = document.getElementById('commentImageInput').files[0];
-        if(hasImage) {  
-            const fileFormData = new FormData();
-            fileFormData.append('file', selectedFile);
-            
-            const fileResponse = await fetch('/uploadImg', {
+            const notificationResponse = await fetch('/api/createNotification', {
                 method: 'POST',
-                body: fileFormData
-            });
-            
-            const fileData = await fileResponse.json();
-
-            const newCommentResponse = await fetch('/api/addComment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    authorId: '6744872f1e74c42b292cf201',
-                    postId: '674be85ad25f6193dd96dd27',
-                    content: "",
-                    typeOfMedia: 'image',
-                    urls: [fileData.filename]
-                })
+                    type: 'comment_post',
+                    sender_id: authorId,
+                    receiver_id: postAuthorId,
+                    attachment: postId,
+                }),
             });
-            const status = await newCommentResponse.json();
+            const notificationStatus = await notificationResponse.json();
             
-            if (status.success) {
-                console.log('Post with file successful');
+            if (notificationStatus.success) {
+                console.log('Notification created successfully');
             } else {
-                console.log('Post with file failed');
+                console.error('Failed to create notification');
             }
+            
+            if (textarea) textarea.value = '';
+            const commentImagePreview = document.getElementById('commentImagePreview');
+            const commentImageInput = document.getElementById('commentImageInput');
+            if (commentImagePreview) {
+                commentImagePreview.style.display = 'none';
+                commentImagePreview.src = '';
+            }
+            if (commentImageInput) commentImageInput.value = '';
+        } else {
+            console.error('Failed to add comment');
         }
-
-        comments.unshift(newComment);
-        renderComments();
-
-        // Reset form
-        commentImagePreview.style.display = 'none';
-        commentImagePreview.src = '';
-        commentImageInput.value = '';
+    } catch (error) {
+        console.error('Error while adding comment:', error);
     }
-
-}
-
-renderComments();
+};
 
 function goBack() {
     window.history.back();
 }
-
-function toggleLike(button) {
-    button.classList.toggle('like-button-clicked');
-}
-
 
 function openFullscreen(index) {
     let modal = document.getElementById(`imageModal-${index}`);
@@ -295,5 +315,17 @@ function closeFullscreen(index) {
         modal.style.display = 'none';
     } else {
         console.error("Modal not found for index:", index);
+    }
+}
+
+function formatNumber(num) {
+    if (num >= 1_000_000_000) {
+        return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+    } else if (num >= 1_000_000) {
+        return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    } else if (num >= 1_000) {
+        return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+    } else {
+        return num.toString();
     }
 }
