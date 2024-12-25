@@ -87,6 +87,16 @@ UserController.fetchUserByUsername = async (username) => {
     }
 }
 
+UserController.searchUsersByName = async (searchString) => {
+    try {
+        const users = await User.find({ username: { $regex: searchString, $options: 'i' } });
+        return users;
+    } catch (error) {
+        console.error('Error searching users by name:', error);
+        return null;
+    }
+};
+
 UserController.editUser = async (id, data) => {
     console.log("Editing user: ", id, " ", data);
 
