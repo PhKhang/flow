@@ -99,7 +99,6 @@
             
             const response = await fetch(`/api/posts?offset=${offset}&limit=${limit}&userId=${user.id}`);
             const posts = await response.json();
-            console.log(posts);
             
             if (posts && posts.length > 0) {
                 const postsContainer = document.querySelector('#posts-container');

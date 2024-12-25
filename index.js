@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
-import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts, getAllPostsPagination } from './server/controller/postController.js';
+import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts, getAllPostsPagination, getFollowPostsPagination } from './server/controller/postController.js';
 import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
 import { getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser } from './server/controller/notificationController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
@@ -87,24 +87,26 @@ app.get("/", async (req, res) => {
 app.use('/post', postRouter);
 
 app.get("/post", async (req, res) => {
-    res.locals.posts = await getAllPosts();
     res.locals.title = "Post • flow";
     res.render("post", { currentPath: "/post" });
 });
 
 app.get("/following", async (req, res) => {
-    const token = req.cookies.access_token;
-    
-    if (!token) {
-        console.log("No token");
-        return res.redirect("/signin");
+    try {
+        const token = req.cookies.access_token;
+        if (!token) {
+            return res.render('signin', { currentPath: "/signin", layout: 'layout-signin' });
+        }
+        const decoded = jwt.verify(token, process.env.SECRET_KEY)
+        const posts = await getFollowPostsPagination(decoded.id, 10, 0);
+        res.locals.posts = posts;
+        res.locals.user = decoded;
+        res.locals.title = "Home following • flow";
+        res.render('index', { currentPath: "/following" });
+    } catch (error) {
+        console.error('Error rendering home following page:', error);
+        res.status(500).send('Error loading home following page');
     }
-
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
-    res.locals.posts = await getFollowPosts(decoded.id);
-    res.locals.title = "Following • flow";
-    res.render('index', { currentPath: "/following" });
 });
 
 app.get("/signin", (req, res) => {
