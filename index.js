@@ -17,7 +17,7 @@ import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts } from './server/controller/postController.js';
-import { getAllUsers, fetchUserByEmail, fetchUserByUsername } from './server/controller/userController.js';
+import UserController from './server/controller/userController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 import DecodeUserInfo from './server/utils/decodeUserInfo.js';
 
@@ -118,7 +118,7 @@ app.get("/profile/:username", async (req, res) => {
         return res.status(404).send("User not found");
     }
     
-    user = await fetchUserByUsername(user.username);
+    user = await UserController.fetchUserByUsername(user.username);
     
     console.log(user)
     res.locals.title = `${user.full_name} • flow`;
@@ -132,12 +132,12 @@ app.get("/post", async (req, res) => {
 });
 
 app.get("/server/all", async (req, res) => {
-    const users = await getAllUsers();
+    const users = await UserController.getAllUsers();
     res.send(users.length.toString());
 });
 
 app.get("/server/:name", async (req, res) => {
-    const user = await fetchUserByEmail(req.params.name);
+    const user = await UserController.fetchUserByEmail(req.params.name);
     if (user) {
         console.log(user);
     } else {

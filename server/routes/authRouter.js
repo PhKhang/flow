@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken"
 import dotenv from "dotenv/config"
 import bcrypt from "bcrypt";
 
-import { fetchUserByEmail, fetchUserByUsername, addUser } from "../controller/userController.js";
+import UserController from "../controller/userController.js";
+import DecodeUserInfo from "../utils/decodeUserInfo.js";
 const authRouter = express.Router()
 
 authRouter.get("/", (req, res) => {
@@ -44,13 +45,13 @@ authRouter.post("/signup", async (req, res) => {
 
     console.log("Fetching user by username from router: ", username);
 
-    let fetched = await fetchUserByUsername(username)
+    let fetched = await UserController.fetchUserByUsername(username)
     if (fetched != null) {
         console.log("Username used: ", fetched)
         return res.status(409).json({ type: "username", error: "Username already used" })
     }
 
-    fetched = await fetchUserByEmail(email)
+    fetched = await UserController.fetchUserByEmail(email)
     if (fetched != null) {
         console.log("Email used: ", fetched)
         return res.status(409).json({ type: "email", error: "Email used" })
@@ -60,7 +61,7 @@ authRouter.post("/signup", async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
-    const user = await addUser(username, email, hash)
+    const user = await UserController.addUser(username, email, hash)
     if (user == null) {
         console.log("Error creating user")
         return res.status(500).send("Error creating user")
@@ -78,7 +79,7 @@ authRouter.post("/signup", async (req, res) => {
 authRouter.post("/signin", async (req, res) => {
     const email = req.body.email
     const password = req.body.password
-    const user = await fetchUserByEmail(email)
+    const user = await UserController.fetchUserByEmail(email)
 
     if (user == null) {
         console.log("User not found")
@@ -101,8 +102,27 @@ authRouter.post("/signin", async (req, res) => {
     }).status(200).json({ status: "logged in" })
 });
 
-authRouter.post("/logout", async (req, res) => {
-    res.clearCookie("access_token").status(200).json({ message: "Logged out" })
+authRouter.get("/logout", async (req, res) => {
+    res.clearCookie("access_token").status(200).redirect("/signin")
+})
+
+authRouter.post("/edit", async (req, res) => {
+    const user = DecodeUserInfo.decode(req);
+    if (user == null) {
+        return res.status(401).send("Not logged in")
+    }
+    
+    const data = req.body
+    const result = await UserController.editUser(user.id, data)
+    if (result == null) {
+        return res.status(500).send("Error editing user")
+    }
+    
+    const token = createToken(user)
+    res.cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production"
+    }).status(200).json({ status: "info changed" })
 })
 
 export default authRouter;

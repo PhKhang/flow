@@ -40,7 +40,7 @@ const posts = [
 function createPostElement(post, index) {
     const postElement = document.createElement('div');
     postElement.classList.add('post');
-  
+
     let postHTML = `
         <div class="user-info">
             <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="User profile" class="profile-pic">
@@ -51,7 +51,7 @@ function createPostElement(post, index) {
         </div>
         <div class="content-wrapper">
             <p class="text">${post.text}</p>`;
-  
+
     if (post.image) {
         postHTML += `
             <div class="media">
@@ -68,7 +68,7 @@ function createPostElement(post, index) {
                 <img src="${post.image}" alt="Full Image" class="full-image">
             </div>`;
     }
-  
+
     postHTML += `
         </div>
         <div class="actions container text-center">
@@ -84,17 +84,17 @@ function createPostElement(post, index) {
             </button>
         </div>`;
 
-        postElement.innerHTML = postHTML;
-  
-        postElement.addEventListener('click', (event) => {
-            if (event.target.closest('.like-button, .close-full-image')) {
-                return; 
-            }
-            if (!event.target.matches('img, .post-image, .modal')) {
-                window.location.href = '/post';
-            }
-        });
-  
+    postElement.innerHTML = postHTML;
+
+    postElement.addEventListener('click', (event) => {
+        if (event.target.closest('.like-button, .close-full-image')) {
+            return;
+        }
+        if (!event.target.matches('img, .post-image, .modal')) {
+            window.location.href = '/post';
+        }
+    });
+
     return postElement;
 }
 
@@ -117,30 +117,33 @@ function formatNumber(num) {
 
 function renderFeed() {
     const otherPostsContainer = document.querySelector('.other-posts');
-    
+
     const existingPosts = otherPostsContainer.querySelectorAll('.post:not(.add-post-area)');
     existingPosts.forEach(post => post.remove());
-    
+
     posts.forEach((post, index) => {
         const postElement = createPostElement(post, index);
         otherPostsContainer.appendChild(postElement);
     });
 }
 
-let IsActiveFollowers= false;
+let IsActiveFollowers = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     renderFeed();
+    toggleTabs();
 });
 
-function togglePopupFollower() {
+function togglePopupFollower(tab) {
     const popupFl = document.getElementById("popup-follower");
     const overlayFl = document.getElementById("overlay-follower");
-    
+
     popupFl.classList.toggle("active-follower");
     overlayFl.classList.toggle("active-follower");
 
     IsActiveFollowers = popupFl.classList.contains("active-follower");
+
+    chooseTab(tab);
 }
 
 document.getElementById("overlay-follower").addEventListener("click", () => {
@@ -151,7 +154,7 @@ document.getElementById("overlay-follower").addEventListener("click", () => {
 
 function toggleFollow(button) {
     button.classList.toggle('follow-btn-clicked');
-    
+
     if (button.classList.contains('follow-btn-clicked')) {
         button.innerText = 'Following';
     } else {
@@ -164,9 +167,9 @@ function openFullscreen(index) {
     let closeButton = document.getElementById(`closeButton-${index}`);
     modal.style.display = 'flex';
     closeButton.style.display = 'block';
-    modal.addEventListener('click', function(event) {
-        if (event.target === modal) { 
-          closeFullscreen(index);
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            closeFullscreen(index);
         }
     });
 }
@@ -176,20 +179,94 @@ function closeFullscreen(index) {
     modal.style.display = 'none';
 }
 
-const tabs = document.querySelectorAll('.tab');
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-    });
-});
+// const tabs = document.querySelectorAll('.tab');
+// tabs.forEach(tab => {
+//     tab.addEventListener('click', () => {
+//         tabs.forEach(t => t.classList.remove('active'));
+//         tab.classList.add('active');
+//     });
+// });
 function goBack() {
     window.history.back();
 }
 
 function scrollToTop() {
     window.scrollTo({
-        top: 0, 
+        top: 0,
         behavior: "smooth"
+    });
+}
+
+function editProfile(event) {
+    e.preventDafault();
+
+    console.log("Edit profile");
+    console.log(event)
+}
+
+document.querySelector("#edit-info").onsubmit = async (e) => {
+    e.preventDefault();
+    console.log("Edit profile");
+    const data = new FormData(e.target);
+    const object = Object.fromEntries(data.entries());
+    const file = document.querySelector(".over #profile-picture input[type='file']").files[0]
+    console.log(file);
+
+    const fileFormData = new FormData();
+    fileFormData.append('file', file);
+
+    const fileResponse = await fetch('/uploadImg', {
+        method: 'POST',
+        body: fileFormData
+    });
+
+    const fileData = await fileResponse.json();
+
+    console.log(fileData);
+    object.profile_pic_url = fileData.filename;
+
+    const response = await fetch("/api/auth/edit", {
+        method: "POST",
+        body: JSON.stringify(object),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    if (!response.ok) {
+        console.log("Error editing user");
+        return;
+    }
+
+    console.log("Edited user successfully");
+    document.querySelector('.over').style.display = 'none';
+    location.reload();
+}
+
+const chooseTab = (tab) => {
+    const followersTab = document.getElementById('followers-tab');
+    const followingTab = document.getElementById('following-tab');
+
+    if (tab == 1) {
+        followersTab.classList.add('active');
+        followingTab.classList.remove('active');
+        document.querySelector(".followers-tab").style.display = "block";
+        document.querySelector(".following-tab").style.display = "none";
+    }
+    else {
+        followingTab.classList.add('active');
+        followersTab.classList.remove('active');
+        document.querySelector(".followers-tab").style.display = "none";
+        document.querySelector(".following-tab").style.display = "block";
+    }
+}
+
+function toggleTabs() {
+    const followersTab = document.getElementById('followers-tab');
+    const followingTab = document.getElementById('following-tab');
+    followersTab.addEventListener('click', () => {
+        chooseTab(1);
+    });
+    followingTab.addEventListener('click', () => {
+        chooseTab(2);
     });
 }
