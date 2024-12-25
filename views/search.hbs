@@ -33,9 +33,15 @@
                             <p>{{username}}</p>
                         </a>
                         <p class="search-user-bio">{{full_name}}</p>
-                        <p class="mt-1">{{followers}} followers</p>
+                        <p id="followers-count-{{id}}" class="mt-1">{{followers}} followers</p>
                     </div>
-                    <button class="follow-btn mt-1 me-1 {{#if isFollowed}}following{{/if}}">
+                    <button 
+                        class="follow-btn mt-1 me-1 {{#if isFollowed}}following{{/if}}" 
+                        onclick="event.preventDefault(); event.stopPropagation(); toggleFollow({ 
+                            followerId: '{{../user.id}}', 
+                            followingId: '{{_id}}', 
+                            isFollowed: '{{isFollowed}}', 
+                            button: this })">
                         <p>{{#if isFollowed}}Following{{else}}Follow{{/if}}</p>
                     </button>
                 </div>

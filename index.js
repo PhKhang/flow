@@ -181,7 +181,6 @@ app.get('/search', async (req, res) => {
         } else if (category === 'post') {
             results = await getAllFoundPosts(decoded.id, keyword);
         }
-
         res.render('search', {
             keyword,
             category,

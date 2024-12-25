@@ -7,6 +7,7 @@ import {searchUsersByName} from '../controller/userController.js';
 import {followUser, unfollowUser} from '../controller/followController.js';
 import {createNotification, deleteNotification, updateReadStatus, updateUnreadStatus} from '../controller/notificationController.js';
 import authRouter from "./authRouter.js"
+import Follow from "../model/follow.js";
 
 apiRouter.use("/auth", authRouter);
 
@@ -61,7 +62,13 @@ apiRouter.post('/uploadPost', async (req, res) => {
 apiRouter.post('/follow', async (req, res) => {
     try {
         const followers = await followUser(req.body.followerId, req.body.followingId);
-        return res.status(200).send({ success: true, followers: followers });
+        const followersCount = await Follow.countDocuments({ following_id: req.body.followingId });
+
+        return res.status(200).send({
+            success: true,
+            followers: followers,
+            followersCount: followersCount  
+        });
     }
     catch (error) {
         console.error('Error following user:', error);
@@ -72,7 +79,13 @@ apiRouter.post('/follow', async (req, res) => {
 apiRouter.post('/unfollow', async (req, res) => {
     try {
         const followers = await unfollowUser(req.body.followerId, req.body.followingId);
-        return res.status(200).send({ success: true, followers: followers });
+        const followersCount = await Follow.countDocuments({ following_id: req.body.followingId });
+
+        return res.status(200).send({
+            success: true,
+            followers: followers,
+            followersCount: followersCount  
+        });
     }
     catch (error) {
         console.error('Error following user:', error);

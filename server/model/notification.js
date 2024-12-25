@@ -15,7 +15,7 @@ const notificationSchema = new Schema({
         default: 'unread',
     },
     created_at: { type: Date, default: Date.now },
-    attachment: { type: Schema.Types.ObjectId, refPath: 'onModel', required: true, },
+    attachment: { type: Schema.Types.ObjectId, refPath: 'onModel' },
     onModel: {
         type: String,
         enum: ['posts', 'comments']
