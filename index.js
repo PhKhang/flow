@@ -16,13 +16,13 @@ import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
-import { addPost, getAllPosts, getFollowPosts, likePost, searchPosts, getAllPostsPagination, getFollowPostsPagination } from './server/controller/postController.js';
-import { getAllUsers, fetchUserByEmail } from './server/controller/userController.js';
+import { addPost, getAllPosts, getFollowPosts, getPostsByAuthor, likePost, searchPosts, getAllPostsPagination, getFollowPostsPagination } from './server/controller/postController.js';
+import UserController from './server/controller/userController.js';
 import { getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser } from './server/controller/notificationController.js';
 import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
 import { getAllFoundUsers, getAllFoundPosts } from './server/controller/searchController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
-import { decode } from 'punycode';
+import DecodeUserInfo from './server/utils/decodeUserInfo.js';
 
 const app = express();
 const port = 3000;
@@ -56,9 +56,10 @@ app.engine('hbs', expressHbs.engine({
 }));
 
 app.use((req, res, next) => {
-    res.locals.username = current_username;
-    res.locals.current_username = current_username;
-    res.locals.isCurrentUser = req.path.includes(`/profile/${current_username}`);
+    let user = DecodeUserInfo.decode(req);
+    res.locals.username = user?.username || current_username;
+    res.locals.current_username = user?.username || current_username;
+    res.locals.isCurrentUser = req.path.includes(`/profile/${user?.username || current_username}`);
     next();
 });
 
@@ -196,16 +197,26 @@ app.get('/search', async (req, res) => {
     }
 });
 
-app.get("/profile/:username", async (req, res) => {
-    const username = req.params.username;
-    const user = await fetchUserByUsername(username)
+app.get("/profile/", verifyToken, async (req, res) => {
+    let user = DecodeUserInfo.decode(req);
+    
+    user = await UserController.fetchUserByUsername(user.username);
+    
+    res.redirect(`/profile/${user.username}`);
+});
+
+app.get("/profile/:username", verifyToken, async (req, res) => {
+    let user = DecodeUserInfo.decode(req);
     if (!user) {
-        return res.status(404).send("User not found");
+        return res.status(404).send("Not logged in");
     }
-    const usr = user[0]
-    // const usr = user
+    
+    user = await UserController.fetchUserByUsername(req.params.username);
+    const posts = await getAllPostsPagination(user._id, 10, 0);
+    user.posts = posts;
+    
     res.locals.title = `${user.full_name} • flow`;
-    res.render("profile", { currentPath: `/profile/${usr.username}`, user: usr });
+    res.render("profile", { currentPath: `/profile/${user.username}`, user: user });
 });
 
 app.get("/post", async (req, res) => {
@@ -215,12 +226,12 @@ app.get("/post", async (req, res) => {
 });
 
 app.get("/server/all", async (req, res) => {
-    const users = await getAllUsers();
+    const users = await UserController.getAllUsers();
     res.send(users.length.toString());
 });
 
 app.get("/server/:name", async (req, res) => {
-    const user = await fetchUserByEmail(req.params.name);
+    const user = await UserController.fetchUserByEmail(req.params.name);
     if (user) {
         console.log(user);
     } else {
@@ -237,30 +248,6 @@ const s3Client = new S3Client({
     credentials: fromEnv(),
     endpoint: "https://fd0314cb84aca3240521990fc2bb803c.r2.cloudflarestorage.com",
 });
-
-const uploadFileToS3 = async (file) => {
-    try {
-        if (!file || !file.size) {
-            throw new Error('No file provided');
-        }
-        const fileName = `${randomUUID()}-${file.name}`;
-        const command = new PutObjectCommand({
-            Bucket: "poro",
-            Key: fileName,
-            Body: await file.arrayBuffer(),
-        });
-        await s3Client.send(command);
-
-        return {
-            name: fileName,
-            size: file.size,
-            url: `https://pub-b62914ea73f14287b50eae850c46299b.r2.dev/${fileName}`,
-        };
-    } catch (error) {
-        console.error('Error uploading file:', error);
-        throw error;
-    }
-};
 
 const upload = multer({
     storage: multerS3({

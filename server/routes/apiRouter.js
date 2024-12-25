@@ -3,7 +3,7 @@ const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
 import {addComment, likeComment, unlikeComment, getCommentsByPost} from '../controller/commentController.js';
 import {addPost, likePost, searchPosts, unlikePost, getPostsByAuthor, getAllPostsPagination, getFollowPostsPagination} from '../controller/postController.js';
-import {searchUsersByName} from '../controller/userController.js';
+import UserController from '../controller/userController.js';
 import {followUser, unfollowUser} from '../controller/followController.js';
 import {createNotification, deleteNotification, updateReadStatus, updateUnreadStatus} from '../controller/notificationController.js';
 import authRouter from "./authRouter.js"
@@ -151,7 +151,7 @@ apiRouter.get('/searchPost', async (req, res) => {
 
 apiRouter.get('/searchUser', async (req, res) => {
     try {
-        const users = await searchUsersByName(req.query.search_string);
+        const users = await UserController.searchUsersByName(req.query.search_string);
         return res.status(200).send({ success: true, users: users });
     }
     catch (error) {
