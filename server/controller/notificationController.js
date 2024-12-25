@@ -110,7 +110,7 @@ const createNotification = async (req, res) => {
 
 const deleteNotification = async (req, res) => {
     try {
-        const  id  = req.body.commentId;
+        const id = req.body.notificationId;
         const notification = await Notification.findByIdAndDelete(id);
         if (!notification) {
             res.status(404).json({success: true, message: 'Notification not found' });

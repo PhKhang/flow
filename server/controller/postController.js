@@ -97,6 +97,7 @@ const getPostById = async (req, res) => {
         post.modified_created_at = formattedDate;
         post.timeAgo = timeAgo;
         post.isLiked = post.likes.some(like => like.toString() === decoded.id.toString());
+
         if (!post) {
             return res.status(404).send('Post not found');
         }
@@ -104,13 +105,17 @@ const getPostById = async (req, res) => {
         const comments = await Comment.find({ post_id: postId })
             .populate('author_id', '_id username profile_pic_url full_name')
             .sort({ created_at: -1 });
+
         comments.forEach(comment => {
             const { formattedDate, timeAgo } = formatPostDate(comment.created_at);
             comment.modified_created_at = formattedDate;
             comment.timeAgo = timeAgo;
+            comment.isLiked = comment.likes.some(like => like.toString() === decoded.id.toString());
         });
+
         const commentsCount = comments.length;
         res.locals.title = `${post.content} • flow`;
+
         res.render('post', {
             post,
             comments,
