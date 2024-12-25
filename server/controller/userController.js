@@ -113,7 +113,7 @@ UserController.searchUsersByName = async (searchString) => {
     }
 };
 
-UserController.editUser = async (id, data) => {
+UserController.editUser = async (id, data, needPassword = true) => {
     console.log("Editing user: ", id, " ", data);
 
     try {
@@ -125,7 +125,8 @@ UserController.editUser = async (id, data) => {
 
 
         if (data["new-password"]) {
-            if (!bcrypt.compareSync(data["old-password"], user.password_hash)) {
+            const salt = bcrypt.genSaltSync(10);
+            if (needPassword && !bcrypt.compareSync(data["old-password"], user.password_hash)) {
                 console.log("Bad password");
                 return null;
             }

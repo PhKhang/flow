@@ -2,6 +2,7 @@ import express from "express"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv/config"
 import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
 
 import UserController from "../controller/userController.js";
 import DecodeUserInfo from "../utils/decodeUserInfo.js";
@@ -30,8 +31,7 @@ const createToken = (user) => {
             email: user.email,
             profile_pic_url: user.profile_pic_url,
             bio: user.bio,
-            created_at: user.created_at,
-            likes: user.likes,
+            created_at: user.created_at
         },
         process.env.SECRET_KEY,
         { expiresIn: '7d' });
@@ -43,7 +43,16 @@ authRouter.post("/signup", async (req, res) => {
     const email = req.body.email
     const password = req.body.password
 
-    console.log("Fetching user by username from router: ", username);
+    if (username == "" || email == "" || password == "") {
+        console.log("Missing fields")
+        return res.status(400).json({ type: "missing", error: "Missing fields" })
+    }
+
+    if (req.body.password !== req.body.password1) {
+        console.log("Passwords don't match")
+        return res.status(400).json({ type: "password", error: "Passwords don't match" })
+    }
+    // console.log("Fetching user by username from router: ", username);
 
     let fetched = await UserController.fetchUserByUsername(username)
     if (fetched != null) {
@@ -106,18 +115,87 @@ authRouter.get("/logout", async (req, res) => {
     res.clearCookie("access_token").status(200).redirect("/signin")
 })
 
+authRouter.post("/reset", async (req, res) => {
+    const email = req.body.email
+
+    const user = await UserController.fetchUserByEmail(email)
+    if (user == null) {
+        return res.status(404).json({ type: "email", error: "Email does not exist" })
+    }
+    user.full_name = undefined
+    user.profile_pic_url = undefined
+    user.bio = undefined
+    user.created_at = undefined
+
+    // Send email with reset link
+    const token = createToken(user)
+    const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD,
+        },
+    });
+
+    // transporter.verify(function (error, success) {
+    //     if (error) {
+    //         console.log(error);
+    //     } else {
+    //         console.log("Server is ready to take our messages");
+    //     }
+    // });
+    const mailOptions = {
+        to: email,
+        subject: "Password Reset Request",
+        text: `You requested a password reset. Click the link to reset your password: ${process.env.FRONTEND_URL}/resetpassword?token=${token}`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error("Error sending email: ", error);
+            return res.status(500).send("Error sending email")
+        } else {
+            console.log("Email sent: ", info.response);
+        }
+    });
+
+
+    res.status(200).send("Email sent")
+})
+
+authRouter.post("/resetpassword", async (req, res) => {
+    const token = req.query.token
+    console.log("Token: ", token)
+    const password = req.body.password
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY)
+    if (decoded == null) {
+        return res.status(401).send("Invalid token")
+    }
+
+    const result = await UserController.editUser(decoded.id, { "new-password": password }, false)
+    if (result == null) {
+        return res.status(500).send("Error resetting password")
+    }
+
+    res.redirect("/signin")
+})
+
+
 authRouter.post("/edit", async (req, res) => {
     const user = DecodeUserInfo.decode(req);
     if (user == null) {
         return res.status(401).send("Not logged in")
     }
-    
+
     const data = req.body
     const result = await UserController.editUser(user.id, data)
     if (result == null) {
         return res.status(500).send("Error editing user")
     }
-    
+
     const token = createToken(user)
     res.cookie("access_token", token, {
         httpOnly: true,

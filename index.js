@@ -131,7 +131,7 @@ app.get("/forgetpassword", (req, res) => {
 
 app.get("/resetpassword", (req, res) => {
     res.locals.title = "Reset Password • flow";
-    res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin' });
+    res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin', token: req.query.token });
 });
 
 app.get("/notifications", async (req, res) => {
