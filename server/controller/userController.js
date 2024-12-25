@@ -14,8 +14,10 @@ UserController.getAllUsers = async () => {
     }
 }
 
-UserController.addUser = async (username, email, password_hash) => {
-    const newUser = new User({ username: username, email: email, password_hash: password_hash });
+UserController.addUser = async (username, email, password) => {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    const newUser = new User({ username: username, email: email, password_hash: hash });
     try {
         await newUser.save();
         return newUser;
@@ -23,6 +25,25 @@ UserController.addUser = async (username, email, password_hash) => {
         return null;
     }
 }
+
+UserController.fetchUserByEmailAndVerify = async (email) => {
+    try {
+        const user = await User.findOneAndUpdate({ email: email }, {verified: true}, {new: true});
+        console.log("AFTER UPDATE: ", user);
+        return user;
+    } catch (error) {
+        return null;
+    }
+}
+
+UserController.fetchBasicUserByUsername = async (username) => {
+    try {
+        const user = await User.findOne({ username: username });
+        return user;
+    } catch (error) {
+        return null;
+    } 
+};
 
 UserController.fetchUserByEmail = async (email) => {
     try {

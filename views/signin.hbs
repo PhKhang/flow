@@ -7,9 +7,9 @@
             <form action="/api/auth/signin" target="_self" method="post">
                 <!-- Email Field -->
                 <div class="border-lable-flt">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter your Email"
+                    <input type="text" class="form-control" name="email" id="email" placeholder="Enter your Email or Username"
                         required>
-                    <label for="email">Email</label>
+                    <label for="email">Email or Username</label>
                 </div>
 
                 <!-- Password Field -->
@@ -19,9 +19,10 @@
                     <label for="password">Password</label>
                 </div>
                 <div class="text-end">
-                    <p><a href="forgetpassword">Forget password?</a></p>
+                    <p><a href="forgetpassword">Forgot password?</a></p>
                 </div>
                 <div id="out" style="color: red"></div>
+                <div style="">{{instruction}}</div>
 
                 <!-- Sign In Button -->
                 <button type="submit" id="sign-in">Sign in</button>

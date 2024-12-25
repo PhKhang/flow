@@ -32,6 +32,7 @@
                 </div>
 
                 <div id="out" style="color: red"></div>
+                <div id="out-good" style=""></div>
                 <button type="submit" id="sign-up">Sign up</button>
             </form>
             <p>Already have an account? <a href="/signin">Sign in</a></p>
@@ -56,7 +57,10 @@
                 if (data.error) {
                     document.querySelector("#out").innerText = data.error
                 } else {
-                    window.location.href = "/"
+                    document.querySelector("#out-good").innerText = "Please check your email to verify your account. Redirecting to sign in page..."
+                    setTimeout(function () {
+                        window.location.href = "/signin?verified=true"
+                    }, 1000)
                 }
             })
     }
