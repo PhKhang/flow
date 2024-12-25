@@ -35,7 +35,7 @@ async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
             },
             body: JSON.stringify({ postId, userId }),
         });
-        if(endpoint === '/api/likePost') {
+        if (endpoint === '/api/likePost') {
             const notificationResponse = await fetch('/api/createNotification', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -147,15 +147,50 @@ async function toggleLikeComment({ commentId, userId, isLiked, button, commentAu
     }
 }
 
-function renderComments() {
+function renderComments(newComment) {
     const container = document.getElementById('commentsContainer');
     if (!container) {
         console.error('Comments container not found');
         return;
     }
 
-    //const commentsHTML = comments.map(comment => createCommentHTML(comment)).join('');
-    //container.innerHTML = commentsHTML;
+    const commentHTML = `
+        <div id="comment-${newComment.id}" class="comment">
+            <img src="${newComment.profilePic}" alt="Profile picture" class="profile-pic">
+            <div class="user-info">
+                <div class="username">
+                    <a href="/profile/${newComment.username}">
+                        <span class="username" style="font-weight: 600;">${newComment.username}</span>
+                    </a>
+                    <span> • </span>
+                    <span class="time">${newComment.time}</span>
+                </div>
+                <div class="comment-block">
+                    ${newComment.text ? `<p class="text">${newComment.text}</p>` : ''}
+                    ${newComment.image ? `<img src="${newComment.image}" alt="Comment image" class="mt-1 comment-image">` : ''}
+                    <div class="actions container text-center">
+                        <button 
+                            style="margin-left: -10px" 
+                            class="me-2 like-button button hover-icon ${newComment.isLiked ? 'like-button-clicked' : ''}" 
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleLikeComment({
+                                commentId: '${newComment.id}',
+                                userId: '${newComment.userId}',
+                                isLiked: ${newComment.isLiked},
+                                button: this,
+                                commentAuthorId: '${newComment.commentAuthorId}'
+                            })">
+                            <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                            </svg>
+                            <p id="comment-like-count-${newComment.id}">${newComment.likes}</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('afterbegin', commentHTML);
 }
 
 const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAuthorId }) => {
@@ -173,9 +208,11 @@ const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAu
     if (!text && !hasImage) return; 
 
     const newComment = {
+        userId: authorId,
         username: username,
         profilePic: profilePicUrl,
-        time: "1s",
+        commentAuthorId: authorId,
+        time: "0min",
         text,
         image: hasImage ? selectedFile : null,
         likes: 0,
@@ -211,13 +248,13 @@ const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAu
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         });
-
+        
         const status = await response.json();
 
-        if (status.success) {
-            console.log('Comment added successfully');
-            // comments.unshift(newComment);
-            // renderComments();
+        if (status.success) { 
+            newComment.id = status.comment._id; 
+            renderComments(newComment);
+
             const notificationResponse = await fetch('/api/createNotification', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -229,7 +266,7 @@ const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAu
                 }),
             });
             const notificationStatus = await notificationResponse.json();
-            console.log(notificationStatus);
+            
             if (notificationStatus.success) {
                 console.log('Notification created successfully');
             } else {
@@ -251,8 +288,6 @@ const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAu
         console.error('Error while adding comment:', error);
     }
 };
-
-renderComments();
 
 function goBack() {
     window.history.back();

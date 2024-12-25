@@ -88,7 +88,12 @@ const markAsUnread = async (id) => {
     })
 
     if (response.ok) {
-        console.log(`Notification ID: ${id} is now unread`);
+        //console.log(`Notification ID: ${id} is now unread`);
+        newStatus = "unread";
+        const notificationElement = document.querySelector(`[data-id="${id}"]`);
+        notificationElement.setAttribute("data-read", newStatus === "read" ? "true" : "false");
+        const button = notificationElement.querySelector(".menu-item");
+        button.textContent = newStatus === "read" ? "Mark as Unread" : "Mark as Read";
     } else {
         console.error(`Failed to mark notification ID: ${id} as unread`);
     }
@@ -104,7 +109,12 @@ const markAsRead = async (id) => {
     })
 
     if (response.ok) {
-        console.log(`Notification ID: ${id} is now read`);
+        //console.log(`Notification ID: ${id} is now read`);
+        newStatus = "read";
+        const notificationElement = document.querySelector(`[data-id="${id}"]`);
+        notificationElement.setAttribute("data-read", newStatus === "read" ? "true" : "false");
+        const button = notificationElement.querySelector(".menu-item");
+        button.textContent = newStatus === "read" ? "Mark as Unread" : "Mark as Read";
     } else {
         console.error(`Failed to mark notification ID: ${id} as read`);
     }
@@ -112,7 +122,6 @@ const markAsRead = async (id) => {
 
 const markAllAsRead = async () => {
     const notifications = document.querySelectorAll('.notification-item');
-    console.log(notifications);
     notifications.forEach((notification) => {
         const id = notification.getAttribute('data-id');
         markAsRead(id);
@@ -129,7 +138,11 @@ const deleteNotification = async (id) => {
     })
 
     if (response.ok) {
-        console.log(`Notification ID: ${id} has been deleted`);
+        //console.log(`Notification ID: ${id} has been deleted`);
+        const notificationElement = document.querySelector(`[data-id="${id}"]`);
+        if (notificationElement) {
+            notificationElement.remove();
+        }
     } else {
         console.error(`Failed to delete notification ID: ${id}`);
     }

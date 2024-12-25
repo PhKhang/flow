@@ -41,7 +41,6 @@ const getAllNotificationsOfUser = async (userId) => {
             Post.find({ _id: { $in: postAttachmentIds } }, 'content media _id')  
         ]);
 
-        console.log(notifications);
         return notifications.map(notification => ({
             ...notification.toObject(),
             attachment:
@@ -65,7 +64,6 @@ const getUnreadNotifications = async (userId) => {
             .populate('sender_id', 'username profile_pic_url')
             .sort({ created_at: -1 });
 
-        console.log(unreadNotifications);
         return unreadNotifications;
     } catch (error) {
         console.error('Error getting unread notifications:', error);
