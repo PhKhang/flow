@@ -79,16 +79,14 @@
 <script src="/script/FeedDisplay.js"></script>
 <script src="/script/Post.js"></script>
 <script>
-    const user = {
-        id: '{{user.id}}'
-    };
     let loading = false;
     let offset = 10;
     const limit = 10;
+    let canFetchMore = true;
 
     window.addEventListener('scroll', () => {
         if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 100) {
-            if (!loading) {
+            if (!loading && canFetchMore) {
                 loadMorePosts();
             }
         }
@@ -111,6 +109,13 @@
                     postsContainer.insertAdjacentHTML('beforeend', postHTML);
                 });
                 offset += limit;
+                canFetchMore = true;
+            } 
+            else {
+                canFetchMore = false;
+                setTimeout(() => {
+                    canFetchMore = true;
+                }, 1000); // 5 second delay before allowing next fetch
             }
         } catch (error) {
             console.error('Error loading more posts:', error);
