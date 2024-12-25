@@ -2,7 +2,7 @@ const controller = {};
 import Notification from '../model/notification.js';
 import Post from '../model/post.js';
 import Comment from '../model/comment.js';
-import User from '../model/user.js';
+import { formatPostDate } from "../utils/postUtils.js"
 
 const init = async (req, res, next) => {
     next();
@@ -41,15 +41,27 @@ const getAllNotificationsOfUser = async (userId) => {
             Post.find({ _id: { $in: postAttachmentIds } }, 'content media _id')  
         ]);
 
-        return notifications.map(notification => ({
-            ...notification.toObject(),
-            attachment:
+        // Format notifications with time and attachments
+        const formattedNotifications = notifications.map(notification => {
+            const notificationObj = notification.toObject();
+            const { formattedDate, timeAgo } = formatPostDate(notification.created_at);
+            
+            // Add time formatting
+            notificationObj.modified_created_at = formattedDate;
+            notificationObj.timeAgo = timeAgo;
+
+            // Add appropriate attachment
+            notificationObj.attachment = 
                 notification.type === 'like_comment'
                     ? comments.find(({ _id }) => _id.equals(notification.attachment)) || null
                     : ['like_post', 'comment_post'].includes(notification.type)
                     ? posts.find(({ _id }) => _id.equals(notification.attachment)) || null
-                    : null
-        }));
+                    : null;
+
+            return notificationObj;
+        });
+
+        return formattedNotifications;
     } catch (error) {
         console.error('Error getting all notifications:', error);
         return null;
