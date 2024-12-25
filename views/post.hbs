@@ -141,5 +141,15 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
 <script src="/script/Post.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textareas = document.getElementsByTagName('textarea');
+        for(let textarea of textareas) {
+            textarea.addEventListener('input', function() {
+                this.value = DOMPurify.sanitize(this.value);
+            });
+        }
+    });
+</script>
