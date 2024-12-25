@@ -1,41 +1,41 @@
-const posts = [
-    {
-        userProfilePic: "https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg",
-        username: "olivia.food.blog",
-        time: "20m",
-        text: "Sau khoảng thời gian 1.5 năm đầu mới đi làm dev chỉ làm \"phần trước\" thì mấy tháng đổ lại đây mình bắt đầu được code \"phần sau\" rùii 🤡. Ai chuyên back-end cho em xin kinh nghiệm cày cuốc cũng như tips để code back-end cho chuẩn chỉ với ạ",
-        image: "https://i.pinimg.com/736x/6f/db/c0/6fdbc00490d523929c84078e16d1fb9a.jpg",
-        likes: 211,
-        comments: 19,
-    },
-    {
-        userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
-        username: "travel.journey",
-        time: "15h",
-        text: "Chia sẻ cho mọi người một web mình vừa hoàn thành ❤️ Tâm huyết bấy lâu nay của mình lun á =))) Phải nói là quá xứng đáng",
-        image: "https://i.pinimg.com/736x/ba/1f/50/ba1f50f644077acc8bedb8b0634c1af8.jpg",
-        likes: 1284,
-        comments: 272,
-    },
-    {
-        userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
-        username: "keria",
-        time: "3d",
-        text: `Khi các bạn fresher bắt đầu đi làm, việc phải rework nhiều lần vì các comment trong code review từ các anh Senior là điều dễ gặp. Điều này không chỉ tốn thời gian, mà đôi khi còn khiến bạn mất điểm trong mắt những anh chị quản lý. Để tránh việc này, dưới đây là 3 tips cực kỳ hữu ích giúp anh em fresher giảm thiểu comment khi tạo Pull Request (PR)`,
-        image: "",
-        likes: 53,
-        comments: 7,
-    },
-    {
-        userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
-        username: "keria",
-        time: "November 1, 2024",
-        text: "Frontend: Nắm chắc cơ bản: HTML, CSS, JavaScript và CSS frameworks: Bootstrap, TailwindCSS, Pico.css",
-        image: "https://i.pinimg.com/736x/3f/f3/38/3ff338fded7cab6c231606b35ebe18ab.jpg",
-        likes: 6348,
-        comments: 451,
-    }
-];
+// const posts = [
+//     {
+//         userProfilePic: "https://i.pinimg.com/564x/fd/cf/c7/fdcfc7eadc949b0a9c85bc08f079998a.jpg",
+//         username: "olivia.food.blog",
+//         time: "20m",
+//         text: "Sau khoảng thời gian 1.5 năm đầu mới đi làm dev chỉ làm \"phần trước\" thì mấy tháng đổ lại đây mình bắt đầu được code \"phần sau\" rùii 🤡. Ai chuyên back-end cho em xin kinh nghiệm cày cuốc cũng như tips để code back-end cho chuẩn chỉ với ạ",
+//         image: "https://i.pinimg.com/736x/6f/db/c0/6fdbc00490d523929c84078e16d1fb9a.jpg",
+//         likes: 211,
+//         comments: 19,
+//     },
+//     {
+//         userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
+//         username: "travel.journey",
+//         time: "15h",
+//         text: "Chia sẻ cho mọi người một web mình vừa hoàn thành ❤️ Tâm huyết bấy lâu nay của mình lun á =))) Phải nói là quá xứng đáng",
+//         image: "https://i.pinimg.com/736x/ba/1f/50/ba1f50f644077acc8bedb8b0634c1af8.jpg",
+//         likes: 1284,
+//         comments: 272,
+//     },
+//     {
+//         userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
+//         username: "keria",
+//         time: "3d",
+//         text: `Khi các bạn fresher bắt đầu đi làm, việc phải rework nhiều lần vì các comment trong code review từ các anh Senior là điều dễ gặp. Điều này không chỉ tốn thời gian, mà đôi khi còn khiến bạn mất điểm trong mắt những anh chị quản lý. Để tránh việc này, dưới đây là 3 tips cực kỳ hữu ích giúp anh em fresher giảm thiểu comment khi tạo Pull Request (PR)`,
+//         image: "",
+//         likes: 53,
+//         comments: 7,
+//     },
+//     {
+//         userProfilePic: "https://i.pinimg.com/564x/5e/9d/ea/5e9deaa039eb8fbbc8a8be06eb07478b.jpg",
+//         username: "keria",
+//         time: "November 1, 2024",
+//         text: "Frontend: Nắm chắc cơ bản: HTML, CSS, JavaScript và CSS frameworks: Bootstrap, TailwindCSS, Pico.css",
+//         image: "https://i.pinimg.com/736x/3f/f3/38/3ff338fded7cab6c231606b35ebe18ab.jpg",
+//         likes: 6348,
+//         comments: 451,
+//     }
+// ];
 
 function createPostElement(post, index) {
     const postElement = document.createElement('div');
@@ -115,8 +115,9 @@ function formatNumber(num) {
     }
 }
 
-function renderFeed() {
+function renderFeed(posts) {
     const otherPostsContainer = document.querySelector('.other-posts');
+    console.log(posts)
 
     const existingPosts = otherPostsContainer.querySelectorAll('.post:not(.add-post-area)');
     existingPosts.forEach(post => post.remove());
@@ -129,8 +130,8 @@ function renderFeed() {
 
 let IsActiveFollowers = false;
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderFeed();
+document.addEventListener('DOMContentLoaded', (posts) => {
+    // renderFeed(posts);
     toggleTabs();
 });
 
@@ -197,14 +198,8 @@ function scrollToTop() {
     });
 }
 
-function editProfile(event) {
-    e.preventDafault();
-
-    console.log("Edit profile");
-    console.log(event)
-}
-
-document.querySelector("#edit-info").onsubmit = async (e) => {
+const editForm = document.querySelector("#edit-info")
+editForm ? document.querySelector("#edit-info").onsubmit = async (e) => {
     e.preventDefault();
     console.log("Edit profile");
     const data = new FormData(e.target);
@@ -240,7 +235,7 @@ document.querySelector("#edit-info").onsubmit = async (e) => {
     console.log("Edited user successfully");
     document.querySelector('.over').style.display = 'none';
     location.reload();
-}
+} : null;
 
 const chooseTab = (tab) => {
     const followersTab = document.getElementById('followers-tab');

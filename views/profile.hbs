@@ -149,8 +149,8 @@
                     </a>
                     <p class="search-user-bio">{{ this.full_name }}</p>
                     {{!-- <p class="mt-1">305 followers</p> --}}
-                    {{!-- TODO: MAKE THIS  --}}
-                    <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p>
+                    {{!-- TODO: MAKE THIS TRUNCATEABLE--}}
+                    {{!-- <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p> --}}
                 </div>
                 <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
                     <p>Follow</p>
@@ -170,7 +170,7 @@
                     </a>
                     <p class="search-user-bio">{{ this.full_name }}</p>
                     {{!-- <p class="mt-1">305 followers</p> --}}
-                    <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p>
+                    {{!-- <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p> --}}
                 </div>
                 <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
                     <p>Follow</p>
@@ -204,7 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // const changeButton = document.querySelector("")
     // changeButton.addEventListener("click", changeInfo)
 
-    document.getElementById('file').addEventListener('change', function (event) {
+    const filePicker = document.getElementById('file');
+    filePicker? filePicker.addEventListener('change', function (event) {
         {{!-- document.querySelector('.over').style.display = 'none' --}}
         const file = event.target.files[0];
         if (file) {
@@ -218,7 +219,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.over #profile-picture img').src = URL.createObjectURL(file); 
             {{!-- console.log(document.querySelector('.over #profile-picture img').files[0]);  --}}
         }
-    });
+    }) : null;
+    
+    {{!-- renderFeed({{{user.posts}}}) --}}
 </script>
 
 {{#if isCurrentUser }}

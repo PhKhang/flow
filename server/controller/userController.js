@@ -36,7 +36,7 @@ UserController.fetchUserByUsername = async (username) => {
     console.log("Fetching user by username: ", username);
     try {
         const user = await User.aggregate([
-            { $match: { username: "humanbeing" } },
+            { $match: { username: username } },
             {
                 $lookup: {
                     from: "follows",
