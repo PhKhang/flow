@@ -8,48 +8,36 @@
 
         <div id="profile-info" class="col-12 col-md-8">
             <div class="name">
-                {{#if user.full_name }}
-                <h2 class="mb-0 full-name">{{ user.full_name }}</h2>
-                {{ else}}
-                <h2 class="mb-0 full-name">{{ user.username }}</h2>
+                {{#if full_name }}
+                <h2 class="mb-0 full-name">{{user.username}}</h2>
+                {{else}}
+                <h2 class="mb-0 full-name">{{user.full_name}}</h2>
                 {{/if}}
-                <p class="username">{{ user.username }}</p>
+                <p class="username">{{user.username}}</p>
             </div>
         </div>
     </div>
     <div class="bio mt-2">
-        <p>{{ user.bio }}</p>
+        <p>{{{user.bio}}}</p>
     </div>
     <div class="info mt-2">
         <div class="post-count">
-            <span>{{#if user.posts }}
-                {{ user.posts.length }}
-                {{ else}}
-                0
-                {{/if}}</span>
+            <span>{{user.posts.length}}</span>
             posts
         </div>
         <div class="bar"></div>
-        <div class="follower-count" onclick="togglePopupFollower(1)">
-            <span>{{#if user.followers.length }}
-                {{ user.followers.length }}
-                {{ else}}
-                0
-                {{/if}}</span>
+        <div class="follower-count" onclick="togglePopupFollower()">
+            <span>{{user.followers.length}}</span>
             followers
         </div>
         <div class="bar"></div>
-        <div class="following-count" onclick="togglePopupFollower(2)">
-            <span>{{#if user.followings.length }}
-                {{ user.followings.length }}
-                {{ else}}
-                0
-                {{/if}}</span>
+        <div class="following-count" onclick="togglePopupFollower()">
+            <span>{{user.followings.length}}</span>
             following
         </div>
     </div>
 
-    {{#if isCurrentUser }}
+    {{#if isCurrentUser}}
     <div class="over">
         <div class="change col-11 col-md-8 col-lg-5">
             <div class="top">
@@ -58,9 +46,9 @@
                     Cancel
                 </button>
             </div>
-            <form id="edit-info">
+            <!-- <form action=""> -->
             <div id="profile-picture" class="">
-                <img src="{{user.profile_pic_url}}" alt="Profile picture"
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
                     class="rounded-circle">
                 <div class="avatar-upload">
                     <label for="file" class="upload-label">
@@ -80,23 +68,24 @@
             </div>
 
             <label for="username">Username</label><br>
-            <input type="text" name="username" id="username" maxlength="15" placeholder="{{user.username}}" value="{{user.username}}"><br>
+            <input type="text" name="username" id="username" maxlength="15" placeholder="phkhang"><br>
 
             <label class="mt-1" for="full-name">Full name</label><br>
-            <input type="text" name="full-name" id="full-name" placeholder="{{user.full_name}}" value="{{user.full_name}}"><br>
+            <input type="text" name="full-name" id="full-name" placeholder="Tran Nguyen Phuc Khang"><br>
 
             <label class="mt-1" for="bio">Bio</label><br>
             <textarea name="bio" id="bio" cols="30" rows="6" maxlength="150"
-                placeholder="Write bio (max 150 characters)">{{user.bio}}</textarea><br>
+                placeholder="Write bio (max 150 characters)"></textarea><br>
 
             <label for="old-password">Change password</label><br>
             <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
             <input class="mt-1" type="password" name="new-password" id="new-password" placeholder="New password">
 
-            <button type="submit" class="edit edit-btn mt-3 mb-2" id="change">
+            <button type="button" class="edit edit-btn mt-3 mb-2" id="change"
+                onclick="document.querySelector('.over').style.display = 'none'">
                 <p>Save all changes</p>
             </button>
-            </form> 
+            <!-- </form> -->
         </div>
     </div>
     <button type="button" class="edit edit-btn mt-3 mb-2"
@@ -106,7 +95,7 @@
     <div class="add-post header" onclick="togglePopup()">
         <div class="add-post-area">
             <div class="add-post-user">
-                <img src="{{user.profile_pic_url}}" alt="Profile picture"
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
                     class="profile-pic">
             </div>
             <div class="post-block">
@@ -114,7 +103,7 @@
             </div>
         </div>
     </div>
-    {{ else}}
+    {{else}}
     <button type="button" class="edit edit-btn mt-3 mb-2" onclick="toggleFollow(this)">
         <p>Follow</p>
     </button>
@@ -130,53 +119,31 @@
     <div id="popup-follower" class="col-11 col-md-8 col-lg-5">
         <div id="heading-follower">
             <div class="follow-number">
-                <p id="followers-tab" class="tab active">Followers</p>
-                <p id="following-tab" class="tab">Following</p>
+                <p class="tab active">Followers</p>
+                <p class="tab">Following</p>
             </div>
             <div class="hover-element">
-                <!-- <p onclick="togglePopupFollower()">Cancel</p> -->
+                <!-- <p  onclick="togglePopupFollower()">Cancel</p> -->
             </div>
         </div>
-        <div class="mt-2 follow-result following-tab">
-            {{#each user.followings }}
+        <div class="mt-2 follow-result">
+            {{#each user.followers}}
             <div class="search-result-item" data-type="user">
                 <div class="profile-pic">
-                    <img src="{{this.profile_pic_url}}" alt="User Avatar">
+                    <img src="{{profile_pic_url}}" alt="User Avatar">
                 </div>
                 <div class="search-text">
                     <a class="search-username" href="/otherProfile.html">
-                        <p>{{ this.username }}</p>
+                        <p>{{username}}</p>
                     </a>
-                    <p class="search-user-bio">{{ this.full_name }}</p>
-                    {{!-- <p class="mt-1">305 followers</p> --}}
-                    {{!-- TODO: MAKE THIS TRUNCATEABLE--}}
-                    {{!-- <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p> --}}
+                    <p class="search-user-bio">{{full_name}}</p>
+                    <p class="mt-1">305 followers</p>
                 </div>
                 <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
                     <p>Follow</p>
                 </button>
             </div>
-            {{/ each}}
-        </div>
-        <div class="mt-2 follow-result followers-tab">
-            {{#each user.followers }}
-            <div class="search-result-item" data-type="user">
-                <div class="profile-pic">
-                    <img src="{{this.profile_pic_url}}" alt="User Avatar">
-                </div>
-                <div class="search-text">
-                    <a class="search-username" href="/otherProfile.html">
-                        <p>{{ this.username }}</p>
-                    </a>
-                    <p class="search-user-bio">{{ this.full_name }}</p>
-                    {{!-- <p class="mt-1">305 followers</p> --}}
-                    {{!-- <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p> --}}
-                </div>
-                <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
-                    <p>Follow</p>
-                </button>
-            </div>
-            {{/ each}}
+            {{/each}}
         </div>
     </div>
 </div>
@@ -184,48 +151,42 @@
 <script src="/script/bio.js"></script>
 
 <script type="module">
-document.addEventListener('DOMContentLoaded', function() {
-    const textareas = document.getElementsByTagName('textarea');
-    for(let textarea of textareas) {
-        textarea.addEventListener('input', function() {
-            // Check if content contains HTML tags
-            const containsHTML = /<[a-z][\s\S]*>/i.test(this.value);
-            
-            if (containsHTML) {
-                // Only sanitize if HTML tags detected
-                this.value = DOMPurify.sanitize(this.value);
-            }
-            // If no HTML tags, keep original content unchanged
+        document.addEventListener('DOMContentLoaded', function() {
+        const textareas = document.getElementsByTagName('textarea');
+        for(let textarea of textareas) {
+            textarea.addEventListener('input', function() {
+                // Convert HTML tags to string representation
+                this.value = this.value
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\n/g, '<br>');
+            });
+        }
         });
-    }
-});
-    {{!-- const fetchButton = document.querySelector("#fetch")
-    fetchButton.addEventListener("click", fetchInfo) --}}
+    const fetchButton = document.querySelector("#fetch")
+    fetchButton.addEventListener("click", fetchInfo)
     // const changeButton = document.querySelector("")
     // changeButton.addEventListener("click", changeInfo)
 
-    const filePicker = document.getElementById('file');
-    filePicker? filePicker.addEventListener('change', function (event) {
-        {{!-- document.querySelector('.over').style.display = 'none' --}}
+    document.getElementById('file').addEventListener('change', function (event) {
+        document.querySelector('.over').style.display = 'none'
+        console.log("Hey")
+        return;
         const file = event.target.files[0];
         if (file) {
-            /*const reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function (e) {
                 const base64String = e.target.result.split(',')[1];
-                {{!-- console.log(base64String); --}}
-                document.querySelector('.over #profile-picture img').src = e.target.result;
+                console.log(base64String);
+                document.querySelector('#profile-picture img').src = e.target.result;
             };
-            reader.readAsDataURL(file);*/
-            document.querySelector('.over #profile-picture img').src = URL.createObjectURL(file); 
-            {{!-- console.log(document.querySelector('.over #profile-picture img').files[0]);  --}}
+            reader.readAsDataURL(file);
         }
-    }) : null;
-    
-    {{!-- renderFeed({{{user.posts}}}) --}}
+    });
 </script>
 
-{{#if isCurrentUser }}
-<h1>Welcome to your profile, {{ username }}</h1>
-{{ else}}
-<h1>Welcome to {{ username }}'s profile</h1>
+{{#if isCurrentUser}}
+<h1>Welcome to your profile, {{username}}</h1>
+{{else}}
+<h1>Welcome to {{username}}'s profile</h1>
 {{/if}}
