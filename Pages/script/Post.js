@@ -47,7 +47,7 @@ async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
                 }),
             });
             const notificationStatus = await notificationResponse.json();
-            console.log(notificationStatus);
+
             if (notificationStatus.success) {
                 console.log('Notification created successfully');
             } else {
@@ -72,6 +72,73 @@ async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
                 isLiked: isLiked === 'true' ? 'false' : 'true',
                 button,
                 postAuthorId,
+            });
+        };
+    } catch (error) {
+        button.classList.toggle('like-button-clicked');
+        alert('An error occurred while toggling like. Please try again.');
+    }
+}
+
+async function toggleLikeComment({ commentId, userId, isLiked, button, commentAuthorId }) {
+    console.log(commentId, userId, isLiked, button, commentAuthorId);
+
+    try {
+        button.classList.toggle('like-button-clicked');
+        let endpoint;
+
+        if (isLiked === "true") {
+            endpoint = '/api/unlikeComment';
+        } else {
+            endpoint = '/api/likeComment';
+        }
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ commentId, userId }),
+        });
+
+        if(endpoint === '/api/likeComment') {
+            const notificationResponse = await fetch('/api/createNotification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'like_comment',
+                    sender_id: userId,
+                    receiver_id: commentAuthorId,
+                    attachment: commentId
+                }),
+            });
+            const notificationStatus = await notificationResponse.json();
+            
+            if (notificationStatus.success) {
+                console.log('Notification created successfully');
+            } else {
+                console.error('Failed to create notification');
+            }
+        }
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Failed to like or unlike the comment');
+        }
+
+        const updatedLikesCount = result.comment.likes.length;
+        document.querySelector(`#comment-like-count-${commentId}`).textContent = updatedLikesCount;
+
+        button.onclick = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleLikeComment({
+                commentId,
+                userId,
+                isLiked: isLiked === 'true' ? 'false' : 'true',
+                button,
+                commentAuthorId
             });
         };
     } catch (error) {

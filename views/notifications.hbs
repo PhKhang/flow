@@ -67,7 +67,7 @@
                     <img src="/images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
                     {{#if (eq status 'read')}}Mark as Unread{{else}}Mark as Read{{/if}}
                 </button>
-                <button class="menu-item" onclick="deleteNotification({{id}})">
+                <button class="menu-item" onclick="deleteNotification('{{_id}}')">
                     <img src="/images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">
                     Delete
                 </button>
