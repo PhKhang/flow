@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import User from '../model/user.js';
 import Follow from '../model/follow.js';
+import jwt from 'jsonwebtoken';
 
 const UserController = {};
 
@@ -32,7 +33,7 @@ UserController.fetchUserByEmail = async (email) => {
     }
 }
 
-UserController.fetchUserByUsername = async (username) => {
+UserController.fetchUserByUsername = async (username, currentUserId) => {
     console.log("Fetching user by username: ", username);
     try {
         const user = await User.aggregate([
@@ -61,7 +62,6 @@ UserController.fetchUserByUsername = async (username) => {
                     as: "posts",
                 },
             },
-
             {
                 $lookup: {
                     from: "users",
@@ -70,7 +70,6 @@ UserController.fetchUserByUsername = async (username) => {
                     as: "followings",
                 },
             },
-
             {
                 $lookup: {
                     from: "users",
@@ -80,12 +79,29 @@ UserController.fetchUserByUsername = async (username) => {
                 },
             },
         ]);
-        return user[0];
+
+        if (!user.length) return null;
+
+        const fetchedUser = user[0];
+
+        for (const follower of fetchedUser.followers) {
+            const isFollowed = await Follow.findOne({
+                follower_id: currentUserId,
+                following_id: follower._id,
+            });
+            follower.isFollowed = !!isFollowed; 
+        }
+
+        fetchedUser.followings.forEach(following => {
+            following.isFollowed = true;
+        });
+
+        return fetchedUser;
     } catch (error) {
-        console.log("Error fetching user by username: ", error);
+        console.error("Error fetching user by username: ", error);
         return null;
     }
-}
+};
 
 UserController.searchUsersByName = async (searchString) => {
     try {

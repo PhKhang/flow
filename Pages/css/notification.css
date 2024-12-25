@@ -132,6 +132,14 @@ header {
 
 .notification-username {
     font-weight: 600;
+    text-decoration: none;
+    color: var(--primary-text-color);
+    font-family: var(--font-family-system);
+}
+
+.notification-username:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .notification-text {

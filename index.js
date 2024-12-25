@@ -16,18 +16,19 @@ import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
 
-import { addPost, getAllPosts, getFollowPosts, getPostsByAuthor, likePost, searchPosts, getAllPostsPagination, getFollowPostsPagination } from './server/controller/postController.js';
+import { addPost, getAllPosts, getFollowPosts, getPostsByAuthor, likePost, searchPosts, getAllPostsPagination, getFollowPostsPagination, getUserPostsPagination } from './server/controller/postController.js';
 import UserController from './server/controller/userController.js';
 import { getNotificationsById, getUnreadNotifications, getAllNotificationsOfUser } from './server/controller/notificationController.js';
-import { followUser, getFollowers, getFollowing } from './server/controller/followController.js';
+import Follow from './server/model/follow.js';
 import { getAllFoundUsers, getAllFoundPosts } from './server/controller/searchController.js';
 import { verifyToken } from './server/middleware/verifyToken.js';
 import DecodeUserInfo from './server/utils/decodeUserInfo.js';
+import { type } from 'os';
 
 const app = express();
 const port = 3000;
 const current_user = "Tran Nguyen Phuc Khang (phkhang) • flow";
-const current_username = "phkhang";
+const current_username = "undefined";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -51,13 +52,16 @@ app.engine('hbs', expressHbs.engine({
             return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
         },
         eq: (a, b) => a === b,
+        not: (value) => !value,
         concat: (...args) => args.slice(0, -1).join(''),
+        string: (value) => String(value),
     },
 }));
 
 app.use((req, res, next) => {
     let user = DecodeUserInfo.decode(req);
     res.locals.username = user?.username || current_username;
+    res.locals.currentUserId = user?.id || null;
     res.locals.current_username = user?.username || current_username;
     res.locals.isCurrentUser = req.path.includes(`/profile/${user?.username || current_username}`);
     next();
@@ -200,22 +204,28 @@ app.get('/search', async (req, res) => {
 app.get("/profile/", verifyToken, async (req, res) => {
     let user = DecodeUserInfo.decode(req);
     
-    user = await UserController.fetchUserByUsername(user.username);
+    user = await UserController.fetchUserByUsername(user.username, user.id);
     
     res.redirect(`/profile/${user.username}`);
 });
 
 app.get("/profile/:username", verifyToken, async (req, res) => {
     let user = DecodeUserInfo.decode(req);
+    let currentUserId = user.id;
     if (!user) {
         return res.status(404).send("Not logged in");
     }
     
-    user = await UserController.fetchUserByUsername(req.params.username);
-    const posts = await getAllPostsPagination(user._id, 10, 0);
-    user.posts = posts;
-    
-    res.locals.title = `${user.full_name} • flow`;
+    user = await UserController.fetchUserByUsername(req.params.username, currentUserId);
+    if (!user) {
+        return res.status(404).send("User not found");
+    }
+    const posts = await getUserPostsPagination(user._id, 10, 0);
+    const isFollowing = await Follow.findOne({ follower_id: currentUserId, following_id: user._id });
+    user.isFollowed = !!isFollowing;
+console.log("user id" + typeof user._id);
+    res.locals.posts = posts;
+    res.locals.title = `${user.username} • flow`;
     res.render("profile", { currentPath: `/profile/${user.username}`, user: user });
 });
 

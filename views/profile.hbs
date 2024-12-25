@@ -8,36 +8,48 @@
 
         <div id="profile-info" class="col-12 col-md-8">
             <div class="name">
-                {{#if full_name }}
-                <h2 class="mb-0 full-name">{{user.username}}</h2>
-                {{else}}
-                <h2 class="mb-0 full-name">{{user.full_name}}</h2>
+                {{#if user.full_name }}
+                <h2 class="mb-0 full-name">{{ user.full_name }}</h2>
+                {{ else}}
+                <h2 class="mb-0 full-name">{{ user.username }}</h2>
                 {{/if}}
-                <p class="username">{{user.username}}</p>
+                <p class="username">{{ user.username }}</p>
             </div>
         </div>
     </div>
     <div class="bio mt-2">
-        <p>{{{user.bio}}}</p>
+        <p>{{ user.bio }}</p>
     </div>
     <div class="info mt-2">
         <div class="post-count">
-            <span>{{user.posts.length}}</span>
+            <span>{{#if user.posts }}
+                {{ user.posts.length }}
+                {{ else}}
+                0
+                {{/if}}</span>
             posts
         </div>
         <div class="bar"></div>
-        <div class="follower-count" onclick="togglePopupFollower()">
-            <span>{{user.followers.length}}</span>
+        <div class="follower-count" onclick="togglePopupFollower(1)">
+            <span>{{#if user.followers.length }}
+                {{ user.followers.length }}
+                {{ else}}
+                0
+                {{/if}}</span>
             followers
         </div>
         <div class="bar"></div>
-        <div class="following-count" onclick="togglePopupFollower()">
-            <span>{{user.followings.length}}</span>
+        <div class="following-count" onclick="togglePopupFollower(2)">
+            <span>{{#if user.followings.length }}
+                {{ user.followings.length }}
+                {{ else}}
+                0
+                {{/if}}</span>
             following
         </div>
     </div>
 
-    {{#if isCurrentUser}}
+    {{#if isCurrentUser }}
     <div class="over">
         <div class="change col-11 col-md-8 col-lg-5">
             <div class="top">
@@ -46,9 +58,9 @@
                     Cancel
                 </button>
             </div>
-            <!-- <form action=""> -->
+            <form id="edit-info">
             <div id="profile-picture" class="">
-                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                <img src="{{user.profile_pic_url}}" alt="Profile picture"
                     class="rounded-circle">
                 <div class="avatar-upload">
                     <label for="file" class="upload-label">
@@ -68,24 +80,23 @@
             </div>
 
             <label for="username">Username</label><br>
-            <input type="text" name="username" id="username" maxlength="15" placeholder="phkhang"><br>
+            <input type="text" name="username" id="username" maxlength="15" placeholder="{{user.username}}" value="{{user.username}}"><br>
 
             <label class="mt-1" for="full-name">Full name</label><br>
-            <input type="text" name="full-name" id="full-name" placeholder="Tran Nguyen Phuc Khang"><br>
+            <input type="text" name="full-name" id="full-name" placeholder="{{user.full_name}}" value="{{user.full_name}}"><br>
 
             <label class="mt-1" for="bio">Bio</label><br>
             <textarea name="bio" id="bio" cols="30" rows="6" maxlength="150"
-                placeholder="Write bio (max 150 characters)"></textarea><br>
+                placeholder="Write bio (max 150 characters)">{{user.bio}}</textarea><br>
 
             <label for="old-password">Change password</label><br>
             <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
             <input class="mt-1" type="password" name="new-password" id="new-password" placeholder="New password">
 
-            <button type="button" class="edit edit-btn mt-3 mb-2" id="change"
-                onclick="document.querySelector('.over').style.display = 'none'">
+            <button type="submit" class="edit edit-btn mt-3 mb-2" id="change">
                 <p>Save all changes</p>
             </button>
-            <!-- </form> -->
+            </form> 
         </div>
     </div>
     <button type="button" class="edit edit-btn mt-3 mb-2"
@@ -95,7 +106,7 @@
     <div class="add-post header" onclick="togglePopup()">
         <div class="add-post-area">
             <div class="add-post-user">
-                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/1731293754064" alt="Profile picture"
+                <img src="{{user.profile_pic_url}}" alt="Profile picture"
                     class="profile-pic">
             </div>
             <div class="post-block">
@@ -104,44 +115,138 @@
         </div>
     </div>
     {{else}}
-    <button type="button" class="edit edit-btn mt-3 mb-2" onclick="toggleFollow(this)">
-        <p>Follow</p>
+    <button type="button" class="edit edit-btn mt-3 mb-2 {{#if user.isFollowed}}following{{/if}}" 
+        onclick="event.preventDefault(); event.stopPropagation(); toggleFollow({ 
+            followerId: '{{currentUserId}}', 
+            followingId: '{{user._id}}', 
+            isFollowed: '{{user.isFollowed}}', 
+            button: this })">
+        <p>{{#if user.isFollowed}}Following{{else}}Follow{{/if}}</p>
     </button>
     {{/if}}
 </div>
 <div class="thread col-11 col-md-8 col-lg-5">
     <div class="profile">
-        <div class="other-posts">
-            <!-- Posts will be added here -->
+        <div class="other-posts" id="posts-container">
+            {{#each posts}}
+            <div id="{{id}}" class="post" onclick="window.location.href='/post/{{id}}'">
+                <div class="user-info">
+                    <img src="{{author_id.profile_pic_url}}" alt="{{author_id.username}}" class="profile-pic">
+                    <div class="post-info">
+                        <a href="/profile/{{author_id.username}}">
+                            <p class="username">{{author_id.username}}</p>
+                        </a>
+                        <span class="time">{{timeAgo}}</span>
+                    </div>
+                </div>
+                <div class="content-wrapper">
+                    <p class="text">{{content}}</p>
+                    {{#if media.urls.length}}
+                    <div class="media">
+                        <img src="{{media.urls.[0]}}" alt="Post media" class="post-image"  onclick="event.stopPropagation(); openFullscreen('{{id}}');">
+                    </div>
+
+                    <div class="modal" id="imageModal-{{id}}" onclick="event.stopPropagation();">
+                        <svg style="display: none;" id="closeButton-{{id}}" class="close-full-image" onclick="closeFullscreen('{{id}}')" fill="#fff" viewBox="-3.5 0 19 19" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M11.383 13.644A1.03 1.03 0 0 1 9.928 15.1L6 11.172 2.072 15.1a1.03 1.03 0 1 1-1.455-1.456l3.928-3.928L.617 5.79a1.03 1.03 0 1 1 1.455-1.456L6 8.261l3.928-3.928a1.03 1.03 0 0 1 1.455 1.456L7.455 9.716z"></path>
+                            </g>
+                        </svg>
+                        <img src="{{media.urls.[0]}}" alt="Full Image" class="full-image">
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="actions container text-center">
+                    <button 
+                        class="like-button button hover-icon {{#if isLiked}}like-button-clicked{{/if}}"
+                        onclick="event.preventDefault(); event.stopPropagation(); toggleLike({
+                            postId: '{{id}}',
+                            userId: '{{../user._id}}',
+                            isLiked: '{{isLiked}}',
+                            button: this,
+                            postAuthorId: '{{author_id._id}}'
+                        })">
+                        <svg viewBox="0 0 24 24" width="18" height="18" class="nav-icon">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                        </svg>
+                        <p id="like-count-{{id}}">{{likes.length}}</p>
+                    </button>
+                    <button class="comment-button button hover-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.663 3.04094 17.0829 4.73812 18.875L2.72681 21.1705C2.44361 21.4937 2.67314 22 3.10288 22H12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <p>{{comments_length}}</p>
+                    </button>
+                </div>
+            </div>
+            {{/each}}
         </div>
     </div>
     <div class="overlay-follower" id="overlay-follower"></div>
     <div id="popup-follower" class="col-11 col-md-8 col-lg-5">
         <div id="heading-follower">
             <div class="follow-number">
-                <p class="tab active">Followers</p>
-                <p class="tab">Following</p>
+                <p id="followers-tab" class="tab active">Followers</p>
+                <p id="following-tab" class="tab">Following</p>
             </div>
             <div class="hover-element">
-                <!-- <p  onclick="togglePopupFollower()">Cancel</p> -->
+                <!-- <p onclick="togglePopupFollower()">Cancel</p> -->
             </div>
         </div>
-        <div class="mt-2 follow-result">
-            {{#each user.followers}}
+        <div class="mt-2 follow-result following-tab">
+            {{#each user.followings }}
             <div class="search-result-item" data-type="user">
                 <div class="profile-pic">
-                    <img src="{{profile_pic_url}}" alt="User Avatar">
+                    <img src="{{this.profile_pic_url}}" alt="User Avatar">
                 </div>
                 <div class="search-text">
-                    <a class="search-username" href="/otherProfile.html">
-                        <p>{{username}}</p>
+                    <a class="search-username" href="/profile/{{this.username}}">
+                        <p>{{ this.username }}</p>
                     </a>
-                    <p class="search-user-bio">{{full_name}}</p>
-                    <p class="mt-1">305 followers</p>
+                    <p class="search-user-bio">{{ this.full_name }}</p>
+                    {{!-- <p class="mt-1">305 followers</p> --}}
+                    {{!-- TODO: MAKE THIS TRUNCATEABLE--}}
+                    {{!-- <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p> --}}
                 </div>
-                <button class="follow-btn mt-1 me-1" onclick="toggleFollow(this)">
-                    <p>Follow</p>
-                </button>
+                {{#if (not (eq this._id ../currentUserId))}}
+                    <button class="follow-btn mt-1 me-1 {{#if this.isFollowed}}following{{/if}}" 
+                        onclick="event.preventDefault(); event.stopPropagation(); toggleFollow({ 
+                            followerId: '{{../currentUserId}}', 
+                            followingId: '{{this._id}}', 
+                            isFollowed: '{{this.isFollowed}}', 
+                            button: this })">
+                        <p>{{#if this.isFollowed}}Following{{else}}Follow{{/if}}</p>
+                    </button>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+        <div class="mt-2 follow-result followers-tab">
+            {{#each user.followers }}
+            <div class="search-result-item" data-type="user">
+                <div class="profile-pic">
+                    <img src="{{this.profile_pic_url}}" alt="User Avatar">
+                </div>
+                <div class="search-text">
+                    <a class="search-username" href="/profile/{{this.username}}">
+                        <p>{{ this.username }}</p>
+                    </a>
+                    <p class="search-user-bio">{{ this.full_name }}</p>
+                    {{!-- <p class="mt-1">305 followers</p> --}}
+                    {{!-- <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p> --}}
+                </div>
+                {{#if (not (eq (string this._id) ../currentUserId))}}
+                    <button class="follow-btn mt-1 me-1 {{#if this.isFollowed}}following{{/if}}" 
+                        onclick="event.preventDefault(); event.stopPropagation(); toggleFollow({ 
+                            followerId: '{{../currentUserId}}', 
+                            followingId: '{{this._id}}', 
+                            isFollowed: '{{this.isFollowed}}', 
+                            button: this })">
+                        <p>{{#if this.isFollowed}}Following{{else}}Follow{{/if}}</p>
+                    </button>
+                {{/if}}
             </div>
             {{/each}}
         </div>
@@ -149,6 +254,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
 <script src="/script/bio.js"></script>
+<script src="/script/Post.js"></script>
 
 <script type="module">
         document.addEventListener('DOMContentLoaded', function() {
@@ -163,8 +269,8 @@
             });
         }
         });
-    const fetchButton = document.querySelector("#fetch")
-    fetchButton.addEventListener("click", fetchInfo)
+    {{!-- const fetchButton = document.querySelector("#fetch")
+    fetchButton.addEventListener("click", fetchInfo) --}}
     // const changeButton = document.querySelector("")
     // changeButton.addEventListener("click", changeInfo)
 
@@ -184,9 +290,3 @@
         }
     });
 </script>
-
-{{#if isCurrentUser}}
-<h1>Welcome to your profile, {{username}}</h1>
-{{else}}
-<h1>Welcome to {{username}}'s profile</h1>
-{{/if}}

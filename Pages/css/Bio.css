@@ -399,6 +399,11 @@ button {
     color: var(--primary-color)
 }
 
+.edit-btn.following {
+    background-color: transparent;
+    color: var(--secondary-text-color);
+}
+
 .post {
     cursor: pointer;
     background-color: #fff;
@@ -622,6 +627,11 @@ button {
 .follow-btn:hover {
     background-color: var(--primary-color);
     color: white
+}
+
+.follow-btn.following {
+    background-color: transparent;
+    color: var(--secondary-text-color);
 }
 
 .follow-btn p {

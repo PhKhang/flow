@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
 
-                if (notificationType === 'like_comment' || notificationType === 'comment_comment') {
+                if (notificationType === 'like_comment') {
                     window.location.href = `/post/${postId}#comment-${commentId}`;
-                } else {
+                } else if (notificationType === 'like_post' || notificationType === 'comment_post') {
                     window.location.href = `/post/${postId}`;
                 }
             } catch (error) {
