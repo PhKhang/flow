@@ -179,12 +179,16 @@ const addPost = async (authorId, content, typeOfMedia, urls, likes) => {
 
 const getPostsByAuthor = async (authorId) => {
     try {
-        const posts = await Post.find({ authorId }).populate('authorId', 'username fullName');
+        // Change authorId to author_id to match schema
+        const posts = await Post.find({ author_id: authorId })
+            .populate('author_id', 'username profile_pic_url full_name')
+            .sort({ created_at: -1 });
         return posts;
     } catch (error) {
+        console.error('Error getting posts by author:', error);
         return null;
     }
-}
+};
 
 const deletePostById = async (postId) => {
     try {

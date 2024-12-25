@@ -163,11 +163,20 @@ apiRouter.get('/searchUser', async (req, res) => {
 apiRouter.get('/getPostsByAuthor', async (req, res) => {
     try {
         const posts = await getPostsByAuthor(req.query.authorId);
-        return res.status(200).send({ success: true, posts: posts });
+        const plainPosts = posts.map(post => post.toObject());
+        
+        // Add the timeAgo property to each plain object
+        plainPosts.forEach(post => {
+            const { formattedDate, timeAgo } = formatPostDate(post.created_at);
+            post.timeAgo = timeAgo;
+            post.modified_created_at = formattedDate;
+        });
+
+        res.json(plainPosts);
     }
     catch (error) {
         console.error('Error getting posts:', error);
-        return res.status(500).send({ success: false });
+        res.status(500).send({ success: false });
     }
 });
 
