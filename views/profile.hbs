@@ -207,7 +207,7 @@
                     {{!-- TODO: MAKE THIS TRUNCATEABLE--}}
                     {{!-- <p class="mt-1 text-truncate" style="max-width: 130px;">{{this.bio}}</p> --}}
                 </div>
-                {{#if (not (eq this._id ../currentUserId))}}
+                {{#if (not (eq (string this._id) ../currentUserId))}}
                     <button class="follow-btn mt-1 me-1 {{#if this.isFollowed}}following{{/if}}" 
                         onclick="event.preventDefault(); event.stopPropagation(); toggleFollow({ 
                             followerId: '{{../currentUserId}}', 
