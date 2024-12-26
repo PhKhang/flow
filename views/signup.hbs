@@ -57,10 +57,7 @@
                 if (data.error) {
                     document.querySelector("#out").innerText = data.error
                 } else {
-                    document.querySelector("#out-good").innerText = "Please check your email to verify your account. Redirecting to sign in page..."
-                    setTimeout(function () {
-                        window.location.href = "/signin?verified=true"
-                    }, 1000)
+                    window.location.href = "/signin?verified=true"
                 }
             })
     }

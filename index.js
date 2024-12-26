@@ -82,6 +82,7 @@ app.get("/", verifyToken, async (req, res) => {
         const posts = await getAllPostsPagination(decoded.id, 10, 0);
         res.locals.posts = posts;
         res.locals.user = decoded;
+        console.log("Profile pic: ", decoded.profile_pic);
         res.locals.title = "Home • flow";
         res.render('index', { currentPath: "/" });
     } catch (error) {

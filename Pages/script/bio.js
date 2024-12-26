@@ -53,18 +53,20 @@ editForm ? document.querySelector("#edit-info").onsubmit = async (e) => {
     const file = document.querySelector(".over #profile-picture input[type='file']").files[0]
     console.log(file);
 
-    const fileFormData = new FormData();
-    fileFormData.append('file', file);
+    if (file) {
+        const fileFormData = new FormData();
+        fileFormData.append('file', file);
 
-    const fileResponse = await fetch('/uploadImg', {
-        method: 'POST',
-        body: fileFormData
-    });
+        const fileResponse = await fetch('/uploadImg', {
+            method: 'POST',
+            body: fileFormData
+        });
 
-    const fileData = await fileResponse.json();
-
-    console.log(fileData);
-    object.profile_pic_url = fileData.filename;
+        const fileData = await fileResponse.json();
+        
+        console.log(fileData);
+        object.profile_pic_url = fileData.filename;
+    }
 
     const response = await fetch("/api/auth/edit", {
         method: "POST",
