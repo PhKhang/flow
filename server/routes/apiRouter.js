@@ -37,24 +37,26 @@ apiRouter.post("/addComment", async (req, res) => {
 apiRouter.post('/uploadPost', async (req, res) => {
     try {
         if (!req.body.fileId) {
-            const {authorId, caption} = req.body;
+            const { authorId, caption } = req.body;
             try {
-                await addPost(authorId, caption);
-            }
-            catch (error) {
+                const newPost = await addPost(authorId, caption);
+                return res.status(200).send({ success: true, post: newPost });
+            } catch (error) {
                 console.error('Error saving post:', error);
                 return res.status(500).send({ success: false });
             }
-            return res.status(200).send({ success: true });
-        }
-        else {
-            const {authorId, caption, fileId} = req.body;
+        } else {
+            const { authorId, caption, fileId } = req.body;
             const urls = [fileId];
-            await addPost(authorId, caption, "image", urls);
-            return res.status(200).send({ success: true });
+            try {
+                const newPost = await addPost(authorId, caption, "image", urls);
+                return res.status(200).send({ success: true, post: newPost });
+            } catch (error) {
+                console.error('Error saving post:', error);
+                return res.status(500).send({ success: false });
+            }
         }
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error saving post:', error);
         return res.status(500).send({ success: false });
     }

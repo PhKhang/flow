@@ -1,5 +1,5 @@
 async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
-    console.log(postId, userId,typeof isLiked, button, postAuthorId);
+    // console.log(postId, userId,typeof isLiked, button, postAuthorId);
     try {
         isLiked = isLiked.toString();
         button.classList.toggle('like-button-clicked');
@@ -27,13 +27,13 @@ async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
                     attachment: postId
                 }),
             });
-            const notificationStatus = await notificationResponse.json();
+            // const notificationStatus = await notificationResponse.json();
 
-            if (notificationStatus.success) {
-                console.log('Notification created successfully');
-            } else {
-                console.error('Failed to create notification');
-            }
+            // if (notificationStatus.success) {
+            //     console.log('Notification created successfully');
+            // } else {
+            //     console.error('Failed to create notification');
+            // }
         }
 
         const result = await response.json();

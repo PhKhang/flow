@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-const markAsUnread = (id) => toggleNotificationStatus(id, '/api/updateUnreadStatus', 'unread');
-const markAsRead = (id) => toggleNotificationStatus(id, '/api/updateReadStatus', 'read');
+// const markAsUnread = (id) => toggleNotificationStatus(id, '/api/updateUnreadStatus', 'unread');
+// const markAsRead = (id) => toggleNotificationStatus(id, '/api/updateReadStatus', 'read');
 
 const toggleNotificationStatus = async (id, isRead, button) => {
     const endpoint = isRead ? '/api/updateUnreadStatus' : '/api/updateReadStatus';
@@ -124,9 +124,14 @@ const markAllAsRead = async () => {
     const notifications = document.querySelectorAll('.notification-item');
     notifications.forEach((notification) => {
         const id = notification.getAttribute('data-id');
-        markAsRead(id);
+        const isRead = notification.getAttribute('data-read') === "true";
+
+        if (!isRead) {
+            const button = notification.querySelector('#toggle-status');
+            toggleNotificationStatus(id, false, button); 
+        }
     });
-}
+};
 
 const deleteNotification = async (id) => {
     const response = await fetch('/api/deleteNotification', {

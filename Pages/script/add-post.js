@@ -54,20 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function handleNewPost(text) {
-    const newPost = {
-        userProfilePic: "https://i.pinimg.com/564x/30/68/fe/3068feecc66810f705ccec8500626428.jpg",
-        username: "olivia.food.blog",
-        time: "Vừa xong",
-        text: text.trim(),
-        image: selectedImage ? URL.createObjectURL(selectedImage) : null,
-        likes: 0, 
-        comments: 0
-    };
-
-    addNewPost(newPost);
     document.querySelector('.post-input').value = '';
     removeImage();
-    togglePopup();
 }
 
 document.querySelector('.post-input').addEventListener('keydown', function(event) {

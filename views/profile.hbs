@@ -30,7 +30,7 @@
             posts
         </div>
         <div class="bar"></div>
-        <div class="follower-count" onclick="togglePopupFollower(1)">
+        <div id="followers-count" class="follower-count" onclick="togglePopupFollower(1)">
             <span>{{user.followers.length}}</span>
             followers
         </div>
@@ -124,7 +124,7 @@
 </div>
 <div class="thread col-11 col-md-8 col-lg-5">
     <div class="profile">
-        <div class="other-posts" id="posts-container">
+        <div class="other-posts" {{#if isCurrentUser}}id="posts-container"{{/if}}>
             {{#each posts}}
             <div id="{{id}}" class="post" onclick="window.location.href='/post/{{id}}'">
                 <div class="user-info">
