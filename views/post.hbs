@@ -106,7 +106,7 @@
                     </div>
                     <div class="comment-block">
                         {{#if content}}
-                            <p class="text">{{{content}}}</p>
+                            <p class="text">{{content}}</p>
                         {{/if}}
                         {{#if media.urls.[0]}}
                             <img src="{{media.urls.[0]}}" alt="Comment image" class="mt-1 comment-image">
@@ -145,16 +145,5 @@
 <script src="/script/Post.js"></script>
 <script src="/script/comment.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const textareas = document.getElementsByTagName('textarea');
-    for(let textarea of textareas) {
-        textarea.addEventListener('input', function() {
-            // Convert HTML tags to string representation
-            this.value = this.value
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/\n/g, '<br>');
-        });
-    }
-});
+
 </script>
