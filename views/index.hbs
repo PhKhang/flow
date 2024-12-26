@@ -83,7 +83,7 @@
     let loading = false;
     let offset = 10;
     const limit = 10;
-    let canFetchMore = true;
+    let canFetchMore = true; // Add flag to control fetching
 
     window.addEventListener('scroll', () => {
         if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 100) {
@@ -98,7 +98,6 @@
             loading = true;
             document.getElementById('loading-spinner').style.display = 'block';
             
-            // Choose API endpoint based on current path
             const endpoint = currentPath === '/following' ? 'followPosts' : 'posts';
             const response = await fetch(`/api/${endpoint}?offset=${offset}&limit=${limit}&userId=${user._id}`);
             const posts = await response.json();
@@ -106,20 +105,29 @@
             if (posts && posts.length > 0) {
                 const postsContainer = document.querySelector('#posts-container');
                 posts.forEach(post => {
-                    const postHTML = createPostHTML(post);
+                    const postHTML = createPostHTML(post, user._id);
                     postsContainer.insertAdjacentHTML('beforeend', postHTML);
                 });
-                offset += limit;
+                offset += posts.length;
+                
+                // Stop fetching if received less than limit
+                if (posts.length < limit) {
+                    canFetchMore = false;
+                }
+            } else {
+                canFetchMore = false; // No more posts
             }
         } catch (error) {
             console.error('Error loading more posts:', error);
+            canFetchMore = false; // Stop on error
         } finally {
             loading = false;
             document.getElementById('loading-spinner').style.display = 'none';
         }
     }
 
-    function createPostHTML(post) {
+
+    function createPostHTML(post, curUserID) {
         return `
             <div id="${post._id}" class="post" onclick="window.location.href='/post/${post._id}'">
                 <div class="user-info">
@@ -143,8 +151,8 @@
                     <button class="like-button button hover-icon ${post.isLiked ? 'like-button-clicked' : ''}"
                         onclick="event.preventDefault(); event.stopPropagation(); toggleLike({
                             postId: '${post._id}',
-                            userId: '${post.author_id._id}',
-                            isLiked: ${post.isLiked},
+                            userId: '${curUserID}',
+                            isLiked: '${post.isLiked}',
                             button: this,
                             postAuthorId: '${post.author_id._id}'
                         })">

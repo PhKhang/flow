@@ -2,7 +2,7 @@ import express from "express"
 const apiRouter = express.Router();
 // import { init, showList, showDetails } from '../controllers/blogController.js';
 import {addComment, likeComment, unlikeComment, getCommentsByPost} from '../controller/commentController.js';
-import {addPost, likePost, searchPosts, unlikePost, getPostsByAuthor, getAllPostsPagination, getFollowPostsPagination} from '../controller/postController.js';
+import { getCommentLength, addPost, likePost, searchPosts, unlikePost, getPostsByAuthor, getAllPostsPagination, getFollowPostsPagination} from '../controller/postController.js';
 import UserController from '../controller/userController.js';
 import {followUser, unfollowUser} from '../controller/followController.js';
 import {createNotification, deleteNotification, updateReadStatus, updateUnreadStatus} from '../controller/notificationController.js';
@@ -185,17 +185,18 @@ apiRouter.get("/posts", async (req, res) => {
         const { offset = 0, limit = 10, userId } = req.query;
         const posts = await getAllPostsPagination(userId, parseInt(limit), parseInt(offset));
         const plainPosts = posts.map(post => post.toObject());
-        
-        // Add the timeAgo property to each plain object
-        plainPosts.forEach(post => {
+
+        // Use Promise.all to wait for all async operations
+        await Promise.all(plainPosts.map(async post => {
             const { formattedDate, timeAgo } = formatPostDate(post.created_at);
             post.timeAgo = timeAgo;
             post.modified_created_at = formattedDate;
-        });
-
+            post.isLiked = post.likes.some(like => like.toString() === userId.toString());
+            post.comments_length = await getCommentLength(post._id);
+        }));
         res.json(plainPosts);
     } catch (error) {
-        res.status(500).json({ error: 'Error loading posts', posts: posts });
+        res.status(500).json({ error: 'Error loading posts' });
     }
 });
 
@@ -204,17 +205,18 @@ apiRouter.get("/followPosts", async (req, res) => {
         const { offset = 0, limit = 10, userId } = req.query;
         const posts = await getFollowPostsPagination(userId, parseInt(limit), parseInt(offset));
         const plainPosts = posts.map(post => post.toObject());
-        
-        // Add the timeAgo property to each plain object
-        plainPosts.forEach(post => {
+
+        // Use Promise.all to wait for all async operations
+        await Promise.all(plainPosts.map(async post => {
             const { formattedDate, timeAgo } = formatPostDate(post.created_at);
             post.timeAgo = timeAgo;
             post.modified_created_at = formattedDate;
-        });
-
+            post.isLiked = post.likes.some(like => like.toString() === userId.toString());
+            post.comments_length = await getCommentLength(post._id);
+        }));
         res.json(plainPosts);
     } catch (error) {
-        res.status(500).json({ error: 'Error loading posts', posts: posts });
+        res.status(500).json({ error: 'Error loading posts' });
     }
 });
 
