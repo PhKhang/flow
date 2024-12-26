@@ -99,13 +99,12 @@
         onclick="document.querySelector('.over').style.display = 'block'">
         <p>Edit profile</p>
     </button>
-    <div class="add-post header" onclick="togglePopup()">
+    <div class="add-post header">
         <div class="add-post-area">
-            <div class="add-post-user">
-                <img src="{{user.profile_pic_url}}" alt="Profile picture"
-                    class="profile-pic">
+            <div class="add-post-user-info">
+                <img src="{{user.profile_pic_url}}" alt="Profile picture" class="profile-pic">
             </div>
-            <div class="post-block">
+            <div class="add-post-block" onclick="togglePopup()">
                 <p class="comment-input hover-element">Share something...</p>
             </div>
         </div>
@@ -251,6 +250,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
 <script src="/script/bio.js"></script>
+<script src="/script/FeedDisplay.js"></script>
 <script src="/script/Post.js"></script>
 
 <script type="module">

@@ -50,7 +50,7 @@
                     class="like-button button hover-icon {{#if isLiked}}like-button-clicked{{/if}}"
                     onclick="event.preventDefault(); event.stopPropagation(); toggleLike({
                         postId: '{{id}}',
-                        userId: '{{../user.id}}',
+                        userId: '{{../user._id}}',
                         isLiked: '{{isLiked}}',
                         button: this,
                         postAuthorId: '{{author_id._id}}'
@@ -100,7 +100,7 @@
             
             // Choose API endpoint based on current path
             const endpoint = currentPath === '/following' ? 'followPosts' : 'posts';
-            const response = await fetch(`/api/${endpoint}?offset=${offset}&limit=${limit}&userId=${user.id}`);
+            const response = await fetch(`/api/${endpoint}?offset=${offset}&limit=${limit}&userId=${user._id}`);
             const posts = await response.json();
             
             if (posts && posts.length > 0) {
