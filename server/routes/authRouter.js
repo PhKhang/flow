@@ -114,7 +114,7 @@ authRouter.post("/signup", async (req, res) => {
             <!-- Logo -->
             <tr>
               <td align="center" style="padding-bottom: 40px;">
-                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/favicon.svg?height=40&width=120" alt="Flow Logo" width="120" height="40" style="display: block; width: 120px; height: 40px;" />
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/image.png?height=40&width=120" alt="Flow Logo" width="120" height="40" style="display: block; width: 120px; height: 40px;" />
               </td>
             </tr>
             <!-- Main Content -->
@@ -293,7 +293,7 @@ authRouter.post("/reset", async (req, res) => {
             <!-- Logo -->
             <tr>
               <td align="center" style="padding-bottom: 40px;">
-                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/favicon.svg?height=40&width=120" alt="Flow Logo" width="120" height="40" style="display: block; width: 120px; height: 40px;" />
+                <img src="https://pub-b0a9bdcea1cd4f6ca28d98f878366466.r2.dev/image.png?height=40&width=120" alt="Flow Logo" width="120" height="40" style="display: block; width: 120px; height: 40px;" />
               </td>
             </tr>
             <!-- Main Content -->
