@@ -29,7 +29,6 @@ UserController.addUser = async (username, email, password) => {
 UserController.fetchUserByEmailAndVerify = async (email) => {
     try {
         const user = await User.findOneAndUpdate({ email: email }, {verified: true}, {new: true});
-        console.log("AFTER UPDATE: ", user);
         return user;
     } catch (error) {
         return null;
@@ -143,6 +142,21 @@ UserController.editUser = async (id, data, needPassword = true) => {
             console.log("User not found");
             return null;
         }
+        
+        if (data["username"]) {
+            const result = await User.findOne({ username: data["username"] })
+            if (result == null) {
+                user.username = data["username"];
+            }
+            else {
+                console.log("Username already exists");
+                return "Username already exists";
+            }
+        }
+        
+        if (data["full-name"]) {
+            user.full_name = data["full-name"];
+        }
 
 
         if (data["new-password"]) {
@@ -152,10 +166,6 @@ UserController.editUser = async (id, data, needPassword = true) => {
                 return null;
             }
             user.password_hash = bcrypt.hashSync(data["new-password"], salt);
-        }
-
-        if (data["full-name"]) {
-            user.full_name = data["full-name"];
         }
 
         // if (data["bio"]) {

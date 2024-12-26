@@ -88,13 +88,14 @@ editForm ? document.querySelector("#edit-info").onsubmit = async (e) => {
     })
     if (!response.ok) {
         console.log("Error editing user");
-        document.querySelector("#error").textContent = "Wrong password";
+        const error = await response.json();
+        document.querySelector("#error").textContent = error.error;
         return;
     }
 
     console.log("Edited user successfully");
     document.querySelector('.over').style.display = 'none';
-    location.reload();
+    location.href = "/profile";
 } : null;
 
 const chooseTab = (tab) => {

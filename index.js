@@ -222,7 +222,7 @@ app.get('/search', async (req, res) => {
 
 app.get("/profile/", verifyToken, async (req, res) => {
     let user = DecodeUserInfo.decode(req);
-
+    console.log("Current profile: ", user);
     user = await UserController.fetchUserByUsername(user.username, user.id);
 
     res.redirect(`/profile/${user.username}`);
@@ -319,6 +319,11 @@ app.get("/send", (req, res) => {
 });
 
 app.use('/api', apiRouter);
+
+// Handle 404 errors
+app.use((req, res, next) => {
+    res.status(404).render('404', { currentPath: req.path });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);

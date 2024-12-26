@@ -404,9 +404,16 @@ authRouter.post("/edit", async (req, res) => {
     }
 
     const data = req.body
+    if (data.username.trim() == user.username) {
+        data.username = ""
+    }
     const result = await UserController.editUser(user.id, data)
     if (result == null) {
-        return res.status(500).send("Error editing user")
+        return res.status(500).json({ type: "password", error: "Password is wrong" })
+    }
+    
+    if (result == "Username already exists") {
+        return res.status(409).json({ type: "username", error: "Username already exists" })
     }
 
     const token = createToken(result)
