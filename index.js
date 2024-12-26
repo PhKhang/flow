@@ -34,7 +34,20 @@ const current_username = "undefined";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.use(cors());
+const allowedOrigins = ["http://localhost:3000", "https://flow-social-media.onrender.com"];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg =
+                "The CORS policy for this site does not allow access from the specified Origin.";
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true, // Cho phép gửi cookie
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -56,6 +69,7 @@ app.engine('hbs', expressHbs.engine({
         not: (value) => !value,
         concat: (...args) => args.slice(0, -1).join(''),
         string: (value) => String(value),
+        or: (a, b) => a || b, // Custom helper to check for empty strings
     },
 }));
 
@@ -118,7 +132,11 @@ app.get("/following", async (req, res) => {
 
 app.get("/signin", (req, res) => {
     res.locals.title = "Sign in • flow";
-    res.render('signin', { currentPath: "/signin", layout: 'layout-signin' });
+    let instruction = ""
+    if (req.params.verified){
+        instruction = "Check your mail to activate your account. The link will expire in 10 minutes."
+    }
+    res.render('signin', { currentPath: "/signin", layout: 'layout-signin', instruction});
 });
 
 app.get("/signup", (req, res) => {
@@ -205,9 +223,9 @@ app.get('/search', async (req, res) => {
 
 app.get("/profile/", verifyToken, async (req, res) => {
     let user = DecodeUserInfo.decode(req);
-    
+
     user = await UserController.fetchUserByUsername(user.username, user.id);
-    
+
     res.redirect(`/profile/${user.username}`);
 });
 
@@ -217,7 +235,7 @@ app.get("/profile/:username", verifyToken, async (req, res) => {
     if (!user) {
         return res.status(404).send("Not logged in");
     }
-    
+
     user = await UserController.fetchUserByUsername(req.params.username, currentUserId);
     if (!user) {
         return res.status(404).send("User not found");

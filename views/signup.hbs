@@ -31,7 +31,7 @@
                     <label for="password1">Confirm Password</label>
                 </div>
 
-                <div id="out" style="color: red"></div>
+                <div id="out" style="color: red; font-size: smaller"></div>
                 <div id="out-good" style=""></div>
                 <button type="submit" id="sign-up">Sign up</button>
             </form>
@@ -41,6 +41,9 @@
 </div>
 
 <script type="module">
+    document.querySelector("form").onclick = () => {
+        document.querySelector("#out").innerText = ""
+    }
     document.querySelector("form").onsubmit = (e) => {
         e.preventDefault()
 

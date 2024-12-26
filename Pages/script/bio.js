@@ -32,11 +32,35 @@ document.getElementById("overlay-follower").addEventListener("click", () => {
 // });
 
 const editForm = document.querySelector("#edit-info")
+editForm ? editForm.addEventListener("click", (e) => {
+    document.querySelector("#error").textContent = "";
+}) : null;
 editForm ? document.querySelector("#edit-info").onsubmit = async (e) => {
     e.preventDefault();
     console.log("Edit profile");
     const data = new FormData(e.target);
     const object = Object.fromEntries(data.entries());
+    
+    object.username = object.username.trim();
+    object.bio = object.bio.trim();
+    object["full-name"] = object["full-name"].trim();
+    if ((object.username.length < 3 && object.username == "") || object.username.length > 15 || object.username.match(/[^a-zA-Z0-9_]/)) {
+        document.querySelector("#error").textContent = "Username must be between 3 and 15 characters, only alphanumerical and underscores";
+        return;
+    }
+    if (object["full-name"].length > 20) {
+    document.querySelector("#error").textContent = "Full name must be less than 20 characters";
+        return;
+    }
+    if (object["new-password"] && (object["new-password"] == object["old-password"])) {
+        document.querySelector("#error").textContent = "Passwords match";
+        return;
+    }
+    if (object["old-password"] && object["new-password"].length < 8) {
+        document.querySelector("#error").textContent = "Password must be at least 8 characters";
+        return;
+    }
+    
     const file = document.querySelector(".over #profile-picture input[type='file']").files[0]
     console.log(file);
 
@@ -64,6 +88,7 @@ editForm ? document.querySelector("#edit-info").onsubmit = async (e) => {
     })
     if (!response.ok) {
         console.log("Error editing user");
+        document.querySelector("#error").textContent = "Wrong password";
         return;
     }
 
