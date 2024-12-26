@@ -1,16 +1,3 @@
-function renderFeed(posts) {
-    const otherPostsContainer = document.querySelector('.other-posts');
-    console.log(posts)
-
-    const existingPosts = otherPostsContainer.querySelectorAll('.post:not(.add-post-area)');
-    existingPosts.forEach(post => post.remove());
-
-    posts.forEach((post, index) => {
-        const postElement = createPostElement(post, index);
-        otherPostsContainer.appendChild(postElement);
-    });
-}
-
 let IsActiveFollowers = false;
 
 document.addEventListener('DOMContentLoaded', (posts) => {
@@ -116,7 +103,7 @@ function toggleTabs() {
 
 
 async function toggleFollow({ followerId, followingId, isFollowed, button }) {
-    console.log(followerId, followingId, isFollowed, button);
+    // console.log(followerId, followingId, isFollowed, button);
 
     try {
         button.classList.toggle('following');

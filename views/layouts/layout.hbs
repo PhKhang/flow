@@ -136,9 +136,12 @@
     <script>
 
         const user = {
-            id: '{{user.id}}'
+            id: '{{user.id}}',
+            _id: '{{user._id}}'
         };
-        
+
+        const userId = user.id ? user.id : user._id;
+                
         let selectedFile = null;
         let selectedCaption = null;
 
@@ -160,7 +163,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        authorId: user.id,
+                        authorId: userId,
                         caption: selectedCaption
                     })
                 });
@@ -169,6 +172,7 @@
 
                 if (status.success) {
                     console.log('Post successful');
+                    togglePopup();
                 } else {
                     console.log('Post failed');
                 }
@@ -194,7 +198,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        authorId: user.id,
+                        authorId: userId,
                         fileId: fileData.filename, 
                         caption: selectedCaption
                     })
@@ -203,6 +207,7 @@
                 const status = await captionResponse.json();
                 if (status.success) {
                     console.log('Post with file successful');
+                    togglePopup();
                 } else {
                     console.log('Post with file failed');
                 }

@@ -57,15 +57,15 @@
                 <img src="/images/icon/notification-setting.svg" alt="noti-setting" class="noti-setting-icon">
             </div>
             <div class="noti-menu hidden">
-                <button class="menu-item" 
-                {{#if (eq status 'read')}}
-                    onclick="markAsUnread('{{_id}}')"
-                {{else}}
-                    onclick="markAsRead('{{_id}}')"
-                {{/if}}
-                >
-                    <img src="/images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
-                    {{#if (eq status 'read')}}Mark as Unread{{else}}Mark as Read{{/if}}
+                <button id="toggle-status" class="menu-item" 
+                    onclick="toggleNotificationStatus('{{_id}}', {{#if (eq status 'read')}}true{{else}}false{{/if}}, this)">
+                    {{#if (eq status 'read')}}
+                        <img src="/images/icon/tick.svg" alt="mark-read-noti" class="setting-menu-icon">
+                        <p>Mark as Unread</p>
+                    {{else}}
+                        <img src="/images/icon/untick.svg" alt="mark-unread-noti" class="setting-menu-icon">
+                        <p>Mark as Read</p>
+                    {{/if}}
                 </button>
                 <button class="menu-item" onclick="deleteNotification('{{_id}}')">
                     <img src="/images/icon/trash-can.svg" alt="delete-noti" class="setting-menu-icon">

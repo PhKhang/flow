@@ -15,7 +15,6 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import apiRouter from './server/routes/apiRouter.js';
 import postRouter from './server/routes/postRouter.js';
-import authRouter from './server/routes/authRouter.js';
 
 import { addPost, getAllPosts, getFollowPosts, getPostsByAuthor, likePost, searchPosts, getAllPostsPagination, getFollowPostsPagination, getUserPostsPagination } from './server/controller/postController.js';
 import UserController from './server/controller/userController.js';
@@ -25,6 +24,7 @@ import { getAllFoundUsers, getAllFoundPosts } from './server/controller/searchCo
 import { verifyToken } from './server/middleware/verifyToken.js';
 import DecodeUserInfo from './server/utils/decodeUserInfo.js';
 import { type } from 'os';
+import User from './server/model/user.js';
 
 const app = express();
 const port = 3000;
@@ -81,8 +81,7 @@ app.get("/", verifyToken, async (req, res) => {
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
         const posts = await getAllPostsPagination(decoded.id, 10, 0);
         res.locals.posts = posts;
-        res.locals.user = decoded;
-        console.log("Profile pic: ", decoded.profile_pic);
+        res.locals.user = await User.findById(decoded.id);
         res.locals.title = "Home • flow";
         res.render('index', { currentPath: "/" });
     } catch (error) {
@@ -107,7 +106,7 @@ app.get("/following", async (req, res) => {
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
         const posts = await getFollowPostsPagination(decoded.id, 10, 0);
         res.locals.posts = posts;
-        res.locals.user = decoded;
+        res.locals.user = await User.findById(decoded.id);
         res.locals.title = "Home following • flow";
         res.render('index', { currentPath: "/following" });
     } catch (error) {
@@ -116,30 +115,9 @@ app.get("/following", async (req, res) => {
     }
 });
 
-app.get("/signin", async (req, res) => {
+app.get("/signin", (req, res) => {
     res.locals.title = "Sign in • flow";
-    let instruction
-    const queryToken = req.query.token
-    
-    if (req.query.verify) {
-        instruction = "Please verify your email to continue"
-    }
-    
-    if (queryToken) {
-        console.log("Query token: ", queryToken)
-        const decoded = jwt.verify(queryToken, process.env.SECRET_KEY)
-        if (decoded == null) {
-            return res.status(401).send("Invalid token")
-        }
-
-        const user = await UserController.fetchUserByEmailAndVerify(decoded.email)
-        const token = authRouter.createToken(user)
-        return res.cookie("access_token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production"
-        }).redirect("/")
-    }
-    res.render('signin', { currentPath: "/signin", layout: 'layout-signin',  instruction});
+    res.render('signin', { currentPath: "/signin", layout: 'layout-signin' });
 });
 
 app.get("/signup", (req, res) => {
@@ -154,7 +132,7 @@ app.get("/forgetpassword", (req, res) => {
 
 app.get("/resetpassword", (req, res) => {
     res.locals.title = "Reset Password • flow";
-    res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin', token: req.query.token });
+    res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin' });
 });
 
 app.get("/notifications", async (req, res) => {
@@ -226,9 +204,9 @@ app.get('/search', async (req, res) => {
 
 app.get("/profile/", verifyToken, async (req, res) => {
     let user = DecodeUserInfo.decode(req);
-
+    
     user = await UserController.fetchUserByUsername(user.username, user.id);
-
+    
     res.redirect(`/profile/${user.username}`);
 });
 
@@ -238,7 +216,7 @@ app.get("/profile/:username", verifyToken, async (req, res) => {
     if (!user) {
         return res.status(404).send("Not logged in");
     }
-
+    
     user = await UserController.fetchUserByUsername(req.params.username, currentUserId);
     if (!user) {
         return res.status(404).send("User not found");
@@ -246,7 +224,6 @@ app.get("/profile/:username", verifyToken, async (req, res) => {
     const posts = await getUserPostsPagination(user._id, 10, 0);
     const isFollowing = await Follow.findOne({ follower_id: currentUserId, following_id: user._id });
     user.isFollowed = !!isFollowing;
-    console.log("user id" + typeof user._id);
     res.locals.posts = posts;
     res.locals.title = `${user.username} • flow`;
     res.render("profile", { currentPath: `/profile/${user.username}`, user: user });

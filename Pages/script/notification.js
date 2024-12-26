@@ -77,48 +77,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-const markAsUnread = async (id) => {
-    console.log(`Toggling read status for notification ID: ${id}`);
-    const response = await fetch('/api/updateUnreadStatus', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ notificationId: id })
-    })
+const markAsUnread = (id) => toggleNotificationStatus(id, '/api/updateUnreadStatus', 'unread');
+const markAsRead = (id) => toggleNotificationStatus(id, '/api/updateReadStatus', 'read');
 
-    if (response.ok) {
-        //console.log(`Notification ID: ${id} is now unread`);
-        newStatus = "unread";
-        const notificationElement = document.querySelector(`[data-id="${id}"]`);
-        notificationElement.setAttribute("data-read", newStatus === "read" ? "true" : "false");
-        const button = notificationElement.querySelector(".menu-item");
-        button.textContent = newStatus === "read" ? "Mark as Unread" : "Mark as Read";
-    } else {
-        console.error(`Failed to mark notification ID: ${id} as unread`);
+const toggleNotificationStatus = async (id, isRead, button) => {
+    const endpoint = isRead ? '/api/updateUnreadStatus' : '/api/updateReadStatus';
+    const newStatus = isRead ? "unread" : "read";
+
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ notificationId: id }),
+        });
+
+        if (response.ok) {
+            const notificationElement = document.querySelector(`[data-id="${id}"]`);
+            const img = button.querySelector(".setting-menu-icon");
+            const text = button.querySelector("p");
+
+            notificationElement.setAttribute("data-read", newStatus === "read" ? "true" : "false");
+
+            if (newStatus === "read") {
+                text.textContent = "Mark as Unread";
+                img.src = "/images/icon/tick.svg";
+                img.alt = "mark-read-noti";
+            } else {
+                text.textContent = "Mark as Read";
+                img.src = "/images/icon/untick.svg";
+                img.alt = "mark-unread-noti";
+            }
+
+            button.onclick = () => toggleNotificationStatus(id, newStatus === "read", button);
+        } else {
+            throw new Error('Failed to update notification status.');
+        }
+    } catch (error) {
+        console.error(error.message);
+        alert('An error occurred while updating the notification. Please try again.');
     }
-}
-
-const markAsRead = async (id) => {
-    const response = await fetch('/api/updateReadStatus', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ notificationId: id })
-    })
-
-    if (response.ok) {
-        //console.log(`Notification ID: ${id} is now read`);
-        newStatus = "read";
-        const notificationElement = document.querySelector(`[data-id="${id}"]`);
-        notificationElement.setAttribute("data-read", newStatus === "read" ? "true" : "false");
-        const button = notificationElement.querySelector(".menu-item");
-        button.textContent = newStatus === "read" ? "Mark as Unread" : "Mark as Read";
-    } else {
-        console.error(`Failed to mark notification ID: ${id} as read`);
-    }
-}
+};
 
 const markAllAsRead = async () => {
     const notifications = document.querySelectorAll('.notification-item');
