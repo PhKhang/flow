@@ -83,7 +83,7 @@
 
                 <label class="mt-1" for="bio">Bio</label><br>
                 <textarea name="bio" id="bio" cols="30" rows="6" maxlength="150"
-                    placeholder="Write bio (max 150 characters)">{{{user.bio}}}</textarea><br>
+                    placeholder="Write bio (max 150 characters)">{{user.bio}}</textarea><br>
 
                 <label for="old-password">Change password</label><br>
                 <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
@@ -254,18 +254,7 @@
 <script src="/script/Post.js"></script>
 
 <script type="module">
-    document.addEventListener('DOMContentLoaded', function () {
-        const textareas = document.getElementsByTagName('textarea');
-        for (let textarea of textareas) {
-            textarea.addEventListener('input', function () {
-                // Convert HTML tags to string representation
-                this.value = this.value
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/\n/g, '<br>');
-            });
-        }
-        });
+
 
     // const changeButton = document.querySelector("")
     // changeButton.addEventListener("click", changeInfo)
