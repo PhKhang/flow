@@ -158,9 +158,9 @@ UserController.editUser = async (id, data, needPassword = true) => {
             user.full_name = data["full-name"];
         }
 
-        if (data["bio"]) {
-            user.bio = data["bio"];
-        }
+        // if (data["bio"]) {
+        user.bio = data["bio"];
+        // }
 
         if (data["profile_pic_url"]) {
             user.profile_pic_url = data["profile_pic_url"];

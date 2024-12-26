@@ -22,7 +22,7 @@ authRouter.get("/", (req, res) => {
     res.json(decoded)
 });
 
-const createToken = (user) => {
+const createToken = (user, time='7d') => {
     return jwt.sign(
         {
             id: user.id,
@@ -36,7 +36,7 @@ const createToken = (user) => {
             created_at: user.created_at
         },
         process.env.SECRET_KEY,
-        { expiresIn: '7d' });
+        { expiresIn: time });
 }
 
 authRouter.createToken = createToken;
@@ -51,6 +51,16 @@ authRouter.post("/signup", async (req, res) => {
         return res.status(400).json({ type: "missing", error: "Missing fields" })
     }
 
+    if (username.length < 3 || username.length > 15 || username.match(/[^a-zA-Z0-9_]/)) {
+        console.log("Invalid username")
+        return res.status(400).json({ type: "username", error: "Username must be between 3 and 15 characters, alphanumerical and underscores" })
+    }
+    
+    if (password.length < 8) {
+        console.log("Password too short")
+        return res.status(400).json({ type: "password", error: "Password must be at least 8 characters" })
+    }
+    
     if (req.body.password !== req.body.password1) {
         console.log("Passwords don't match")
         return res.status(400).json({ type: "password", error: "Passwords don't match" })
@@ -84,7 +94,7 @@ authRouter.post("/signup", async (req, res) => {
     user.bio = undefined
     user.created_at = undefined
 
-    const token = createToken(user)
+    const token = createToken(user, "10m")
     const transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE,
         host: process.env.EMAIL_HOST,
@@ -182,6 +192,8 @@ authRouter.post("/signup", async (req, res) => {
             console.log("Email sent: ", info.response);
         }
     });
+    
+    res.status(200).redirect("/signin?verified=true")
 });
 
 authRouter.post("/signin", async (req, res) => {
@@ -214,7 +226,8 @@ authRouter.post("/signin", async (req, res) => {
         const token = createToken(decoded)
         return res.cookie("access_token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production"
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict"
         }).status(200).json({ status: "logged in" })
     }
 
@@ -235,7 +248,8 @@ authRouter.post("/signin", async (req, res) => {
     const token = createToken(user)
     res.cookie("access_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production"
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
     }).status(200).json({ status: "logged in" })
 });
 
@@ -398,7 +412,8 @@ authRouter.post("/edit", async (req, res) => {
     const token = createToken(result)
     res.cookie("access_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production"
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
     }).status(200).json({ status: "info changed" })
 })
 

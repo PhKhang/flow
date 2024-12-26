@@ -74,11 +74,11 @@
                 </div>
 
                 <label for="username">Username</label><br>
-                <input type="text" name="username" id="username" maxlength="15" placeholder="{{user.username}}"
+                <input type="text" name="username" id="username" maxlength="15" placeholder="{{or user.username "Your username"}}"
                     value="{{user.username}}"><br>
 
                 <label class="mt-1" for="full-name">Full name</label><br>
-                <input type="text" name="full-name" id="full-name" placeholder="{{user.full_name}}"
+                <input type="text" name="full-name" id="full-name" maxlength="20" placeholder="{{or user.full_name "Your full name"}}"
                     value="{{user.full_name}}"><br>
 
                 <label class="mt-1" for="bio">Bio</label><br>
@@ -88,6 +88,8 @@
                 <label for="old-password">Change password</label><br>
                 <input type="password" name="old-password" id="old-password" placeholder="Old password"><br>
                 <input class="mt-1" type="password" name="new-password" id="new-password" placeholder="New password">
+
+                <p id="error" style="color: red; font-size: small"></p>
 
                 <button type="submit" class="edit edit-btn mt-3 mb-2" id="change">
                     <p>Save all changes</p>
