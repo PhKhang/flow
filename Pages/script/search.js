@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function toggleFollow({ followerId, followingId, isFollowed, button }) {
-    console.log(followerId, followingId, isFollowed, button);
+    // console.log(followerId, followingId, isFollowed, button);
 
     try {
         button.classList.toggle('following');

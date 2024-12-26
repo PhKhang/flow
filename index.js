@@ -64,6 +64,7 @@ app.use((req, res, next) => {
     res.locals.username = user?.username || current_username;
     res.locals.currentUserId = user?.id || null;
     res.locals.current_username = user?.username || current_username;
+    res.locals.currentUser = user;
     res.locals.isCurrentUser = req.path.includes(`/profile/${user?.username || current_username}`);
     next();
 });

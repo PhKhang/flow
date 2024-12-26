@@ -110,10 +110,10 @@
                 <div class="post-feed-header">
                     <div class="post-user-info">
                         <div class="profile-pic">
-                            <img src="{{user.profile_pic_url}}" alt="Profile Picture">
+                            <img src="{{currentUser.profile_pic_url}}" alt="Profile Picture">
                         </div>
                         <div class="post-text">
-                            <p><span class="post-username">{{user.username}}</span></p>
+                            <p><span class="post-username">{{currentUser.username}}</span></p>
                             <textarea id="captionInput" name="captionInput" placeholder="Share something..." class="post-input"></textarea>
                         </div>
                     </div>
@@ -136,8 +136,10 @@
     <script>
 
         const user = {
-            id: '{{user.id}}',
-            _id: '{{user._id}}'
+            id: '{{currentUser.id}}',
+            _id: '{{currentUser._id}}', 
+            username: '{{currentUser.username}}',
+            profile_pic_url: '{{currentUser.profile_pic_url}}'
         };
 
         const userId = user.id ? user.id : user._id;
@@ -155,7 +157,12 @@
 
         document.getElementById('uploadForm').addEventListener('submit', async (event) => {
             event.preventDefault();
- 
+
+            const postsContainer = document.getElementById('posts-container');
+            if (!selectedCaption) {
+                alert('Please enter a caption');
+                return;
+            }
             if (!selectedFile) {
                 const captionResponse = await fetch('/api/uploadPost', {
                     method: 'POST',
@@ -167,31 +174,37 @@
                         caption: selectedCaption
                     })
                 });
-                
+
                 const status = await captionResponse.json();
 
                 if (status.success) {
                     console.log('Post successful');
                     togglePopup();
+
+                    if (postsContainer) {
+                        const newPostHTML = createPostHTMLwhenAddPost(user, status.post, userId);
+                        postsContainer.insertAdjacentHTML('afterbegin', newPostHTML);
+                    }
                 } else {
                     console.log('Post failed');
                 }
                 return;
-            }
-            else {
+            } else {
                 const fileFormData = new FormData();
                 fileFormData.append('file', selectedFile);
-                
+
                 const fileResponse = await fetch('/uploadImg', {
                     method: 'POST',
                     body: fileFormData
                 });
-                
+
                 const fileData = await fileResponse.json();
                 console.log(fileData.filename);
+
                 if (!fileResponse.ok) {
                     throw new Error('Upload file failed');
                 }
+
                 const captionResponse = await fetch('/api/uploadPost', {
                     method: 'POST',
                     headers: {
@@ -199,15 +212,20 @@
                     },
                     body: JSON.stringify({
                         authorId: userId,
-                        fileId: fileData.filename, 
+                        fileId: fileData.filename,
                         caption: selectedCaption
                     })
                 });
-                
+
                 const status = await captionResponse.json();
                 if (status.success) {
                     console.log('Post with file successful');
                     togglePopup();
+
+                    if (postsContainer) {
+                        const newPostHTML = createPostHTMLwhenAddPost(user, status.post, userId);
+                        postsContainer.insertAdjacentHTML('afterbegin', newPostHTML);
+                    }
                 } else {
                     console.log('Post with file failed');
                 }
@@ -221,6 +239,9 @@
 
         function goBack() {
             window.history.back();
+            //window.addEventListener('popstate', function () {
+            //    window.location.reload();
+            //});
         }
 
         function scrollToTop() {

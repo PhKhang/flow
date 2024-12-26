@@ -141,6 +141,7 @@ textarea {
     align-items: center;
     height: 40px;
     width: 40px;
+    padding-bottom: 5px;
 }
 
 .upload-actions:hover {

@@ -102,6 +102,13 @@ const getUnreadNotificationsByUserId = async (userId) => {
 const createNotification = async (req, res) => {
     try {
         const { type, sender_id, receiver_id, attachment, onModel } = req.body;
+        
+        if (sender_id === receiver_id) {
+            return res.status(200).json({
+                success: true,
+                message: "Sender and receiver are the same, notification not created."
+            });
+        }
 
         const newNotification = new Notification({
             type,

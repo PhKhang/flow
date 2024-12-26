@@ -423,6 +423,20 @@ button {
     align-items: center;
 }
 
+.add-post-user-info {
+    display: flex
+;
+    align-items: center;
+}
+
+.add-post-block {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    padding-left: 10px;
+    background-color: var(--hover-background-color);
+}
+
 .post-block {
     width: 100%;
     height: 100%;
@@ -437,6 +451,7 @@ button {
 
 .comment-input {
     color: var(--secondary-text-color);
+    padding: 10px 10px 10px 0px;
 }
 
 .add-post-area {
@@ -572,6 +587,7 @@ button {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    object-fit: cover;
     overflow: hidden;
     z-index: 2; 
     flex-shrink: 0;

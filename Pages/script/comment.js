@@ -27,7 +27,7 @@ if (newCommentInput) {
 }
 
 async function toggleLikeComment({ commentId, userId, isLiked, button, commentAuthorId }) {
-    console.log(commentId, userId, isLiked, button, commentAuthorId);
+    // console.log(commentId, userId, isLiked, button, commentAuthorId);
 
     try {
         button.classList.toggle('like-button-clicked');
@@ -58,13 +58,13 @@ async function toggleLikeComment({ commentId, userId, isLiked, button, commentAu
                     attachment: commentId
                 }),
             });
-            const notificationStatus = await notificationResponse.json();
+            // const notificationStatus = await notificationResponse.json();
             
-            if (notificationStatus.success) {
-                console.log('Notification created successfully');
-            } else {
-                console.error('Failed to create notification');
-            }
+            // if (notificationStatus.success) {
+            //     console.log('Notification created successfully');
+            // } else {
+            //     console.error('Failed to create notification');
+            // }
         }
 
         const result = await response.json();
@@ -211,13 +211,13 @@ const addNewComment = async ({ postId, authorId, username, profilePicUrl, postAu
                     attachment: postId,
                 }),
             });
-            const notificationStatus = await notificationResponse.json();
+            // const notificationStatus = await notificationResponse.json();
             
-            if (notificationStatus.success) {
-                console.log('Notification created successfully');
-            } else {
-                console.error('Failed to create notification');
-            }
+            // if (notificationStatus.success) {
+            //     console.log('Notification created successfully');
+            // } else {
+            //     console.error('Failed to create notification');
+            // }
             
             if (textarea) textarea.value = '';
             const commentImagePreview = document.getElementById('commentImagePreview');
