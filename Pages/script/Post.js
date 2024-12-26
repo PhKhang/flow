@@ -1,6 +1,7 @@
 async function toggleLike({ postId, userId, isLiked, button, postAuthorId }) {
-    console.log(postId, userId, isLiked, button, postAuthorId);
+    console.log(postId, userId,typeof isLiked, button, postAuthorId);
     try {
+        isLiked = isLiked.toString();
         button.classList.toggle('like-button-clicked');
         let endpoint;
         if (isLiked === "true") {

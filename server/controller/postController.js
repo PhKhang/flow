@@ -21,7 +21,7 @@ const getAllPosts = async (userId) => {
             post.modified_created_at = formattedDate;
             post.timeAgo = timeAgo;
 
-            post.isLiked = post.likes.some(like => like.toString() === userId.toString());
+            post.isLiked = post.likes.some(like => like.toString() === userId.toString()).toString();
 
             const commentsLength = await Comment.countDocuments({ post_id: post._id });
             post.comments_length = commentsLength;
@@ -57,6 +57,16 @@ const getAllPostsPagination = async (userId, limit = 10, offset = 0) => {
         return null;
     }
 };
+
+const getCommentLength = async (postId) => {
+    try {
+        const commentsLength = await Comment.countDocuments({ post_id: postId });
+        return commentsLength;
+    } catch (error) {
+        console.error('Error getting comment length:', error);
+        return 0;
+    }
+}
 
 const getUserPostsPagination = async (userId, limit = 10, offset = 0) => {
     try {
@@ -270,4 +280,4 @@ const searchPosts = async (searchString) => {
     }
 };
 
-export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, unlikePost, getAllPostsPagination, getFollowPostsPagination, getUserPostsPagination };
+export { init, getAllPosts, getFollowPosts, getPostById, addPost, getPostsByAuthor, deletePostById, likePost, searchPosts, unlikePost, getAllPostsPagination, getFollowPostsPagination, getUserPostsPagination, getCommentLength };
