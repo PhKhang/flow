@@ -19,6 +19,27 @@ body {
     --max-post-height: 420px;
     --bs-link-color: rgba(0, 0, 0, 0.3);
     --bs-body-bg: #FAFAFA;
+    --primary-text-color: #212529;
+}   
+
+.dark {
+    --font-family-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --text-color: #FAFAFA;
+    --secondary-text-color: #B5B5B5;
+    --primary-color: #5865F2;
+    --secondary-color: #BDB3F9;
+    --background-color: #1E1E1E;
+    --button-primary-outline: rgba(255, 255, 255, 0.15);
+    --icon-secondary-outline: #c4bebe;
+    --hover-background-color: rgba(255, 255, 255, 0.05);
+    --outline: #3E3E3E;
+    --new-notification: #DD2334;
+    --form-border-radius: 8px;
+    --block-content-border-radius: 10px;
+    --max-post-height: 420px;
+    --bs-link-color: rgba(255, 255, 255, 0.3);
+    --bs-body-bg: #1E1E1E;
+    --primary-text-color: #FAFAFA;
 }   
 
 h1, h2, h3, h4, h5, h6 {
