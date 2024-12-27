@@ -230,7 +230,7 @@ authRouter.post("/signin", async (req, res) => {
     }
 
     user = await UserController.fetchUserByEmailAndVerify(decoded.email)
-    const token = createToken(decoded)
+    const token = createToken(user)
     return res.cookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
