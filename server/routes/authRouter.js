@@ -261,7 +261,7 @@ authRouter.post("/signin", async (req, res) => {
 });
 
 authRouter.get("/logout", async (req, res) => {
-    res.clearCookie("access_token").status(200).redirect("/signin")
+    res.clearCookie("access_token", {path:'/', domain: "flow-social-media.onrender.com"}).status(200).redirect("/signin")
 })
 
 authRouter.post("/reset", async (req, res) => {
