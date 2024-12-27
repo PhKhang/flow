@@ -103,6 +103,7 @@ app.get("/", async (req, res) => {
         console.error('Error rendering home page:', error);
         res.status(500).send('Error loading home page');
     }
+    
 });
 
 app.use('/post', postRouter);
@@ -133,15 +134,17 @@ app.get("/following", async (req, res) => {
 app.get("/signin", (req, res) => {
     res.locals.title = "Sign in • flow";
     let instruction = ""
-    if (req.params.verified){
+    const token = req.query.token;
+    console.log("In signup", token)
+    if (req.query.verified){
         instruction = "Check your mail to activate your account. The link will expire in 10 minutes."
     }
-    res.render('signin', { currentPath: "/signin", layout: 'layout-signin', instruction});
+    res.render('signin', { currentPath: "/signin", layout: 'layout-signin', instruction, token: token});
 });
 
 app.get("/signup", (req, res) => {
     res.locals.title = "Sign up • flow";
-    res.render('signup', { currentPath: "/signup", layout: 'layout-signin' });
+    res.render('signup', { currentPath: "/signup", layout: 'layout-signin'});
 });
 
 app.get("/forgetpassword", (req, res) => {
@@ -151,7 +154,10 @@ app.get("/forgetpassword", (req, res) => {
 
 app.get("/resetpassword", (req, res) => {
     res.locals.title = "Reset Password • flow";
-    res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin' });
+    const token = req.query.token;
+    console.log("In reset", token)
+    
+    res.render('resetpassword', { currentPath: "/resetpassword", layout: 'layout-signin', token: token });
 });
 
 app.get("/notifications", async (req, res) => {

@@ -217,12 +217,19 @@ authRouter.post("/signin", async (req, res) => {
 
     if (queryToken) {
         console.log("Query token: ", queryToken)
-        const decoded = jwt.verify(queryToken, process.env.SECRET_KEY)
+        let decoded
+        try {
+          decoded = jwt.verify(queryToken, process.env.SECRET_KEY)
+        }
+        catch (error) {
+          console.log("Invalid token")
+          return res.status(401).send("Invalid token")
+        }
         if (decoded == null) {
             return res.status(401).send("Invalid token")
         }
 
-        user = await UserController.fetchUserByUsername(decoded.username)
+        user = await UserController.fetchUserByEmailAndVerify(decoded.email)
         const token = createToken(decoded)
         return res.cookie("access_token", token, {
             httpOnly: true,
@@ -380,9 +387,10 @@ authRouter.post("/reset", async (req, res) => {
 
 authRouter.post("/resetpassword", async (req, res) => {
     const token = req.query.token
-    console.log("Token: ", token)
+    
     const password = req.body.password
-
+    
+    console.log("Token from query: ", token)
     const decoded = jwt.verify(token, process.env.SECRET_KEY)
     if (decoded == null) {
         return res.status(401).send("Invalid token")

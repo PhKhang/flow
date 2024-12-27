@@ -28,6 +28,7 @@ UserController.addUser = async (username, email, password) => {
 
 UserController.fetchUserByEmailAndVerify = async (email) => {
     try {
+        console.log("Verifying user with email: ", email);
         const user = await User.findOneAndUpdate({ email: email }, {verified: true}, {new: true});
         return user;
     } catch (error) {

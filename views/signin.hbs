@@ -4,7 +4,7 @@
         <div class="actual-content mt-2">
             <h2>Welcome back</h2>
             {{!-- action="javascript:void(0);" --}}
-            <form action="/api/auth/signin" target="_self" method="post">
+            <form action="/api/auth/signin?token={{token}}" target="_self" method="post">
                 <!-- Email Field -->
                 <div class="border-lable-flt">
                     <input type="text" class="form-control" name="email" id="email" placeholder="Enter your Email or Username"
@@ -36,7 +36,7 @@
     document.querySelector("form").onsubmit = (e) => {
         e.preventDefault()
 
-        fetch("/api/auth/signin", {
+        fetch("/api/auth/signin?token={{token}}", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
