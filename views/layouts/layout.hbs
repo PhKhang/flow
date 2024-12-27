@@ -132,7 +132,6 @@
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
-    <script src="/script/add-post.js"></script>
     <script>
 
         const user = {
@@ -147,9 +146,37 @@
         let selectedFile = null;
         let selectedCaption = null;
 
-        document.getElementById('imageInput').addEventListener('change', (e) => {
-            selectedFile = e.target.files[0];
+        // document.getElementById('imageInput').addEventListener('change', (e) => {
+        //    selectedFile = e.target.files[0];
+        // });
+
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                selectedFile = file;
+                
+                const previewDiv = document.getElementById('imagePreview');
+                previewDiv.innerHTML = `
+                    <svg class="remove-image" onclick="removeImage()" fill="#fff" viewBox="-3.5 0 19 19" xmlns="http://www.w3.org/2000/svg" class="cf-icon-svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M11.383 13.644A1.03 1.03 0 0 1 9.928 15.1L6 11.172 2.072 15.1a1.03 1.03 0 1 1-1.455-1.456l3.928-3.928L.617 5.79a1.03 1.03 0 1 1 1.455-1.456L6 8.261l3.928-3.928a1.03 1.03 0 0 1 1.455 1.456L7.455 9.716z"></path></g></svg>
+                    <img src="${URL.createObjectURL(file)}" alt="Preview">
+                `;
+            } else {
+                selectedFile = null;
+                document.getElementById('imagePreview').innerHTML = '';
+            }
         });
+
+        function removeImage() {
+            selectedFile = null;
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('imageInput').value = '';
+        }
+
+        function handleNewPost() {
+            document.querySelector('.post-input').value = '';
+            document.getElementById('captionInput').value = '';
+            removeImage();
+        }
 
         document.getElementById('captionInput').addEventListener('input', (e) => {
             selectedCaption = e.target.value;
@@ -178,6 +205,9 @@
                 const status = await captionResponse.json();
 
                 if (status.success) {
+                    selectedFile = null;
+                    selectedCaption = null;
+                    handleNewPost();
                     console.log('Post successful');
                     togglePopup();
 
@@ -219,6 +249,9 @@
 
                 const status = await captionResponse.json();
                 if (status.success) {
+                    selectedFile = null;
+                    selectedCaption = null;
+                    handleNewPost();
                     console.log('Post with file successful');
                     togglePopup();
 
@@ -232,9 +265,20 @@
             }
         });
 
-        document.getElementById('imageInput').addEventListener('change', (e) => {
-            console.log("File selection event triggered");
-            console.log("Files at selection:", e.target.files);
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                selectedFile = file;
+                
+                const previewDiv = document.getElementById('imagePreview');
+                previewDiv.innerHTML = `
+                    <svg class="remove-image" onclick="removeImage()" fill="#fff" viewBox="-3.5 0 19 19" xmlns="http://www.w3.org/2000/svg" class="cf-icon-svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M11.383 13.644A1.03 1.03 0 0 1 9.928 15.1L6 11.172 2.072 15.1a1.03 1.03 0 1 1-1.455-1.456l3.928-3.928L.617 5.79a1.03 1.03 0 1 1 1.455-1.456L6 8.261l3.928-3.928a1.03 1.03 0 0 1 1.455 1.456L7.455 9.716z"></path></g></svg>
+                    <img src="${URL.createObjectURL(file)}" alt="Preview">
+                `;
+            } else {
+                selectedFile = null;
+                document.getElementById('imagePreview').innerHTML = '';
+            }
         });
 
         function goBack() {
@@ -251,5 +295,6 @@
             });
         }
     </script>
+    <script src="/script/add-post.js"></script>
 </body>
 </html>

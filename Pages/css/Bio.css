@@ -308,8 +308,9 @@ button {
     margin-bottom: 10px;
 }
 
-.media {
+.media img {
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .post-image {
