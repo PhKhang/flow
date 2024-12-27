@@ -278,7 +278,7 @@ authRouter.post("/reset", async (req, res) => {
   user.created_at = undefined
 
   // Send email with reset link
-  const token = createToken(user)
+  const token = createToken(user, "10m")
   const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE,
     host: process.env.EMAIL_HOST,
