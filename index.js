@@ -87,7 +87,7 @@ app.set('view engine', 'hbs');
 
 await mongoose.connect(process.env.ATLAS_URI);
 
-app.get("/", verifyToken, async (req, res) => {
+app.get("/", async (req, res) => {
     try {
         const token = req.cookies.access_token;
         if (!token) {

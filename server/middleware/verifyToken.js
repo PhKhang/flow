@@ -17,7 +17,7 @@ const verifyToken = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
         console.log("Verification status", decoded.verified)
         if (!decoded.verified){
-            console.log("User not verified")
+            console.log("User not verified 😂")
             return res.redirect("/signin");
         }
         
