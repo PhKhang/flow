@@ -51,17 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 if (currentStatus === 'false') {
-                    const response = await fetch(`/api/notifications/${notificationId}/mark-read`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    if (response.ok) {
-                        this.setAttribute('data-read', 'true');
-                        this.classList.add('read');
-                    }
+                    toggleNotificationStatus(notificationId, false, this.querySelector('#toggle-status'));
                 }
 
                 if (notificationType === 'like_comment') {

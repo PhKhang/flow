@@ -63,9 +63,18 @@ apiRouter.post('/uploadPost', async (req, res) => {
 });
 
 apiRouter.post('/follow', async (req, res) => {
+    const { followerId, followingId } = req.body;
+
+    if (followerId === followingId) {
+        return res.status(400).send({
+            success: false,
+            message: "Follower and following IDs cannot be the same."
+        });
+    }
+
     try {
-        const followers = await followUser(req.body.followerId, req.body.followingId);
-        const followersCount = await Follow.countDocuments({ following_id: req.body.followingId });
+        const followers = await followUser(followerId, followingId);
+        const followersCount = await Follow.countDocuments({ following_id: followingId });
 
         return res.status(200).send({
             success: true,
@@ -78,6 +87,7 @@ apiRouter.post('/follow', async (req, res) => {
         return res.status(500).send({ success: false });
     }
 });
+
 
 apiRouter.post('/unfollow', async (req, res) => {
     try {
