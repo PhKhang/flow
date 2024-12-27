@@ -9,105 +9,105 @@ import DecodeUserInfo from "../utils/decodeUserInfo.js";
 const authRouter = express.Router()
 
 authRouter.get("/", (req, res) => {
-    const token = req.cookies.access_token;
+  const token = req.cookies.access_token;
 
-    if (!token) {
-        console.log("No token")
-        return res.status(401).json({ error: 'Not logged in' })
-    }
+  if (!token) {
+    console.log("No token")
+    return res.status(401).json({ error: 'Not logged in' })
+  }
 
-    const decoded = jwt.verify(token, process.env.SECRET_KEY)
-    console.log("Decoded token: ", decoded)
-    console.log("Username: ", decoded.username)
-    res.json(decoded)
+  const decoded = jwt.verify(token, process.env.SECRET_KEY)
+  console.log("Decoded token: ", decoded)
+  console.log("Username: ", decoded.username)
+  res.json(decoded)
 });
 
-const createToken = (user, time='7d') => {
-    return jwt.sign(
-        {
-            id: user.id,
-            _id: user.id,
-            username: user.username,
-            full_name: user.full_name,
-            email: user.email,
-            profile_pic_url: user.profile_pic_url,
-            bio: user.bio,
-            verified: user.verified,
-            created_at: user.created_at
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: time });
+const createToken = (user, time = '7d') => {
+  return jwt.sign(
+    {
+      id: user.id,
+      _id: user.id,
+      username: user.username,
+      full_name: user.full_name,
+      email: user.email,
+      profile_pic_url: user.profile_pic_url,
+      bio: user.bio,
+      verified: user.verified,
+      created_at: user.created_at
+    },
+    process.env.SECRET_KEY,
+    { expiresIn: time });
 }
 
 authRouter.createToken = createToken;
 authRouter.post("/signup", async (req, res) => {
-    console.log(req.body)
-    const username = req.body.username
-    const email = req.body.email
-    const password = req.body.password
+  console.log(req.body)
+  const username = req.body.username
+  const email = req.body.email
+  const password = req.body.password
 
-    if (username == "" || email == "" || password == "") {
-        console.log("Missing fields")
-        return res.status(400).json({ type: "missing", error: "Missing fields" })
-    }
+  if (username == "" || email == "" || password == "") {
+    console.log("Missing fields")
+    return res.status(400).json({ type: "missing", error: "Missing fields" })
+  }
 
-    if (username.length < 3 || username.length > 15 || username.match(/[^a-zA-Z0-9_]/)) {
-        console.log("Invalid username")
-        return res.status(400).json({ type: "username", error: "Username must be between 3 and 15 characters, alphanumerical and underscores" })
-    }
-    
-    if (password.length < 8) {
-        console.log("Password too short")
-        return res.status(400).json({ type: "password", error: "Password must be at least 8 characters" })
-    }
-    
-    if (req.body.password !== req.body.password1) {
-        console.log("Passwords don't match")
-        return res.status(400).json({ type: "password", error: "Passwords don't match" })
-    }
-    // console.log("Fetching user by username from router: ", username);
+  if (username.length < 3 || username.length > 15 || username.match(/[^a-zA-Z0-9_]/)) {
+    console.log("Invalid username")
+    return res.status(400).json({ type: "username", error: "Username must be between 3 and 15 characters, alphanumerical and underscores" })
+  }
 
-    let fetched = await UserController.fetchUserByUsername(username)
-    if (fetched != null) {
-        console.log("Username used: ", fetched)
-        return res.status(409).json({ type: "username", error: "Username already used" })
-    }
+  if (password.length < 8) {
+    console.log("Password too short")
+    return res.status(400).json({ type: "password", error: "Password must be at least 8 characters" })
+  }
 
-    fetched = await UserController.fetchUserByEmail(email)
-    if (fetched != null) {
-        console.log("Email used: ", fetched)
-        return res.status(409).json({ type: "email", error: "Email used" })
-    }
+  if (req.body.password !== req.body.password1) {
+    console.log("Passwords don't match")
+    return res.status(400).json({ type: "password", error: "Passwords don't match" })
+  }
+  // console.log("Fetching user by username from router: ", username);
 
-    console.log("Creating new user...")
+  let fetched = await UserController.fetchUserByUsername(username)
+  if (fetched != null) {
+    console.log("Username used: ", fetched)
+    return res.status(409).json({ type: "username", error: "Username already used" })
+  }
 
-    const user = await UserController.addUser(username, email, password)
-    if (user == null) {
-        console.log("Error creating user")
-        return res.status(500).send("Error creating user")
-    }
-    console.log("User created: ", user)
+  fetched = await UserController.fetchUserByEmail(email)
+  if (fetched != null) {
+    console.log("Email used: ", fetched)
+    return res.status(409).json({ type: "email", error: "Email used" })
+  }
 
-    user.full_name = undefined
-    user.password_hash = undefined
-    user.profile_pic_url = undefined
-    user.bio = undefined
-    user.created_at = undefined
+  console.log("Creating new user...")
 
-    const token = createToken(user, "10m")
-    const transporter = nodemailer.createTransport({
-        service: process.env.EMAIL_SERVICE,
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    });
+  const user = await UserController.addUser(username, email, password)
+  if (user == null) {
+    console.log("Error creating user")
+    return res.status(500).send("Error creating user")
+  }
+  console.log("User created: ", user)
 
-    let link = `${process.env.FRONTEND_URL}/signin?token=${token}`
-    let content = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  user.full_name = undefined
+  user.password_hash = undefined
+  user.profile_pic_url = undefined
+  user.bio = undefined
+  user.created_at = undefined
+
+  const token = createToken(user, "10m")
+  const transporter = nodemailer.createTransport({
+    service: process.env.EMAIL_SERVICE,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: true,
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  let link = `${process.env.FRONTEND_URL}/signin?token=${token}`
+  let content = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -177,127 +177,128 @@ authRouter.post("/signup", async (req, res) => {
   </body>
 </html>`
 
-    const mailOptions = {
-        to: email,
-        subject: "Email Confirmation",
-        text: `To confirm this email for your account, please follow the link bellow: ${process.env.FRONTEND_URL}/signin?token=${token}. If you didn't request an email confirmation, you can safely ignore this email.`,
-        html: content,
-    };
+  const mailOptions = {
+    to: email,
+    subject: "Email Confirmation",
+    text: `To confirm this email for your account, please follow the link bellow: ${process.env.FRONTEND_URL}/signin?token=${token}. If you didn't request an email confirmation, you can safely ignore this email.`,
+    html: content,
+  };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error("Error sending email: ", error);
-            return res.status(500).send("Error sending email")
-        } else {
-            console.log("Email sent: ", info.response);
-        }
-    });
-    
-    res.redirect("/signin?verified=true")
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email: ", error);
+      return res.status(500).send("Error sending email")
+    } else {
+      console.log("Email sent: ", info.response);
+    }
+  });
+
+  res.redirect("/signin?verified=true")
 });
 
 authRouter.post("/signin", async (req, res) => {
-    console.log("Sign in")
-    const email = req.body.email
-    const password = req.body.password
-    
-    if (email == "" || password == "") {
-        console.log("Missing fields")
-        return res.status(400).json({ type: "missing", error: "Missing fields" })
-    }
-    
-    let user
-    if (email.includes("@")) {
-        user = await UserController.fetchUserByEmail(email)
-    }
-    else {
-        user = await UserController.fetchBasicUserByUsername(email)
-    }
-    const queryToken = req.query.token
+  console.log("Sign in")
+  const email = req.body.email
+  const password = req.body.password
 
-    if (queryToken) {
-        console.log("Query token: ", queryToken)
-        let decoded
-        try {
-          decoded = jwt.verify(queryToken, process.env.SECRET_KEY)
-        }
-        catch (error) {
-          console.log("Invalid token")
-          return res.status(401).send("Invalid token")
-        }
-        if (decoded == null) {
-            return res.status(401).send("Invalid token")
-        }
+  if (email == "" || password == "") {
+    console.log("Missing fields")
+    return res.status(400).json({ type: "missing", error: "Missing fields" })
+  }
 
-        user = await UserController.fetchUserByEmailAndVerify(decoded.email)
-        const token = createToken(decoded)
-        return res.cookie("access_token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict"
-        }).status(200).json({ status: "logged in" })
+  let user
+  if (email.includes("@")) {
+    user = await UserController.fetchUserByEmail(email)
+  }
+  else {
+    user = await UserController.fetchBasicUserByUsername(email)
+  }
+  const queryToken = req.query.token
+
+  if (queryToken) {
+    console.log("Query token: ", queryToken)
+    let decoded
+    try {
+      decoded = jwt.verify(queryToken, process.env.SECRET_KEY)
+    }
+    catch (error) {
+      console.log("Invalid token")
+      return res.status(401).send("Invalid token")
+    }
+    if (decoded == null) {
+      return res.status(401).send("Invalid token")
     }
 
-    if (user == null) {
-        console.log("User not found")
-        return res.status(404).json({ type: "email", error: "Email or username does not exist" })
-    }
-
-    console.log("User info: ", user)
-
-    if (!bcrypt.compareSync(password, user.password_hash)) {
-        console.log("Bad login")
-        return res.status(401).json({ type: "password", error: "Incorrect password" })
-    }
-
-    console.log("Correct login")
-
-    const token = createToken(user)
-    res.cookie("access_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict"
+    user = await UserController.fetchUserByEmailAndVerify(decoded.email)
+    const token = createToken(decoded)
+    return res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict"
     }).status(200).json({ status: "logged in" })
+  }
+
+  if (user == null) {
+    console.log("User not found")
+    return res.status(404).json({ type: "email", error: "Email or username does not exist" })
+  }
+
+  console.log("User info: ", user)
+
+  if (!bcrypt.compareSync(password, user.password_hash)) {
+    console.log("Bad login")
+    return res.status(401).json({ type: "password", error: "Incorrect password" })
+  }
+
+  console.log("Correct login")
+
+  const token = createToken(user)
+  res.cookie("access_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict"
+  }).status(200).json({ status: "logged in" })
 });
 
 authRouter.get("/logout", async (req, res) => {
-    res.clearCookie("access_token", {path:'/', domain: "flow-social-media.onrender.com"}).status(200).redirect("/signin")
+  console.log("Clear cookies")
+  res.clearCookie("access_token").status(200).redirect("/signin")
 })
 
 authRouter.post("/reset", async (req, res) => {
-    const email = req.body.email
+  const email = req.body.email
 
-    const user = await UserController.fetchUserByEmail(email)
-    if (user == null) {
-        return res.status(404).json({ type: "email", error: "Email does not exist" })
-    }
-    user.full_name = undefined
-    user.profile_pic_url = undefined
-    user.bio = undefined
-    user.created_at = undefined
+  const user = await UserController.fetchUserByEmail(email)
+  if (user == null) {
+    return res.status(404).json({ type: "email", error: "Email does not exist" })
+  }
+  user.full_name = undefined
+  user.profile_pic_url = undefined
+  user.bio = undefined
+  user.created_at = undefined
 
-    // Send email with reset link
-    const token = createToken(user)
-    const transporter = nodemailer.createTransport({
-        service: process.env.EMAIL_SERVICE,
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    });
+  // Send email with reset link
+  const token = createToken(user)
+  const transporter = nodemailer.createTransport({
+    service: process.env.EMAIL_SERVICE,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: true,
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
 
-    // transporter.verify(function (error, success) {
-    //     if (error) {
-    //         console.log(error);
-    //     } else {
-    //         console.log("Server is ready to take our messages");
-    //     }
-    // });
-    let link = `${process.env.FRONTEND_URL}/resetpassword?token=${token}`
-    let content = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  // transporter.verify(function (error, success) {
+  //     if (error) {
+  //         console.log(error);
+  //     } else {
+  //         console.log("Server is ready to take our messages");
+  //     }
+  // });
+  let link = `${process.env.FRONTEND_URL}/resetpassword?token=${token}`
+  let content = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -366,70 +367,70 @@ authRouter.post("/reset", async (req, res) => {
     </table>
   </body>
 </html>`
-    const mailOptions = {
-        to: email,
-        subject: "Password Reset Request",
-        text: `To reset the password of your account, please follow the link bellow: ${process.env.FRONTEND_URL}/resetpassword?token=${token}. If you didn't request an email confirmation, you can safely ignore this email.`,
-        html: content,
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error("Error sending email: ", error);
-            return res.status(500).send("Error sending email")
-        } else {
-            console.log("Email sent: ", info.response);
-        }
-    });
+  const mailOptions = {
+    to: email,
+    subject: "Password Reset Request",
+    text: `To reset the password of your account, please follow the link bellow: ${process.env.FRONTEND_URL}/resetpassword?token=${token}. If you didn't request an email confirmation, you can safely ignore this email.`,
+    html: content,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email: ", error);
+      return res.status(500).send("Error sending email")
+    } else {
+      console.log("Email sent: ", info.response);
+    }
+  });
 
 
-    res.redirect("/signin")
+  res.redirect("/signin")
 })
 
 authRouter.post("/resetpassword", async (req, res) => {
-    const token = req.query.token
-    
-    const password = req.body.password
-    
-    console.log("Token from query: ", token)
-    const decoded = jwt.verify(token, process.env.SECRET_KEY)
-    if (decoded == null) {
-        return res.status(401).send("Invalid token")
-    }
+  const token = req.query.token
 
-    const result = await UserController.editUser(decoded.id, { "new-password": password }, false)
-    if (result == null) {
-        return res.status(500).send("Error resetting password")
-    }
+  const password = req.body.password
 
-    res.redirect("/signin")
+  console.log("Token from query: ", token)
+  const decoded = jwt.verify(token, process.env.SECRET_KEY)
+  if (decoded == null) {
+    return res.status(401).send("Invalid token")
+  }
+
+  const result = await UserController.editUser(decoded.id, { "new-password": password }, false)
+  if (result == null) {
+    return res.status(500).send("Error resetting password")
+  }
+
+  res.redirect("/signin")
 })
 
 
 authRouter.post("/edit", async (req, res) => {
-    const user = DecodeUserInfo.decode(req);
-    if (user == null) {
-        return res.status(401).send("Not logged in")
-    }
+  const user = DecodeUserInfo.decode(req);
+  if (user == null) {
+    return res.status(401).send("Not logged in")
+  }
 
-    const data = req.body
-    if (data.username.trim() == user.username) {
-        data.username = ""
-    }
-    const result = await UserController.editUser(user.id, data)
-    if (result == null) {
-        return res.status(500).json({ type: "password", error: "Password is wrong" })
-    }
-    
-    if (result == "Username already exists") {
-        return res.status(409).json({ type: "username", error: "Username already exists" })
-    }
+  const data = req.body
+  if (data.username.trim() == user.username) {
+    data.username = ""
+  }
+  const result = await UserController.editUser(user.id, data)
+  if (result == null) {
+    return res.status(500).json({ type: "password", error: "Password is wrong" })
+  }
 
-    const token = createToken(result)
-    res.cookie("access_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict"
-    }).status(200).json({ status: "info changed" })
+  if (result == "Username already exists") {
+    return res.status(409).json({ type: "username", error: "Username already exists" })
+  }
+
+  const token = createToken(result)
+  res.cookie("access_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict"
+  }).status(200).json({ status: "info changed" })
 })
 
 export default authRouter;
