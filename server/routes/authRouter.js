@@ -193,7 +193,7 @@ authRouter.post("/signup", async (req, res) => {
         }
     });
     
-    res.status(200).redirect("/signin?verified=true")
+    res.redirect("/signin?verified=true")
 });
 
 authRouter.post("/signin", async (req, res) => {
